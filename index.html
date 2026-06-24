@@ -390,117 +390,158 @@
 </div>
 
 <script>
-function getBaseScore(type) {
-    const scores = { 'ring': 1, 'charm': 2, 'bracelet': 3, 'necklace': 5 };
-    return scores[type] || 0;
-}
+/**
+ * アイテムのスコアを計算するスクリプト
+ */
 
-function updateSelectColor(slotNum) {
-    const selectEl = document.getElementById(`color${slotNum}`);
-    const color = selectEl.value;
-    selectEl.classList.remove('color-red', 'color-blue', 'color-yellow', 'color-green', 'color-gold');
-    selectEl.classList.add(`color-${color}`);
-}
+// アイテムの定義用定数
+const TYPES = {
+    SCARECROW: 'scarecrow', // カカシ
+    RING: 'ring',           // 指輪
+    CHARM: 'charm',         // チャーム
+    BRACELET: 'bracelet',   // 腕輪
+    NECKLACE: 'necklace'    // 首飾り
+};
 
-function calculate() {
-    const gameLevel = document.getElementById('gameLevel').value;
-    const nMap = { '見習い': 1, '三級': 2, '二級': 3, '一級': 4 };
-    const n = nMap[gameLevel] || 0;
+const COLORS = {
+    GOLD: 'gold',
+    RED: 'red',
+    BLUE: 'blue',
+    YELLOW: 'yellow',
+    GREEN: 'green'
+};
 
-    const slot1 = { color: document.getElementById('color1').value, type: document.getElementById('type1').value, isCompleted: document.getElementById('complete1').checked };
-    const slot2 = { color: document.getElementById('color2').value, type: document.getElementById('type2').value, isCompleted: document.getElementById('complete2').checked };
-    const slot3 = { color: document.getElementById('color3').value, type: document.getElementById('type3').value, isCompleted: document.getElementById('complete3').checked };
-
-    // 【修正】金色（gold）ならカカシ判定を打ち消し、通常アイテム扱いにする
-    const k1 = slot1.type === 'kakashi' && slot1.color !== 'gold';
-    const k2 = slot2.type === 'kakashi' && slot2.color !== 'gold';
-    const k3 = slot3.type === 'kakashi' && slot3.color !== 'gold';
-
-    // 【修正】金色なら最優先で素点10。それ以外なら、カカシは0点、通常アイテムは各ベーススコア。
-    let base1 = slot1.color === 'gold' ? 10 : (k1 ? 0 : getBaseScore(slot1.type));
-    let base2 = slot2.color === 'gold' ? 10 : (k2 ? 0 : getBaseScore(slot2.type));
-    let base3 = slot3.color === 'gold' ? 10 : (k3 ? 0 : getBaseScore(slot3.type));
-
-    // 【修正】スロット1の素点をこの段階で2倍（カカシの場合は2倍処理もスルー）
-    let s1_doubled = k1 ? base1 : base1 * 2;
-
-    let final1 = 0, final2 = 0, final3 = 0;
-
-    // カカシの伝播処理
-    if (!k1 && !k2 && !k3) {
-        final1 = s1_doubled; final2 = base2; final3 = base3;
-    } else if (k1 && !k2 && !k3) {
-        final2 = base2; final1 = final2 * 2; final3 = base3;
-    } else if (!k1 && k2 && !k3) {
-        final1 = s1_doubled; final3 = base3; final2 = final1 + final3;
-    } else if (!k1 && !k2 && k3) {
-        final1 = s1_doubled; final2 = base2; final3 = final2;
-    } else if (k1 && k2 && !k3) {
-        final3 = base3; final2 = final3; final1 = final2 * 2;
-    } else if (k1 && !k2 && k3) {
-        final2 = base2; final1 = final2 * 2; final3 = final2;
-    } else if (!k1 && k2 && k3) {
-        final1 = s1_doubled; final2 = final1 * 2; final3 = final2;
-    } else {
-        final1 = 0; final2 = 0; final3 = 0;
+/**
+ * 1つのアイテムの素点を取得する（カカシ以外、または金の場合）
+ * @param {Object} item - { color: string, type: string }
+ * @returns {number|null} 金額または基本スコア。金色以外のカカシは計算が必要なため null を返す。
+ */
+function getBaseScore(item) {
+    if (!item) return 0;
+    
+    // 金色のアイテムは種類を問わず一律10（カカシよりも最優先）
+    if (item.color === COLORS.GOLD) {
+        return 10;
     }
 
-    // 完成スロットの集計
-    let baseTotal = 0;
-    let completedItems = [];
-    if (slot1.isCompleted) { baseTotal += final1; completedItems.push(slot1); }
-    if (slot2.isCompleted) { baseTotal += final2; completedItems.push(slot2); }
-    if (slot3.isCompleted) { baseTotal += final3; completedItems.push(slot3); }
-
-    // ボーナス詳細計算
-    let colorBonus = 0;
-    let typeBonus = 0;
-
-    if (completedItems.length >= 2) {
-        if (completedItems.length === 3) {
-            const item1 = completedItems[0]; const item2 = completedItems[1]; const item3 = completedItems[2];
-            
-            if (item1.color === item2.color && item2.color === item3.color && item1.type === item2.type && item2.type === item3.type) {
-                colorBonus = n; typeBonus = n;
-            } 
-            else if ((item1.color === item2.color && item1.type === item2.type) || (item2.color === item3.color && item2.type === item3.type) || (item1.color === item3.color && item1.type === item3.type)) {
-                colorBonus = n; typeBonus = n;
-            } 
-            else {
-                if (item1.color === item2.color || item2.color === item3.color || item1.color === item3.color) colorBonus = n;
-                if (item1.type === item2.type || item2.type === item3.type || item1.type === item3.type) typeBonus = n;
-            }
-        } else if (completedItems.length === 2) {
-            const item1 = completedItems[0]; const item2 = completedItems[1];
-            if (item1.color === item2.color && item1.type === item2.type) {
-                colorBonus = n; typeBonus = n;
-            } else {
-                if (item1.color === item2.color) colorBonus = n;
-                if (item1.type === item2.type) typeBonus = n;
-            }
-        }
+    // 金色以外の各種スコア
+    switch (item.type) {
+        case TYPES.RING:     return 1;
+        case TYPES.CHARM:    return 2;
+        case TYPES.BRACELET: return 3;
+        case TYPES.NECKLACE: return 5;
+        case TYPES.SCARECROW:
+            return null; // カカシ(x)は後で周辺スロットから計算する
+        default:
+            return 0;
     }
-
-    let totalBonus = colorBonus + typeBonus;
-
-    // 【修正】pts表記の複数形対応関数
-    function formatPt(val) {
-        return val === 1 ? `${val}pt` : `${val}pts`;
-    }
-
-    // 画面への反映
-    document.getElementById('colorBonusDisp').innerText = colorBonus;
-    document.getElementById('typeBonusDisp').innerText = typeBonus;
-    
-    document.getElementById('midDetails').innerText = `ベース合計: ${baseTotal}点 | ボーナス合計: ${totalBonus}点`;
-    
-    // 【修正】スロット1：すでに伝播・計算を終えた「2倍後の最終スコア」を表示
-    document.getElementById('slot1Pt').innerText = `スロット1：${formatPt(final1)}`;
-    document.getElementById('slot2Pt').innerText = `スロット2：${formatPt(final2)}`;
-    document.getElementById('slot3Pt').innerText = `スロット3：${formatPt(final3)}`;
-    
-    document.getElementById('totalScore').innerText = baseTotal + totalBonus;
 }
+
+/**
+ * 3つのスロットの合計スコアを計算するメイン関数
+ * @param {Object} slot1 - スロット1のアイテム { color, type }
+ * @param {Object} slot2 - スロット2のアイテム { color, type }
+ * @param {Object} slot3 - スロット3のアイテム { color, type }
+ * @param {Object} bonuses - ボーナス点 { colorBonus: number, typeBonus: number }
+ * @returns {Object} 詳細な計算結果
+ */
+function calculateTotalScore(slot1, slot2, slot3, bonuses = { colorBonus: 0, typeBonus: 0 }) {
+    // 1. まず金色や通常アイテムの基本スコアを確定させる
+    let s1 = getBaseScore(slot1);
+    let s2 = getBaseScore(slot2);
+    let s3 = getBaseScore(slot3);
+
+    // 各スロットが「変動するカカシ(x)」であるかどうかのフラグ
+    const isS1Scarecrow = (s1 === null);
+    const isS2Scarecrow = (s2 === null);
+    const isS3Scarecrow = (s3 === null);
+
+    // 2. カカシの配置パターン（全8通り）に応じたスコア補完ロジック
+    // ※スロット1は「スコアが完全に定義された時」に2倍にするため、カカシ計算のプロセス内で適切に2倍化を行います。
+
+    if (!isS1Scarecrow && !isS2Scarecrow && !isS3Scarecrow) {
+        // 【パターン0】カカシなし（または金カカシのみで全員数字が埋まっている）
+        s1 = s1 * 2; // スロット1の2倍ルール
+    } 
+    else if (isS1Scarecrow && !isS2Scarecrow && !isS3Scarecrow) {
+        // 【パターン①】スロット1のみカカシ
+        // スロット2のスコアを参照し、スロット1は2倍になる
+        s1 = s2 * 2;
+    } 
+    else if (!isS1Scarecrow && isS2Scarecrow && !isS3Scarecrow) {
+        // 【パターン②】スロット2のみカカシ
+        // 先にスロット1を確定（2倍）させ、それとスロット3を合算
+        s1 = s1 * 2;
+        s2 = s1 + s3;
+    } 
+    else if (!isS1Scarecrow && !isS2Scarecrow && isS3Scarecrow) {
+        // 【パターン③】スロット3のみカカシ
+        // スロット2を参照
+        s1 = s1 * 2;
+        s3 = s2;
+    } 
+    else if (isS1Scarecrow && isS2Scarecrow && !isS3Scarecrow) {
+        // 【パターン④】スロット1と2がカカシ
+        // まずスロット2が3を参照、その後1が2を参照して2倍
+        s2 = s3;
+        s1 = s2 * 2;
+    } 
+    else if (isS1Scarecrow && !isS2Scarecrow && isS3Scarecrow) {
+        // 【パターン⑤】スロット1と3がカカシ
+        // 1は2の2倍、3は2をそのまま参照
+        s1 = s2 * 2;
+        s3 = s2;
+    } 
+    else if (!isS1Scarecrow && isS2Scarecrow && isS3Scarecrow) {
+        // 【パターン⑥】スロット2と3がカカシ
+        // まず1を確定(2倍)させ、2がそれを参照、3がさらに2を参照
+        s1 = s1 * 2;
+        s2 = s1;
+        s3 = s2;
+    } 
+    else if (isS1Scarecrow && isS2Scarecrow && isS3Scarecrow) {
+        // 【パターン⑦】1,2,3すべてが通常のカカシ（※おまけ：すべて変動カカシの場合のデフォルト処理）
+        // ルール⑦（例示の挙動）に準拠。全員が基準値を参照し合う場合のフォールバック（仮に素点0ベース）
+        s1 = 0;
+        s2 = 0;
+        s3 = 0;
+    }
+
+    // 3. 合計点の算出（スロットスコア + 各種ボーナス）
+    const totalSlotsScore = s1 + s2 + s3;
+    const finalScore = totalSlotsScore + bonuses.colorBonus + bonuses.typeBonus;
+
+    // GitHub等でUIに反映しやすいよう、内訳もオブジェクトで返却します
+    return {
+        slot1Score: s1,
+        slot2Score: s2,
+        slot3Score: s3,
+        colorBonus: bonuses.colorBonus,
+        typeBonus: bonuses.typeBonus,
+        totalScore: finalScore
+    };
+}
+
+
+// ==========================================
+// 動作検証（テストケース）
+// ==========================================
+
+// ご提示いただいた例：金のカカシ、赤のカカシ、青のカカシ、種類ボーナス+1
+const sampleSlot1 = { color: COLORS.GOLD, type: TYPES.SCARECROW }; // 金のカカシ (素点10)
+const sampleSlot2 = { color: COLORS.RED,  type: TYPES.SCARECROW }; // 赤のカカシ (x)
+const sampleSlot3 = { color: COLORS.BLUE, type: TYPES.SCARECROW }; // 青のカカシ (x)
+const sampleBonuses = { colorBonus: 0, typeBonus: 1 };
+
+const result = calculateTotalScore(sampleSlot1, sampleSlot2, sampleSlot3, sampleBonuses);
+
+console.log("--- 計算結果 ---");
+console.log(`スロット1: ${result.slot1Score}`); // 20
+console.log(`スロット2: ${result.slot2Score}`); // 20
+console.log(`スロット3: ${result.slot3Score}`); // 20
+console.log(`色ボーナス: +${result.colorBonus}`);
+console.log(`種類ボーナス: +${result.typeBonus}`);
+console.log(`合計スコア: ${result.totalScore}`); // 61
 
 calculate();
 </script>
