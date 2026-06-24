@@ -15,7 +15,7 @@
             /* アイテム色の定義 */
             --color-red: #ff4d4d;
             --color-blue: #3399ff;
-            --color-yellow: #ffcc00;
+            --color-yellow: #b38f00; /* 視認性のため少し暗めに */
             --color-green: #2ecc71;
             --color-gold: #f1c40f;
         }
@@ -29,25 +29,45 @@
             flex-direction: column;
             align-items: center;
         }
-        .container {
-            width: 100%;
-            max-width: 600px;
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            border: 1px solid var(--border-color);
-        }
+        
+        /* タイトル */
         h1 {
             text-align: center;
             font-size: 22px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             color: #fff;
             border-bottom: 2px solid #e74c3c;
             padding-bottom: 10px;
+            width: 100%;
+            max-width: 750px;
         }
+
+        /* 全体レイアウト：左右分割（PC等）用コンテナ */
+        .main-layout {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: 100%;
+            max-width: 750px;
+            align-items: flex-start;
+        }
+
+        /* 左側：スコア表示エリア */
+        .left-panel {
+            flex: 1;
+            position: sticky;
+            top: 20px;
+        }
+
+        /* 右側：入力エリア */
+        .right-panel {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
         .level-select {
-            margin-bottom: 25px;
             padding: 15px;
             background: #1f1f2e;
             border-radius: 8px;
@@ -68,26 +88,47 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 15px;
-            margin-bottom: 15px;
             background: #1f1f2e;
         }
         .slot-title {
             font-weight: bold;
-            font-size: 17px;
+            font-size: 16px;
             margin-bottom: 10px;
+        }
+        
+        /* 入力パーツを行形式に配置 */
+        .slot-row {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 8px;
         }
-        .slot-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        select, input[type="checkbox"] {
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
         }
-        .slot-inputs select {
+        .checkbox-container input {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        /* 幅の調整 */
+        .select-color {
+            width: 85px; /* 色プルダウンの幅を狭く */
+            padding: 10px 5px;
+            font-size: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+        }
+        .select-type {
+            flex: 1; /* 種類プルダウンは広めにスペースを取る */
             padding: 10px;
             font-size: 15px;
             border-radius: 6px;
@@ -95,47 +136,40 @@
             background: #2c2c3e;
             color: #fff;
             font-weight: bold;
-            transition: background-color 0.2s, color 0.2s;
         }
         
-        /* セレクトボックスの色分け（JavaScriptでも動的に制御） */
-        select.color-red { background-color: var(--color-red) !important; color: #fff !important; }
-        select.color-blue { background-color: var(--color-blue) !important; color: #fff !important; }
-        select.color-yellow { background-color: #b38f00 !important; color: #fff !important; } /* 視認性のため少し暗めに */
+        /* セレクトボックスの色分け */
+        select.color-red { background-color: #ff4d4d !important; color: #fff !important; }
+        select.color-blue { background-color: #3399ff !important; color: #fff !important; }
+        select.color-yellow { background-color: var(--color-yellow) !important; color: #fff !important; }
         select.color-green { background-color: var(--color-green) !important; color: #fff !important; }
-        select.color-gold { background-color: var(--color-gold) !important; color: #000 !important; }
+        select.color-gold { background-color: #f1c40f !important; color: #000 !important; }
 
-        /* プルダウンの選択肢内の色 */
         option[value="red"] { background-color: #ff4d4d; color: #fff; }
         option[value="blue"] { background-color: #3399ff; color: #fff; }
         option[value="yellow"] { background-color: #ffcc00; color: #000; }
         option[value="green"] { background-color: #2ecc71; color: #fff; }
         option[value="gold"] { background-color: #f1c40f; color: #000; }
 
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 14px;
-        }
+        /* 結果ボックス */
         .result-box {
-            margin-top: 25px;
-            padding: 20px;
+            padding: 25px 15px;
             background: #11111a;
             color: #fff;
             border-radius: 8px;
             text-align: center;
             border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         .total-score {
-            font-size: 42px;
+            font-size: 48px;
             font-weight: bold;
             color: #2ecc71;
-            margin: 10px 0;
-            text-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+            margin: 15px 0;
+            text-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
         }
         .details {
-            font-size: 14px;
+            font-size: 13px;
             color: #a0a0b0;
             line-height: 1.6;
         }
@@ -143,7 +177,7 @@
         /* リンクエリア */
         .footer-links {
             width: 100%;
-            max-width: 600px;
+            max-width: 750px;
             margin-top: 30px;
             padding-top: 20px;
             border-top: 1px solid var(--border-color);
@@ -172,108 +206,127 @@
             color: #ff7675;
             font-weight: bold;
         }
+
+        /* 画面が狭い（スマホなど）時のレスポンシブ対応 */
+        @media (max-width: 600px) {
+            .main-layout {
+                flex-direction: column; /* 上下に並べる */
+            }
+            .left-panel, .right-panel {
+                width: 100%;
+            }
+            .left-panel {
+                position: static; /* 固定を解除 */
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>カジナイトアカデミー<br>鍛冶スコア計算ツール</h1>
+<h1>カジナイトアカデミー<br>鍛冶スコア計算ツール</h1>
 
-    <div class="level-select">
-        <label for="gameLevel"><strong>ゲームレベル:</strong></label>
-        <select id="gameLevel" onchange="calculate()">
-            <option value="初級">初級 (n=1)</option>
-            <option value="三級">三級 (n=2)</option>
-            <option value="二級">二級 (n=3)</option>
-            <option value="一級">一級 (n=4)</option>
-        </select>
-    </div>
-
-    <div class="slot-card">
-        <div class="slot-title">
-            <span>スロット 1</span>
-            <label class="checkbox-container">
-                <input type="checkbox" id="complete1" checked onchange="calculate()"> 完成
-            </label>
-        </div>
-        <div class="slot-inputs">
-            <select id="color1" onchange="updateSelectColor(1); calculate();" class="color-red">
-                <option value="red">赤色</option>
-                <option value="blue">青色</option>
-                <option value="yellow">黄色</option>
-                <option value="green">緑色</option>
-                <option value="gold">金色</option>
-            </select>
-            <select id="type1" onchange="calculate()">
-                <option value="kakashi">🌾 カカシ</option>
-                <option value="ring">💍 指輪</option>
-                <option value="charm">🧿 チャーム</option>
-                <option value="bracelet">📿 腕輪</option>
-                <option value="necklace">📿 首飾り</option>
-            </select>
+<div class="main-layout">
+    
+    <!-- 左側：スコア表示エリア -->
+    <div class="left-panel">
+        <div class="result-box">
+            <div>最終獲得スコア</div>
+            <div class="total-score" id="totalScore">0</div>
+            <div class="details" id="scoreDetails">
+                ベース合計: 0点 | ボーナス: 0点<br>
+                各スロット最終値 ➔ 1: 0点 | 2: 0点 | 3: 0点
+            </div>
         </div>
     </div>
 
-    <div class="slot-card">
-        <div class="slot-title">
-            <span>スロット 2</span>
-            <label class="checkbox-container">
-                <input type="checkbox" id="complete2" checked onchange="calculate()"> 完成
-            </label>
-        </div>
-        <div class="slot-inputs">
-            <select id="color2" onchange="updateSelectColor(2); calculate();" class="color-red">
-                <option value="red">赤色</option>
-                <option value="blue">青色</option>
-                <option value="yellow">黄色</option>
-                <option value="green">緑色</option>
-                <option value="gold">金色</option>
-            </select>
-            <select id="type2" onchange="calculate()">
-                <option value="kakashi">🌾 カカシ</option>
-                <option value="ring">💍 指輪</option>
-                <option value="charm">🧿 チャーム</option>
-                <option value="bracelet">📿 腕輪</option>
-                <option value="necklace">📿 首飾り</option>
+    <!-- 右側：アイテム入力エリア -->
+    <div class="right-panel">
+        <!-- ゲームレベル選択 -->
+        <div class="level-select">
+            <label for="gameLevel"><strong>ゲームレベル:</strong></label>
+            <select id="gameLevel" onchange="calculate()">
+                <option value="初級">初級</option>
+                <option value="三級">三級</option>
+                <option value="二級">二級</option>
+                <option value="一級">一級</option>
             </select>
         </div>
-    </div>
 
-    <div class="slot-card">
-        <div class="slot-title">
-            <span>スロット 3</span>
-            <label class="checkbox-container">
-                <input type="checkbox" id="complete3" checked onchange="calculate()"> 完成
-            </label>
+        <!-- スロット1 -->
+        <div class="slot-card">
+            <div class="slot-title">スロット 1</div>
+            <div class="slot-row">
+                <label class="checkbox-container" title="完成">
+                    <input type="checkbox" id="complete1" checked onchange="calculate()">
+                </label>
+                <select id="color1" onchange="updateSelectColor(1); calculate();" class="select-color color-red">
+                    <option value="red">赤色</option>
+                    <option value="blue">青色</option>
+                    <option value="yellow">黄色</option>
+                    <option value="green">緑色</option>
+                    <option value="gold">金色</option>
+                </select>
+                <select id="type1" onchange="calculate()" class="select-type">
+                    <option value="kakashi">🌾 カカシ</option>
+                    <option value="ring">💍 指輪</option>
+                    <option value="charm">🧿 チャーム</option>
+                    <option value="bracelet">💪 腕輪</option>
+                    <option value="necklace">📿 首飾り</option>
+                </select>
+            </div>
         </div>
-        <div class="slot-inputs">
-            <select id="color3" onchange="updateSelectColor(3); calculate();" class="color-red">
-                <option value="red">赤色</option>
-                <option value="blue">青色</option>
-                <option value="yellow">黄色</option>
-                <option value="green">緑色</option>
-                <option value="gold">金色</option>
-            </select>
-            <select id="type3" onchange="calculate()">
-                <option value="kakashi">🌾 カカシ</option>
-                <option value="ring">💍 指輪</option>
-                <option value="charm">🧿 チャーム</option>
-                <option value="bracelet">📿 腕輪</option>
-                <option value="necklace">📿 首飾り</option>
-            </select>
-        </div>
-    </div>
 
-    <div class="result-box">
-        <div>最終獲得スコア</div>
-        <div class="total-score" id="totalScore">0</div>
-        <div class="details" id="scoreDetails">
-            ベース合計: 0点 | ボーナス: 0点<br>
-            各スロット最終値 ➔ 1: 0点 | 2: 0点 | 3: 0点
+        <!-- スロット2 -->
+        <div class="slot-card">
+            <div class="slot-title">スロット 2</div>
+            <div class="slot-row">
+                <label class="checkbox-container" title="完成">
+                    <input type="checkbox" id="complete2" checked onchange="calculate()">
+                </label>
+                <select id="color2" onchange="updateSelectColor(2); calculate();" class="select-color color-red">
+                    <option value="red">赤色</option>
+                    <option value="blue">青色</option>
+                    <option value="yellow">黄色</option>
+                    <option value="green">緑色</option>
+                    <option value="gold">金色</option>
+                </select>
+                <select id="type2" onchange="calculate()" class="select-type">
+                    <option value="kakashi">🌾 カカシ</option>
+                    <option value="ring">💍 指輪</option>
+                    <option value="charm">🧿 チャーム</option>
+                    <option value="bracelet">💪 腕輪</option>
+                    <option value="necklace">📿 首飾り</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- スロット3 -->
+        <div class="slot-card">
+            <div class="slot-title">スロット 3</div>
+            <div class="slot-row">
+                <label class="checkbox-container" title="完成">
+                    <input type="checkbox" id="complete3" checked onchange="calculate()">
+                </label>
+                <select id="color3" onchange="updateSelectColor(3); calculate();" class="select-color color-red">
+                    <option value="red">赤色</option>
+                    <option value="blue">青色</option>
+                    <option value="yellow">黄色</option>
+                    <option value="green">緑色</option>
+                    <option value="gold">金色</option>
+                </select>
+                <select id="type3" onchange="calculate()" class="select-type">
+                    <option value="kakashi">🌾 カカシ</option>
+                    <option value="ring">💍 指輪</option>
+                    <option value="charm">🧿 チャーム</option>
+                    <option value="bracelet">💪 腕輪</option>
+                    <option value="necklace">📿 首飾り</option>
+                </select>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- フッターリンクエリア -->
 <div class="footer-links">
     <p class="support-link">
         <strong>不具合・ご要望・ご意見はこちら：</strong><br>
@@ -303,14 +356,10 @@ function getBaseScore(type) {
     return scores[type] || 0;
 }
 
-// 選択された色に応じて、プルダウン自体の背景色を切り替える関数
 function updateSelectColor(slotNum) {
     const selectEl = document.getElementById(`color${slotNum}`);
     const color = selectEl.value;
-    
-    // 一旦色クラスをリセット
     selectEl.classList.remove('color-red', 'color-blue', 'color-yellow', 'color-green', 'color-gold');
-    // 新しい色クラスを追加
     selectEl.classList.add(`color-${color}`);
 }
 
@@ -392,7 +441,6 @@ function calculate() {
     `;
 }
 
-// 初期化実行
 calculate();
 </script>
 
