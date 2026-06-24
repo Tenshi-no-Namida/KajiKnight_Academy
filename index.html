@@ -19,9 +19,9 @@
             --color-green: #2ecc71;
             --color-gold: #f1c40f;
             
-            /* スロット1の紫背景 */
-            --slot1-bg: #322647;
-            --slot1-border: #5a4480;
+            /* 【修正】スロット1の紫背景をさらに深く濃い色に調整 */
+            --slot1-bg: #1d142b;
+            --slot1-border: #4a346b;
         }
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -34,7 +34,7 @@
             align-items: center;
         }
         
-        /* 全体コンテナ（縦長ストレート配置） */
+        /* 全体コンテナ */
         .container {
             width: 100%;
             max-width: 550px;
@@ -53,7 +53,7 @@
             padding-bottom: 10px;
         }
 
-        /* 段位 ＆ ボーナス（横一列） */
+        /* 段位 ＆ ボーナス */
         .level-bonus-row {
             padding: 12px;
             background: #1f1f2e;
@@ -95,7 +95,7 @@
             margin-left: 3px;
         }
         
-        /* 中間の重要度が低い詳細情報 */
+        /* 中間の詳細情報 */
         .mid-details {
             font-size: 13px;
             color: #a0a0b0;
@@ -116,10 +116,10 @@
         .slot-card.slot1-special {
             background: var(--slot1-bg);
             border: 1px solid var(--slot1-border);
-            box-shadow: 0 0 10px rgba(90, 68, 128, 0.3);
+            box-shadow: 0 0 10px rgba(74, 52, 107, 0.4);
         }
 
-        /* スロット上部のテキスト（タイトルと個別点数を横並びに） */
+        /* スロット上部テキスト */
         .slot-header {
             display: flex;
             justify-content: space-between;
@@ -190,7 +190,7 @@
         option[value="green"] { background-color: #2ecc71; color: #fff; }
         option[value="gold"] { background-color: #f1c40f; color: #000; }
 
-        /* 最下部：獲得鍛冶スコア（一番目立たせる） */
+        /* 最下部：獲得鍛冶スコア */
         .result-box {
             padding: 25px 15px;
             background: #11111a;
@@ -281,7 +281,7 @@
     <div class="slot-card slot1-special">
         <div class="slot-header">
             <span>スロット 1</span>
-            <span class="slot-pt-display" id="slot1Pt">スロット1：0pt(s)</span>
+            <span class="slot-pt-display" id="slot1Pt">スロット1：0pts</span>
         </div>
         <div class="slot-row">
             <label class="checkbox-container" title="完成">
@@ -307,7 +307,7 @@
     <div class="slot-card">
         <div class="slot-header">
             <span>スロット 2</span>
-            <span class="slot-pt-display" id="slot2Pt">スロット2：0pt(s)</span>
+            <span class="slot-pt-display" id="slot2Pt">スロット2：0pts</span>
         </div>
         <div class="slot-row">
             <label class="checkbox-container" title="完成">
@@ -333,7 +333,7 @@
     <div class="slot-card">
         <div class="slot-header">
             <span>スロット 3</span>
-            <span class="slot-pt-display" id="slot3Pt">スロット3：0pt(s)</span>
+            <span class="slot-pt-display" id="slot3Pt">スロット3：0pts</span>
         </div>
         <div class="slot-row">
             <label class="checkbox-container" title="完成">
@@ -362,7 +362,7 @@
     </div>
     
     <div class="warning-box">
-        ※細心の注意を払っておりますが、計算結果に間違いが含まれる可能性がございます。あらかじめご了承ください。
+        ※計算結果に間違いが含まれる可能性がございます。お気づきの点がありましたら、ご連絡ください。
     </div>
 
     <div class="footer-links">
@@ -411,22 +411,26 @@ function calculate() {
     const slot2 = { color: document.getElementById('color2').value, type: document.getElementById('type2').value, isCompleted: document.getElementById('complete2').checked };
     const slot3 = { color: document.getElementById('color3').value, type: document.getElementById('type3').value, isCompleted: document.getElementById('complete3').checked };
 
-    const k1 = slot1.type === 'kakashi';
-    const k2 = slot2.type === 'kakashi';
-    const k3 = slot3.type === 'kakashi';
+    // 【修正】金色（gold）ならカカシ判定を打ち消し、通常アイテム扱いにする
+    const k1 = slot1.type === 'kakashi' && slot1.color !== 'gold';
+    const k2 = slot2.type === 'kakashi' && slot2.color !== 'gold';
+    const k3 = slot3.type === 'kakashi' && slot3.color !== 'gold';
 
-    let base1 = k1 ? 0 : (slot1.color === 'gold' ? 10 : getBaseScore(slot1.type));
-    let base2 = k2 ? 0 : (slot2.color === 'gold' ? 10 : getBaseScore(slot2.type));
-    let base3 = k3 ? 0 : (slot3.color === 'gold' ? 10 : getBaseScore(slot3.type));
+    // 【修正】金色なら最優先で素点10。それ以外なら、カカシは0点、通常アイテムは各ベーススコア。
+    let base1 = slot1.color === 'gold' ? 10 : (k1 ? 0 : getBaseScore(slot1.type));
+    let base2 = slot2.color === 'gold' ? 10 : (k2 ? 0 : getBaseScore(slot2.type));
+    let base3 = slot3.color === 'gold' ? 10 : (k3 ? 0 : getBaseScore(slot3.type));
 
+    // 【修正】スロット1の素点をこの段階で2倍（カカシの場合は2倍処理もスルー）
     let s1_doubled = k1 ? base1 : base1 * 2;
 
     let final1 = 0, final2 = 0, final3 = 0;
 
+    // カカシの伝播処理
     if (!k1 && !k2 && !k3) {
         final1 = s1_doubled; final2 = base2; final3 = base3;
     } else if (k1 && !k2 && !k3) {
-        final2 = base2; final1 = final2 * 2; final3 = s3;
+        final2 = base2; final1 = final2 * 2; final3 = base3;
     } else if (!k1 && k2 && !k3) {
         final1 = s1_doubled; final3 = base3; final2 = final1 + final3;
     } else if (!k1 && !k2 && k3) {
@@ -441,13 +445,14 @@ function calculate() {
         final1 = 0; final2 = 0; final3 = 0;
     }
 
+    // 完成スロットの集計
     let baseTotal = 0;
     let completedItems = [];
     if (slot1.isCompleted) { baseTotal += final1; completedItems.push(slot1); }
     if (slot2.isCompleted) { baseTotal += final2; completedItems.push(slot2); }
     if (slot3.isCompleted) { baseTotal += final3; completedItems.push(slot3); }
 
-    // ボーナス詳細計算（色・種類をそれぞれ抽出）
+    // ボーナス詳細計算
     let colorBonus = 0;
     let typeBonus = 0;
 
@@ -455,30 +460,20 @@ function calculate() {
         if (completedItems.length === 3) {
             const item1 = completedItems[0]; const item2 = completedItems[1]; const item3 = completedItems[2];
             
-            // 3つ完全一致
             if (item1.color === item2.color && item2.color === item3.color && item1.type === item2.type && item2.type === item3.type) {
-                colorBonus = n;
-                typeBonus = n;
+                colorBonus = n; typeBonus = n;
             } 
-            // 2つだけ完全一致がある場合（そのペアに色と種類両方の権利を消費）
             else if ((item1.color === item2.color && item1.type === item2.type) || (item2.color === item3.color && item2.type === item3.type) || (item1.color === item3.color && item1.type === item3.type)) {
-                colorBonus = n;
-                typeBonus = n;
+                colorBonus = n; typeBonus = n;
             } 
-            // 完全一致がない場合
             else {
-                if (item1.color === item2.color || item2.color === item3.color || item1.color === item3.color) {
-                    colorBonus = n;
-                }
-                if (item1.type === item2.type || item2.type === item3.type || item1.type === item3.type) {
-                    typeBonus = n;
-                }
+                if (item1.color === item2.color || item2.color === item3.color || item1.color === item3.color) colorBonus = n;
+                if (item1.type === item2.type || item2.type === item3.type || item1.type === item3.type) typeBonus = n;
             }
         } else if (completedItems.length === 2) {
             const item1 = completedItems[0]; const item2 = completedItems[1];
             if (item1.color === item2.color && item1.type === item2.type) {
-                colorBonus = n;
-                typeBonus = n;
+                colorBonus = n; typeBonus = n;
             } else {
                 if (item1.color === item2.color) colorBonus = n;
                 if (item1.type === item2.type) typeBonus = n;
@@ -488,15 +483,21 @@ function calculate() {
 
     let totalBonus = colorBonus + typeBonus;
 
-    // 各画面要素への反映
+    // 【修正】pts表記の複数形対応関数
+    function formatPt(val) {
+        return val === 1 ? `${val}pt` : `${val}pts`;
+    }
+
+    // 画面への反映
     document.getElementById('colorBonusDisp').innerText = colorBonus;
     document.getElementById('typeBonusDisp').innerText = typeBonus;
     
     document.getElementById('midDetails').innerText = `ベース合計: ${baseTotal}点 | ボーナス合計: ${totalBonus}点`;
     
-    document.getElementById('slot1Pt').innerText = `スロット1：${final1}pt(s)`;
-    document.getElementById('slot2Pt').innerText = `スロット2：${final2}pt(s)`;
-    document.getElementById('slot3Pt').innerText = `スロット3：${final3}pt(s)`;
+    // 【修正】スロット1：すでに伝播・計算を終えた「2倍後の最終スコア」を表示
+    document.getElementById('slot1Pt').innerText = `スロット1：${formatPt(final1)}`;
+    document.getElementById('slot2Pt').innerText = `スロット2：${formatPt(final2)}`;
+    document.getElementById('slot3Pt').innerText = `スロット3：${formatPt(final3)}`;
     
     document.getElementById('totalScore').innerText = baseTotal + totalBonus;
 }
