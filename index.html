@@ -209,7 +209,7 @@
             text-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
         }
 
-        /* 💡 新規：逆算検索シミュレーターのスタイル */
+        /* 🎯 逆算検索シミュレーターのスタイル */
         .search-box {
             padding: 15px;
             background: #1f1f2e;
@@ -218,11 +218,69 @@
             margin-top: 5px;
         }
         .search-box h3 {
-            margin: 0 0 10px 0;
+            margin: 0 0 5px 0;
             font-size: 16px;
             color: #3498db;
             text-align: center;
         }
+        
+        /* 📦 ストックアイテム設定エリア */
+        .stock-section {
+            background: #14141f;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #2c2c3e;
+            margin-bottom: 12px;
+        }
+        .stock-section-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #a0a0b0;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .stock-row-inputs {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+        }
+        .stock-row-inputs:last-child { margin-bottom: 0; }
+        .stock-label {
+            font-size: 11px;
+            color: #888;
+            width: 45px;
+        }
+        .select-stock-color {
+            width: 75px;
+            padding: 4px;
+            font-size: 13px;
+            border-radius: 4px;
+            background: #2c2c3e;
+            color: #fff;
+            border: 1px solid var(--border-color);
+        }
+        .select-stock-type {
+            width: 110px;
+            padding: 4px;
+            font-size: 13px;
+            border-radius: 4px;
+            background: #2c2c3e;
+            color: #fff;
+            border: 1px solid var(--border-color);
+        }
+        .stock-count {
+            width: 45px;
+            padding: 4px;
+            font-size: 13px;
+            border-radius: 4px;
+            background: #2c2c3e;
+            color: #fff;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
         .search-row {
             display: flex;
             gap: 10px;
@@ -315,7 +373,8 @@
     <div class="level-bonus-row">
         <div class="level-select-group">
             <label for="gameLevel"><strong>段位:</strong></label>
-            <select id="gameLevel" onchange="calculate()">
+            <!-- 段位変更時にストック枠の数も動的に変えるよう設定 -->
+            <select id="gameLevel" onchange="updateStockFields(); calculate();">
                 <option value="見習い">見習い</option>
                 <option value="三級">三級</option>
                 <option value="二級">二級</option>
@@ -420,19 +479,28 @@
         <div class="total-score" id="totalScore">0</div>
     </div>
 
-    <!-- 🎯 新規：目標ポイント逆算検索シミュレーター -->
+    <!-- 🎯 逆算検索シミュレーター -->
     <div class="search-box">
         <h3>🎯 目標ポイント達成シミュレーター</h3>
         <p style="font-size: 11px; color: #a0a0b0; text-align: center; margin: -5px 0 10px 0;">
-            上のスロットを「現在の盤面」として、1手以内の入れ替えでぴったり目標点になる手順を割り出します。
+            現在の盤面から、ストックアイテムを消費して1手以内で目標点になる手順を割り出します。
         </p>
+
+        <!-- 📦 持ち手（ストックアイテム）入力セクション -->
+        <div class="stock-section">
+            <div class="stock-section-title">📦 手持ちのストックアイテム（段位連動）</div>
+            <div id="stockContainer">
+                <!-- JavaScriptで動的に生成されます -->
+            </div>
+        </div>
+
         <div class="search-row">
             <label for="targetScore"><strong>目標ポイント:</strong></label>
             <input type="number" id="targetScore" value="20" min="0" class="search-input">
             <button onclick="searchPatterns()" class="search-btn">手順を割り出す</button>
         </div>
         <div id="searchResults" class="search-results">
-            数値を入力して「手順を割り出す」ボタンを押してください。
+            ストックを入力して「手順を割り出す」ボタンを押してください。
         </div>
     </div>
     
@@ -473,6 +541,9 @@ const TYPES = ['kakashi', 'ring', 'charm', 'bracelet', 'necklace'];
 const colorJa = { red: '赤色', blue: '青色', yellow: '黄色', green: '緑色', gold: '金色' };
 const typeJa = { kakashi: '🌾カカシ', ring: '💍指輪', charm: '🧿チャーム', bracelet: '💪腕輪', necklace: '📿首飾り' };
 
+// 段位に応じたストック枠数のマッピング
+const stockSlotsMap = { '見習い': 3, '三級': 4, '二級': 5, '一級': 6 };
+
 function getBaseScore(type) {
     const scores = { 'ring': 1, 'charm': 2, 'bracelet': 3, 'necklace': 5 };
     return scores[type] || 0;
@@ -485,17 +556,64 @@ function updateSelectColor(slotNum) {
     selectEl.classList.add(`color-${color}`);
 }
 
-// 共通計算コアロジック (逆算と通常計算で共有)
+// 📦 段位に応じてストックアイテムの入力枠を動的に生成する関数
+function updateStockFields() {
+    const gameLevel = document.getElementById('gameLevel').value;
+    const slotCount = stockSlotsMap[gameLevel] || 3;
+    const container = document.getElementById('stockContainer');
+    
+    // 現在の入力を一時保存
+    const savedValues = [];
+    for(let i=1; i<=6; i++) {
+        const cEl = document.getElementById(`stockColor${i}`);
+        const tEl = document.getElementById(`stockType${i}`);
+        const cntEl = document.getElementById(`stockCount${i}`);
+        if(cEl && tEl && cntEl) {
+            savedValues.push({ color: cEl.value, type: tEl.value, count: cntEl.value });
+        } else {
+            // 初期デフォルト値（使いやすいようにバラけさせる）
+            const defaultColors = ['gold', 'red', 'blue', 'yellow', 'green', 'gold'];
+            const defaultTypes = ['kakashi', 'ring', 'charm', 'bracelet', 'necklace', 'kakashi'];
+            savedValues.push({ color: defaultColors[i-1], type: defaultTypes[i-1], count: 1 });
+        }
+    }
+
+    let html = '';
+    for (let i = 1; i <= slotCount; i++) {
+        const val = savedValues[i-1];
+        html += `
+        <div class="stock-row-inputs">
+            <span class="stock-label">枠 ${i}:</span>
+            <select id="stockColor${i}" class="select-stock-color">
+                <option value="red" ${val.color==='red'?'selected':''}>赤色</option>
+                <option value="blue" ${val.color==='blue'?'selected':''}>青色</option>
+                <option value="yellow" ${val.color==='yellow'?'selected':''}>黄色</option>
+                <option value="green" ${val.color==='green'?'selected':''}>緑色</option>
+                <option value="gold" ${val.color==='gold'?'selected':''}>金色</option>
+            </select>
+            <select id="stockType${i}" class="select-stock-type">
+                <option value="kakashi" ${val.type==='kakashi'?'selected':''}>🌾 カカシ</option>
+                <option value="ring" ${val.type==='ring'?'selected':''}>💍 指輪</option>
+                <option value="charm" ${val.type==='charm'?'selected':''}>🧿 チャーム</option>
+                <option value="bracelet" ${val.type==='bracelet'?'selected':''}>💪 腕輪</option>
+                <option value="necklace" ${val.type==='necklace'?'selected':''}>📿 首飾り</option>
+            </select>
+            <input type="number" id="stockCount${i}" value="${val.count}" min="0" class="stock-count" title="所持個数">
+            <span style="font-size:12px;color:#888;">個</span>
+        </div>`;
+    }
+    container.innerHTML = html;
+}
+
+// 共通計算コアロジック
 function checkScore(s1, s2, s3, gameLevel) {
     const nMap = { '見習い': 1, '三級': 2, '二級': 3, '一級': 4 };
     const n = nMap[gameLevel] || 0;
 
-    // 【修正】未完成の場合はカカシ効果を発動しない（isCompletedが真の時のみフラグを立てる）
     const k1 = s1.isCompleted && s1.type === 'kakashi' && s1.color !== 'gold';
     const k2 = s2.isCompleted && s2.type === 'kakashi' && s2.color !== 'gold';
     const k3 = s3.isCompleted && s3.type === 'kakashi' && s3.color !== 'gold';
 
-    // 各スロットの素点（未完成なら最初から0点）
     let base1 = s1.isCompleted ? (s1.color === 'gold' ? 10 : (k1 ? 0 : getBaseScore(s1.type))) : 0;
     let base2 = s2.isCompleted ? (s2.color === 'gold' ? 10 : (k2 ? 0 : getBaseScore(s2.type))) : 0;
     let base3 = s3.isCompleted ? (s3.color === 'gold' ? 10 : (k3 ? 0 : getBaseScore(s3.type))) : 0;
@@ -589,25 +707,33 @@ function calculate() {
     document.getElementById('totalScore').innerText = res.total;
 }
 
-// 🎯 新規：1手以内で遷移可能な状態を生成する関数
-function getPossibleStates(curColor, curType) {
+// 🎯 【修正】現在のスロットから、登録された「ストックアイテム」のみを消費して移行できる状態を生成
+function getPossibleStatesWithStock(curColor, curType, availableStocks) {
     let states = [];
     
-    // パターン①：完成させる（1手以内の入れ替えルールを適用：色か種類のどちらかが一致）
-    for (let c of COLORS) {
-        for (let t of TYPES) {
-            if (c === curColor || t === curType) {
-                states.push({ color: c, type: t, isCompleted: true });
+    // パターン①：そのまま（ストックを消費しない）
+    states.push({ color: curColor, type: curType, isCompleted: true, useStockIndex: -1 }); // そのまま完成
+    states.push({ color: curColor, type: curType, isCompleted: false, useStockIndex: -1 }); // そのまま未完成
+
+    // パターン②：入れ替え（登録されているストックの候補から選ぶ）
+    availableStocks.forEach((stock, index) => {
+        if (stock.count > 0) {
+            // 制約1: 色または種類のいずれかが一致している場合のみ入れ替え可能
+            if (stock.color === curColor || stock.type === curType) {
+                states.push({
+                    color: stock.color,
+                    type: stock.type,
+                    isCompleted: true,
+                    useStockIndex: index // どのストック枠を消費するか記憶
+                });
             }
         }
-    }
-    // パターン②：未完成にする（未完成なら何に変えても0点なので、無駄な入れ替えを排除して「そのまま未完成」の1択に絞る）
-    states.push({ color: curColor, type: curType, isCompleted: false });
+    });
     
     return states;
 }
 
-// 🎯 新規：目標ポイントに一致する手順を総当たり検索する関数
+// 🎯 【修正】ストック制限およびスロット間移動禁止を考慮した総当たり検索
 function searchPatterns() {
     const target = parseInt(document.getElementById('targetScore').value);
     if (isNaN(target) || target < 0) {
@@ -616,21 +742,51 @@ function searchPatterns() {
     }
     
     const gameLevel = document.getElementById('gameLevel').value;
+    const slotCount = stockSlotsMap[gameLevel] || 3;
 
+    // 現在の画面の盤面
     const cur1 = { color: document.getElementById('color1').value, type: document.getElementById('type1').value };
     const cur2 = { color: document.getElementById('color2').value, type: document.getElementById('type2').value };
     const cur3 = { color: document.getElementById('color3').value, type: document.getElementById('type3').value };
 
-    const states1 = getPossibleStates(cur1.color, cur1.type);
-    const states2 = getPossibleStates(cur2.color, cur2.type);
-    const states3 = getPossibleStates(cur3.color, cur3.type);
+    // ユーザーが入力した現在のストック情報を取得
+    let availableStocks = [];
+    for (let i = 1; i <= slotCount; i++) {
+        availableStocks.push({
+            color: document.getElementById(`stockColor${i}`).value,
+            type: document.getElementById(`stockType${i}`).value,
+            count: parseInt(document.getElementById(`stockCount${i}`).value) || 0
+        });
+    }
+
+    // 各スロットが移行可能なパターンを割り出す
+    const states1 = getPossibleStatesWithStock(cur1.color, cur1.type, availableStocks);
+    const states2 = getPossibleStatesWithStock(cur2.color, cur2.type, availableStocks);
+    const states3 = getPossibleStatesWithStock(cur3.color, cur3.type, availableStocks);
 
     let matches = [];
 
-    // 10 × 10 × 10 = 1,000 通りを一瞬で総当たり
     for (let s1 of states1) {
         for (let s2 of states2) {
             for (let s3 of states3) {
+                
+                // 【超重要】ストックの個数制限バリデーション
+                let stockUsage = Array(slotCount).fill(0);
+                if (s1.useStockIndex !== -1) stockUsage[s1.useStockIndex]++;
+                if (s2.useStockIndex !== -1) stockUsage[s2.useStockIndex]++;
+                if (s3.useStockIndex !== -1) stockUsage[s3.useStockIndex]++;
+
+                // いずれかのストック枠の消費数が、所持数を超えていたらこの組み合わせは不可能
+                let isInvalidUsage = false;
+                for(let i=0; i<slotCount; i++) {
+                    if (stockUsage[i] > availableStocks[i].count) {
+                        isInvalidUsage = true;
+                        break;
+                    }
+                }
+                if (isInvalidUsage) continue; // 不可能な手順としてスキップ
+
+                // スコア計算
                 const res = checkScore(s1, s2, s3, gameLevel);
                 if (res.total === target) {
                     matches.push({ s1, s2, s3, res });
@@ -641,36 +797,38 @@ function searchPatterns() {
 
     const resDiv = document.getElementById('searchResults');
     if (matches.length === 0) {
-        resDiv.innerHTML = `<span style="color: #e74c3c;">現在の盤面から1手以内の入れ替えで、ぴったり ${target}pts になる組み合わせは見つかりませんでした。</span>`;
+        resDiv.innerHTML = `<span style="color: #e74c3c;">現在の盤面とストックの制限内では、ぴったり ${target}pts になる組み合わせは見つかりませんでした。</span>`;
         return;
     }
 
     // アクションテキストを生成する補助関数
-    function getActionText(cur, next) {
+    function getActionText(cur, next, stockIdx) {
         let text = "";
-        if (cur.color === next.color && cur.type === next.type) {
+        if (stockIdx === -1) {
             text += `<span class="tag-keep">[そのまま]</span> ${colorJa[next.color]}${typeJa[next.type]}`;
         } else {
-            text += `<span class="tag-change">[入れ替え]</span> ${colorJa[next.color]}${typeJa[next.type]}`;
+            text += `<span class="tag-change">[ストック枠${stockIdx + 1}を使用]</span> ${colorJa[next.color]}${typeJa[next.type]}`;
         }
         text += next.isCompleted ? ` <span class="tag-comp">(完成)</span>` : ` <span class="tag-uncomp">(未完成)</span>`;
         return text;
     }
 
-    // 表示用にHTMLを組み立て
-    let html = `<div style="font-weight: bold; color: #2ecc71; margin-bottom: 8px;">🎉 ${matches.length} 件の達成パターンが見つかりました：</div>`;
+    // 表示 HTML 組み立て
+    let html = `<div style="font-weight: bold; color: #2ecc71; margin-bottom: 8px;">🎉 ${matches.length} 件の達成手順が見つかりました：</div>`;
     matches.forEach((m, idx) => {
         html += `<div class="result-item">`;
         html += `<strong>パターン ${idx + 1}:</strong><br>`;
-        html += `・スロット1: ${getActionText(cur1, m.s1)} ➔ ${m.res.final1}pts<br>`;
-        html += `・スロット2: ${getActionText(cur2, m.s2)} ➔ ${m.res.final2}pts<br>`;
-        html += `・スロット3: ${getActionText(cur3, m.s3)} ➔ ${m.res.final3}pts<br>`;
+        html += `・スロット1: ${getActionText(cur1, m.s1, m.s1.useStockIndex)} ➔ ${m.res.final1}pts<br>`;
+        html += `・スロット2: ${getActionText(cur2, m.s2, m.s2.useStockIndex)} ➔ ${m.res.final2}pts<br>`;
+        html += `・スロット3: ${getActionText(cur3, m.s3, m.s3.useStockIndex)} ➔ ${m.res.final3}pts<br>`;
         html += `<span style="font-size: 11px; color: #a0a0b0;">(ベース内訳: ${m.res.baseTotal} | 色ボ: ${m.res.colorBonus} | 種類ボ: ${m.res.typeBonus})</span>`;
         html += `</div>`;
     });
     resDiv.innerHTML = html;
 }
 
+// 初期化実行
+updateStockFields();
 calculate();
 </script>
 
