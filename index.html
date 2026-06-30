@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>カジナイトアカデミー 鍛冶スコア計算ツール</title>
+    <title>カジナイトアカデミー 鍛冶スコア計算＆逆算ツール</title>
     <style>
         :root {
             --bg-color: #1a1a24;
@@ -208,6 +208,70 @@
             margin: 10px 0 0 0;
             text-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
         }
+
+        /* 💡 新規：逆算検索シミュレーターのスタイル */
+        .search-box {
+            padding: 15px;
+            background: #1f1f2e;
+            border-radius: 8px;
+            border: 1px solid #3498db;
+            margin-top: 5px;
+        }
+        .search-box h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            color: #3498db;
+            text-align: center;
+        }
+        .search-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .search-input {
+            width: 80px;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #2c2c3e;
+            color: #fff;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .search-btn {
+            padding: 8px 15px;
+            border-radius: 6px;
+            border: none;
+            background: #3498db;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .search-btn:hover { background: #2980b9; }
+        .search-results {
+            text-align: left;
+            max-height: 250px;
+            overflow-y: auto;
+            background: #11111a;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.6;
+            border: 1px solid var(--border-color);
+        }
+        .result-item {
+            padding: 8px;
+            border-bottom: 1px solid #2a2a3a;
+        }
+        .result-item:last-child { border-bottom: none; }
+        .tag-change { color: #e67e22; font-weight: bold; }
+        .tag-keep { color: #95a5a6; font-weight: bold; }
+        .tag-comp { color: #2ecc71; font-weight: bold; }
+        .tag-uncomp { color: #e74c3c; font-weight: bold; }
         
         /* 注意書き文言 */
         .warning-box {
@@ -229,17 +293,9 @@
             line-height: 1.8;
             width: 100%;
         }
-        .footer-links p {
-            margin: 8px 0;
-        }
-        .footer-links a {
-            color: #3498db;
-            text-decoration: none;
-            word-break: break-all;
-        }
-        .footer-links a:hover {
-            text-decoration: underline;
-        }
+        .footer-links p { margin: 8px 0; }
+        .footer-links a { color: #3498db; text-decoration: none; word-break: break-all; }
+        .footer-links a:hover { text-decoration: underline; }
         .support-link {
             background: #2c3e50;
             padding: 10px;
@@ -247,17 +303,15 @@
             margin-bottom: 15px !important;
             border-left: 4px solid #e74c3c;
         }
-        .support-link a {
-            color: #ff7675;
-            font-weight: bold;
-        }
+        .support-link a { color: #ff7675; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>カジナイトアカデミー<br>鍛冶スコア計算ツール</h1>
+    <h1>カジナイトアカデミー<br>鍛冶スコア計算＆逆算ツール</h1>
 
+    <!-- 段位 ＆ ボーナス表示 -->
     <div class="level-bonus-row">
         <div class="level-select-group">
             <label for="gameLevel"><strong>段位:</strong></label>
@@ -274,13 +328,15 @@
         </div>
     </div>
 
+    <!-- 中間の詳細情報 -->
     <div class="mid-details" id="midDetails">
         ベース合計: 0点 | ボーナス合計: 0点
     </div>
 
+    <!-- スロット1（濃い紫背景） -->
     <div class="slot-card slot1-special">
         <div class="slot-header">
-            <span>スロット 1</span>
+            <span>スロット 1 (現在の状態)</span>
             <span class="slot-pt-display" id="slot1Pt">スロット1：0pts</span>
         </div>
         <div class="slot-row">
@@ -304,9 +360,10 @@
         </div>
     </div>
 
+    <!-- スロット2 -->
     <div class="slot-card">
         <div class="slot-header">
-            <span>スロット 2</span>
+            <span>スロット 2 (現在の状態)</span>
             <span class="slot-pt-display" id="slot2Pt">スロット2：0pts</span>
         </div>
         <div class="slot-row">
@@ -330,9 +387,10 @@
         </div>
     </div>
 
+    <!-- スロット3 -->
     <div class="slot-card">
         <div class="slot-header">
-            <span>スロット 3</span>
+            <span>スロット 3 (現在の状態)</span>
             <span class="slot-pt-display" id="slot3Pt">スロット3：0pts</span>
         </div>
         <div class="slot-row">
@@ -356,19 +414,38 @@
         </div>
     </div>
 
+    <!-- 最下部：獲得鍛冶スコア -->
     <div class="result-box">
-        <div>獲得鍛冶スコア</div>
+        <div>獲得鍛冶スコア (現在の状態の合計値)</div>
         <div class="total-score" id="totalScore">0</div>
     </div>
+
+    <!-- 🎯 新規：目標ポイント逆算検索シミュレーター -->
+    <div class="search-box">
+        <h3>🎯 目標ポイント達成シミュレーター</h3>
+        <p style="font-size: 11px; color: #a0a0b0; text-align: center; margin: -5px 0 10px 0;">
+            上のスロットを「現在の盤面」として、1手以内の入れ替えでぴったり目標点になる手順を割り出します。
+        </p>
+        <div class="search-row">
+            <label for="targetScore"><strong>目標ポイント:</strong></label>
+            <input type="number" id="targetScore" value="20" min="0" class="search-input">
+            <button onclick="searchPatterns()" class="search-btn">手順を割り出す</button>
+        </div>
+        <div id="searchResults" class="search-results">
+            数値を入力して「手順を割り出す」ボタンを押してください。
+        </div>
+    </div>
     
+    <!-- 注意書きボックス -->
     <div class="warning-box">
-        ※計算結果に間違いが含まれる可能性があります。あらかじめご了承ください。
+        ※当ツールは有志による計算シミュレーターです。細心の注意を払ってロジックを実装しておりますが、計算結果に間違いが含まれる可能性があります。あらかじめご了承ください。
     </div>
 
+    <!-- フッターリンクエリア -->
     <div class="footer-links">
         <p class="support-link">
             <strong>不具合・ご要望・ご意見はこちら：</strong><br>
-            <a href="https://pawafuru-connect.konami.net/post/details/df461c3628c844168dede6338a939e77th4m7plglrk0ne" target="_blank" rel="noopener noreferrer">https://pawafuru-connect.konami.net/post/details/df461c3628c844168dede6338a939e77th4m7plglrk0ne</a>
+            <a href="https://x.com/cgV9GpPq6v69083" target="_blank" rel="noopener noreferrer">https://x.com/cgV9GpPq6v69083</a>
         </p>
         <p>
             <strong>パワフルコネクト for パワプロアドベンチャーズ（パワアド）：</strong><br>
@@ -390,6 +467,12 @@
 </div>
 
 <script>
+const COLORS = ['red', 'blue', 'yellow', 'green', 'gold'];
+const TYPES = ['kakashi', 'ring', 'charm', 'bracelet', 'necklace'];
+
+const colorJa = { red: '赤色', blue: '青色', yellow: '黄色', green: '緑色', gold: '金色' };
+const typeJa = { kakashi: '🌾カカシ', ring: '💍指輪', charm: '🧿チャーム', bracelet: '💪腕輪', necklace: '📿首飾り' };
+
 function getBaseScore(type) {
     const scores = { 'ring': 1, 'charm': 2, 'bracelet': 3, 'necklace': 5 };
     return scores[type] || 0;
@@ -402,73 +485,55 @@ function updateSelectColor(slotNum) {
     selectEl.classList.add(`color-${color}`);
 }
 
-function calculate() {
-    const gameLevel = document.getElementById('gameLevel').value;
+// 共通計算コアロジック (逆算と通常計算で共有)
+function checkScore(s1, s2, s3, gameLevel) {
     const nMap = { '見習い': 1, '三級': 2, '二級': 3, '一級': 4 };
     const n = nMap[gameLevel] || 0;
 
-    const slot1 = { color: document.getElementById('color1').value, type: document.getElementById('type1').value, isCompleted: document.getElementById('complete1').checked };
-    const slot2 = { color: document.getElementById('color2').value, type: document.getElementById('type2').value, isCompleted: document.getElementById('complete2').checked };
-    const slot3 = { color: document.getElementById('color3').value, type: document.getElementById('type3').value, isCompleted: document.getElementById('complete3').checked };
+    // 【修正】未完成の場合はカカシ効果を発動しない（isCompletedが真の時のみフラグを立てる）
+    const k1 = s1.isCompleted && s1.type === 'kakashi' && s1.color !== 'gold';
+    const k2 = s2.isCompleted && s2.type === 'kakashi' && s2.color !== 'gold';
+    const k3 = s3.isCompleted && s3.type === 'kakashi' && s3.color !== 'gold';
 
-    // 金色（gold）ならカカシ判定を打ち消し、通常アイテム（10点）扱いにする
-    const k1 = slot1.type === 'kakashi' && slot1.color !== 'gold';
-    const k2 = slot2.type === 'kakashi' && slot2.color !== 'gold';
-    const k3 = slot3.type === 'kakashi' && slot3.color !== 'gold';
+    // 各スロットの素点（未完成なら最初から0点）
+    let base1 = s1.isCompleted ? (s1.color === 'gold' ? 10 : (k1 ? 0 : getBaseScore(s1.type))) : 0;
+    let base2 = s2.isCompleted ? (s2.color === 'gold' ? 10 : (k2 ? 0 : getBaseScore(s2.type))) : 0;
+    let base3 = s3.isCompleted ? (s3.color === 'gold' ? 10 : (k3 ? 0 : getBaseScore(s3.type))) : 0;
 
-    // 金色なら最優先で素点10。それ以外なら、金でないカカシは0点、通常アイテムは各ベーススコア。
-    let base1 = slot1.color === 'gold' ? 10 : (k1 ? 0 : getBaseScore(slot1.type));
-    let base2 = slot2.color === 'gold' ? 10 : (k2 ? 0 : getBaseScore(slot2.type));
-    let base3 = slot3.color === 'gold' ? 10 : (k3 ? 0 : getBaseScore(slot3.type));
-
-    // スロット1が金でないカカシ以外なら、その時点でスコアを2倍にする（金色の場合はここで20点になる）
     let s1_doubled = k1 ? base1 : base1 * 2;
 
     let final1 = 0, final2 = 0, final3 = 0;
 
-    // 隣が「金でないカカシ」なら0が加算される（引き継がれる）という大原則を忠実に再現
     if (!k1 && !k2 && !k3) {
         final1 = s1_doubled; final2 = base2; final3 = base3;
     } else if (k1 && !k2 && !k3) {
-        // ①スロット1のみカカシ：隣のスロット2を参照して2倍
         final2 = base2; final1 = final2 * 2; final3 = base3;
     } else if (!k1 && k2 && !k3) {
-        // ②スロット2のみカカシ：隣の1（2倍済み）と3を合算
         final1 = s1_doubled; final3 = base3; final2 = final1 + final3;
     } else if (!k1 && !k2 && k3) {
-        // ③スロット3のみカカシ：隣のスロット2を参照
         final1 = s1_doubled; final2 = base2; final3 = final2;
     } else if (k1 && k2 && !k3) {
-        // ④スロット1と2がカカシ：2は隣の3を参照。1は隣の2（3を参照済み）を参照して2倍
         final3 = base3; final2 = final3; final1 = final2 * 2;
     } else if (k1 && !k2 && k3) {
-        // ⑤スロット1と3がカカシ：1は隣の2を参照して2倍。3は隣の2を参照
         final2 = base2; final1 = final2 * 2; final3 = final2;
     } else if (!k1 && k2 && k3) {
-        // ⑥【修正】スロット2と3がカカシ：2は隣の1（2倍済み）を参照。3は隣の2（1を参照済み）を参照
-        final1 = s1_doubled; 
-        final2 = final1; // スロット3はカカシなので2への加算は0。よって1の値をそのまま引き継ぐ
-        final3 = final2; // スロット3は2の値を引き継ぐ
+        final1 = s1_doubled; final2 = final1; final3 = final2;
     } else {
-        // すべてカカシ
         final1 = 0; final2 = 0; final3 = 0;
     }
 
-    // 完成スロットの集計
     let baseTotal = 0;
     let completedItems = [];
-    if (slot1.isCompleted) { baseTotal += final1; completedItems.push(slot1); }
-    if (slot2.isCompleted) { baseTotal += final2; completedItems.push(slot2); }
-    if (slot3.isCompleted) { baseTotal += final3; completedItems.push(slot3); }
+    if (s1.isCompleted) { baseTotal += final1; completedItems.push(s1); }
+    if (s2.isCompleted) { baseTotal += final2; completedItems.push(s2); }
+    if (s3.isCompleted) { baseTotal += final3; completedItems.push(s3); }
 
-    // ボーナス詳細計算
     let colorBonus = 0;
     let typeBonus = 0;
 
     if (completedItems.length >= 2) {
         if (completedItems.length === 3) {
             const item1 = completedItems[0]; const item2 = completedItems[1]; const item3 = completedItems[2];
-            
             if (item1.color === item2.color && item2.color === item3.color && item1.type === item2.type && item2.type === item3.type) {
                 colorBonus = n; typeBonus = n;
             } 
@@ -490,24 +555,120 @@ function calculate() {
         }
     }
 
-    let totalBonus = colorBonus + typeBonus;
+    return {
+        total: baseTotal + colorBonus + typeBonus,
+        baseTotal: baseTotal,
+        colorBonus: colorBonus,
+        typeBonus: typeBonus,
+        final1: final1,
+        final2: final2,
+        final3: final3
+    };
+}
 
-    // pts表記の複数形対応関数
+function calculate() {
+    const gameLevel = document.getElementById('gameLevel').value;
+    const slot1 = { color: document.getElementById('color1').value, type: document.getElementById('type1').value, isCompleted: document.getElementById('complete1').checked };
+    const slot2 = { color: document.getElementById('color2').value, type: document.getElementById('type2').value, isCompleted: document.getElementById('complete2').checked };
+    const slot3 = { color: document.getElementById('color3').value, type: document.getElementById('type3').value, isCompleted: document.getElementById('complete3').checked };
+
+    const res = checkScore(slot1, slot2, slot3, gameLevel);
+
     function formatPt(val) {
         return val === 1 ? `${val}pt` : `${val}pts`;
     }
 
-    // 画面への反映
-    document.getElementById('colorBonusDisp').innerText = colorBonus;
-    document.getElementById('typeBonusDisp').innerText = typeBonus;
+    document.getElementById('colorBonusDisp').innerText = res.colorBonus;
+    document.getElementById('typeBonusDisp').innerText = res.typeBonus;
+    document.getElementById('midDetails').innerText = `ベース合計: ${res.baseTotal}点 | ボーナス合計: ${(res.colorBonus + res.typeBonus)}点`;
     
-    document.getElementById('midDetails').innerText = `ベース合計: ${baseTotal}点 | ボーナス合計: ${totalBonus}点`;
+    document.getElementById('slot1Pt').innerText = `スロット1：${formatPt(res.final1)}`;
+    document.getElementById('slot2Pt').innerText = `スロット2：${formatPt(res.final2)}`;
+    document.getElementById('slot3Pt').innerText = `スロット3：${formatPt(res.final3)}`;
     
-    document.getElementById('slot1Pt').innerText = `スロット1：${formatPt(final1)}`;
-    document.getElementById('slot2Pt').innerText = `スロット2：${formatPt(final2)}`;
-    document.getElementById('slot3Pt').innerText = `スロット3：${formatPt(final3)}`;
+    document.getElementById('totalScore').innerText = res.total;
+}
+
+// 🎯 新規：1手以内で遷移可能な状態を生成する関数
+function getPossibleStates(curColor, curType) {
+    let states = [];
     
-    document.getElementById('totalScore').innerText = baseTotal + totalBonus;
+    // パターン①：完成させる（1手以内の入れ替えルールを適用：色か種類のどちらかが一致）
+    for (let c of COLORS) {
+        for (let t of TYPES) {
+            if (c === curColor || t === curType) {
+                states.push({ color: c, type: t, isCompleted: true });
+            }
+        }
+    }
+    // パターン②：未完成にする（未完成なら何に変えても0点なので、無駄な入れ替えを排除して「そのまま未完成」の1択に絞る）
+    states.push({ color: curColor, type: curType, isCompleted: false });
+    
+    return states;
+}
+
+// 🎯 新規：目標ポイントに一致する手順を総当たり検索する関数
+function searchPatterns() {
+    const target = parseInt(document.getElementById('targetScore').value);
+    if (isNaN(target) || target < 0) {
+        document.getElementById('searchResults').innerHTML = `<span style="color: #e74c3c;">正しい目標数値を入力してください。</span>`;
+        return;
+    }
+    
+    const gameLevel = document.getElementById('gameLevel').value;
+
+    const cur1 = { color: document.getElementById('color1').value, type: document.getElementById('type1').value };
+    const cur2 = { color: document.getElementById('color2').value, type: document.getElementById('type2').value };
+    const cur3 = { color: document.getElementById('color3').value, type: document.getElementById('type3').value };
+
+    const states1 = getPossibleStates(cur1.color, cur1.type);
+    const states2 = getPossibleStates(cur2.color, cur2.type);
+    const states3 = getPossibleStates(cur3.color, cur3.type);
+
+    let matches = [];
+
+    // 10 × 10 × 10 = 1,000 通りを一瞬で総当たり
+    for (let s1 of states1) {
+        for (let s2 of states2) {
+            for (let s3 of states3) {
+                const res = checkScore(s1, s2, s3, gameLevel);
+                if (res.total === target) {
+                    matches.push({ s1, s2, s3, res });
+                }
+            }
+        }
+    }
+
+    const resDiv = document.getElementById('searchResults');
+    if (matches.length === 0) {
+        resDiv.innerHTML = `<span style="color: #e74c3c;">現在の盤面から1手以内の入れ替えで、ぴったり ${target}pts になる組み合わせは見つかりませんでした。</span>`;
+        return;
+    }
+
+    // アクションテキストを生成する補助関数
+    function getActionText(cur, next) {
+        let text = "";
+        if (cur.color === next.color && cur.type === next.type) {
+            text += `<span class="tag-keep">[そのまま]</span> ${colorJa[next.color]}${typeJa[next.type]}`;
+        } else {
+            text += `<span class="tag-change">[入れ替え]</span> ${colorJa[next.color]}${typeJa[next.type]}`;
+        }
+        text += next.isCompleted ? ` <span class="tag-comp">(完成)</span>` : ` <span class="tag-uncomp">(未完成)</span>`;
+        return text;
+    }
+
+    // 表示用にHTMLを組み立て
+    let html = `<div style="font-weight: bold; color: #2ecc71; margin-bottom: 8px;">🎉 ${matches.length} 件の達成パターンが見つかりました：</div>`;
+    matches.forEach((m, idx) => {
+        html += `<div class="result-item">`;
+        html += `<strong>パターン ${idx + 1}:</strong><br>`;
+        html += `・スロット1: ${getActionText(cur1, m.s1)} ➔ ${m.res.final1}pts<br>`;
+        html += `・スロット2: ${getActionText(cur2, m.s2)} ➔ ${m.res.final2}pts<br>`;
+        html += `・スロット3: ${getActionText(cur3, m.s3)} ➔ ${m.res.final3}pts<br>`;
+        html += `<span style="font-size: 11px; color: #a0a0b0;">(ベース内訳: ${m.res.baseTotal} | 色ボ: ${m.res.colorBonus} | 種類ボ: ${m.res.typeBonus})</span>`;
+        html += `</div>`;
+    });
+    resDiv.innerHTML = html;
 }
 
 calculate();
