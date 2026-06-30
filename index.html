@@ -15,7 +15,7 @@
             /* アイテム色の定義 */
             --color-red: #ff4d4d;
             --color-blue: #3399ff;
-            --color-yellow: #b38f00;
+            --color-yellow: #f39c12;
             --color-green: #2ecc71;
             --color-gold: #f1c40f;
             
@@ -224,7 +224,7 @@
             text-align: center;
         }
         
-        /* 📦 ストックアイテム設定エリア */
+        /* 📦 クロス表（マトリクス）形式のスタイル */
         .stock-section {
             background: #14141f;
             padding: 12px;
@@ -236,50 +236,94 @@
             font-size: 13px;
             font-weight: bold;
             color: #a0a0b0;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-align: center;
         }
-        .stock-row-inputs {
+        .stock-status-bar {
             display: flex;
-            gap: 6px;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            background: #191924;
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .clear-btn {
+            padding: 2px 8px;
+            font-size: 11px;
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .clear-btn:hover { background: #c0392b; }
+
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            table-layout: fixed;
+        }
+        .stock-table th, .stock-table td {
+            border: 1px solid var(--border-color);
+            padding: 5px 2px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .stock-table th {
+            background: #2c2c3e;
+            color: #fff;
+            font-weight: bold;
+        }
+        .stock-table th:first-child, .stock-table td:first-child {
+            width: 45px;
+            font-weight: bold;
+        }
+        .row-hdr { background: #191924; }
+        
+        /* 表の中のボタンコントロール */
+        .stock-ctrl {
+            display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 6px;
+            gap: 3px;
         }
-        .stock-row-inputs:last-child { margin-bottom: 0; }
-        .stock-label {
-            font-size: 11px;
-            color: #888;
-            width: 45px;
-        }
-        .select-stock-color {
-            width: 75px;
-            padding: 4px;
-            font-size: 13px;
-            border-radius: 4px;
-            background: #2c2c3e;
+        .stock-ctrl button {
+            width: 18px;
+            height: 18px;
+            padding: 0;
+            font-size: 12px;
+            font-weight: bold;
+            background: #3a3a52;
             color: #fff;
-            border: 1px solid var(--border-color);
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .select-stock-type {
-            width: 110px;
-            padding: 4px;
-            font-size: 13px;
-            border-radius: 4px;
-            background: #2c2c3e;
+        .stock-ctrl button:hover { background: #4e4e6e; }
+        .stock-ctrl span {
+            min-width: 10px;
+            font-weight: bold;
+            font-size: 12px;
             color: #fff;
-            border: 1px solid var(--border-color);
         }
-        .stock-count {
-            width: 45px;
-            padding: 4px;
-            font-size: 13px;
-            border-radius: 4px;
-            background: #2c2c3e;
-            color: #fff;
-            border: 1px solid var(--border-color);
-            text-align: center;
+        .stock-ctrl span.has-count {
+            color: #2ecc71;
+            text-shadow: 0 0 5px rgba(46,204,113,0.5);
         }
+
+        /* 文字色クラス */
+        .text-red { color: var(--color-red); }
+        .text-blue { color: var(--color-blue); }
+        .text-yellow { color: var(--color-yellow); }
+        .text-green { color: var(--color-green); }
+        .text-gold { color: var(--color-gold); }
 
         .search-row {
             display: flex;
@@ -369,12 +413,10 @@
 <div class="container">
     <h1>カジナイトアカデミー<br>鍛冶スコア計算＆逆算ツール</h1>
 
-    <!-- 段位 ＆ ボーナス表示 -->
     <div class="level-bonus-row">
         <div class="level-select-group">
             <label for="gameLevel"><strong>段位:</strong></label>
-            <!-- 段位変更時にストック枠の数も動的に変えるよう設定 -->
-            <select id="gameLevel" onchange="updateStockFields(); calculate();">
+            <select id="gameLevel" onchange="onLevelChange();">
                 <option value="見習い">見習い</option>
                 <option value="三級">三級</option>
                 <option value="二級">二級</option>
@@ -387,12 +429,10 @@
         </div>
     </div>
 
-    <!-- 中間の詳細情報 -->
     <div class="mid-details" id="midDetails">
         ベース合計: 0点 | ボーナス合計: 0点
     </div>
 
-    <!-- スロット1（濃い紫背景） -->
     <div class="slot-card slot1-special">
         <div class="slot-header">
             <span>スロット 1 (現在の状態)</span>
@@ -419,7 +459,6 @@
         </div>
     </div>
 
-    <!-- スロット2 -->
     <div class="slot-card">
         <div class="slot-header">
             <span>スロット 2 (現在の状態)</span>
@@ -446,7 +485,6 @@
         </div>
     </div>
 
-    <!-- スロット3 -->
     <div class="slot-card">
         <div class="slot-header">
             <span>スロット 3 (現在の状態)</span>
@@ -473,25 +511,79 @@
         </div>
     </div>
 
-    <!-- 最下部：獲得鍛冶スコア -->
     <div class="result-box">
         <div>獲得鍛冶スコア (現在の状態の合計値)</div>
         <div class="total-score" id="totalScore">0</div>
     </div>
 
-    <!-- 🎯 逆算検索シミュレーター -->
     <div class="search-box">
         <h3>🎯 目標ポイント達成シミュレーター</h3>
         <p style="font-size: 11px; color: #a0a0b0; text-align: center; margin: -5px 0 10px 0;">
-            現在の盤面から、ストックアイテムを消費して1手以内で目標点になる手順を割り出します。
+            現在の盤面から、手持ちのストック表の範囲内で1手以内に目標点にする手順を割り出します。
         </p>
 
-        <!-- 📦 持ち手（ストックアイテム）入力セクション -->
         <div class="stock-section">
-            <div class="stock-section-title">📦 手持ちのストックアイテム（段位連動）</div>
-            <div id="stockContainer">
-                <!-- JavaScriptで動的に生成されます -->
+            <div class="stock-section-title">📦 手持ちのストックアイテム（直接タップで増減）</div>
+            
+            <div class="stock-status-bar">
+                <span>登録数: <strong id="totalStockDisp">0</strong> / <span id="maxStockDisp">3</span> 枠</span>
+                <button onclick="clearStock()" class="clear-btn">全クリア</button>
             </div>
+
+            <table class="stock-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>🌾カカシ</th>
+                        <th>💍指輪</th>
+                        <th>🧿チャム</th>
+                        <th>💪腕輪</th>
+                        <th>📿首飾</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="row-hdr text-red">赤色</td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('red', 'kakashi', -1)">-</button><span id="stock-red-kakashi">0</span><button onclick="adjustStock('red', 'kakashi', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('red', 'ring', -1)">-</button><span id="stock-red-ring">0</span><button onclick="adjustStock('red', 'ring', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('red', 'charm', -1)">-</button><span id="stock-red-charm">0</span><button onclick="adjustStock('red', 'charm', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('red', 'bracelet', -1)">-</button><span id="stock-red-bracelet">0</span><button onclick="adjustStock('red', 'bracelet', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('red', 'necklace', -1)">-</button><span id="stock-red-necklace">0</span><button onclick="adjustStock('red', 'necklace', 1)">+</button></div></td>
+                    </tr>
+                    <tr>
+                        <td class="row-hdr text-blue">青色</td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('blue', 'kakashi', -1)">-</button><span id="stock-blue-kakashi">0</span><button onclick="adjustStock('blue', 'kakashi', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('blue', 'ring', -1)">-</button><span id="stock-blue-ring">0</span><button onclick="adjustStock('blue', 'ring', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('blue', 'charm', -1)">-</button><span id="stock-blue-charm">0</span><button onclick="adjustStock('blue', 'charm', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('blue', 'bracelet', -1)">-</button><span id="stock-blue-bracelet">0</span><button onclick="adjustStock('blue', 'bracelet', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('blue', 'necklace', -1)">-</button><span id="stock-blue-necklace">0</span><button onclick="adjustStock('blue', 'necklace', 1)">+</button></div></td>
+                    </tr>
+                    <tr>
+                        <td class="row-hdr text-yellow">黄色</td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('yellow', 'kakashi', -1)">-</button><span id="stock-yellow-kakashi">0</span><button onclick="adjustStock('yellow', 'kakashi', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('yellow', 'ring', -1)">-</button><span id="stock-yellow-ring">0</span><button onclick="adjustStock('yellow', 'ring', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('yellow', 'charm', -1)">-</button><span id="stock-yellow-charm">0</span><button onclick="adjustStock('yellow', 'charm', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('yellow', 'bracelet', -1)">-</button><span id="stock-yellow-bracelet">0</span><button onclick="adjustStock('yellow', 'bracelet', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('yellow', 'necklace', -1)">-</button><span id="stock-yellow-necklace">0</span><button onclick="adjustStock('yellow', 'necklace', 1)">+</button></div></td>
+                    </tr>
+                    <tr>
+                        <td class="row-hdr text-green">緑色</td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('green', 'kakashi', -1)">-</button><span id="stock-green-kakashi">0</span><button onclick="adjustStock('green', 'kakashi', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('green', 'ring', -1)">-</button><span id="stock-green-ring">0</span><button onclick="adjustStock('green', 'ring', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('green', 'charm', -1)">-</button><span id="stock-green-charm">0</span><button onclick="adjustStock('green', 'charm', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('green', 'bracelet', -1)">-</button><span id="stock-green-bracelet">0</span><button onclick="adjustStock('green', 'bracelet', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('green', 'necklace', -1)">-</button><span id="stock-green-necklace">0</span><button onclick="adjustStock('green', 'necklace', 1)">+</button></div></td>
+                    </tr>
+                    <tr>
+                        <td class="row-hdr text-gold">金色</td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('gold', 'kakashi', -1)">-</button><span id="stock-gold-kakashi">0</span><button onclick="adjustStock('gold', 'kakashi', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('gold', 'ring', -1)">-</button><span id="stock-gold-ring">0</span><button onclick="adjustStock('gold', 'ring', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('gold', 'charm', -1)">-</button><span id="stock-gold-charm">0</span><button onclick="adjustStock('gold', 'charm', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('gold', 'bracelet', -1)">-</button><span id="stock-gold-bracelet">0</span><button onclick="adjustStock('gold', 'bracelet', 1)">+</button></div></td>
+                        <td><div class="stock-ctrl"><button onclick="adjustStock('gold', 'necklace', -1)">-</button><span id="stock-gold-necklace">0</span><button onclick="adjustStock('gold', 'necklace', 1)">+</button></div></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="search-row">
@@ -504,12 +596,10 @@
         </div>
     </div>
     
-    <!-- 注意書きボックス -->
     <div class="warning-box">
         ※当ツールは有志による計算シミュレーターです。細心の注意を払ってロジックを実装しておりますが、計算結果に間違いが含まれる可能性があります。あらかじめご了承ください。
     </div>
 
-    <!-- フッターリンクエリア -->
     <div class="footer-links">
         <p class="support-link">
             <strong>不具合・ご要望・ご意見はこちら：</strong><br>
@@ -541,8 +631,17 @@ const TYPES = ['kakashi', 'ring', 'charm', 'bracelet', 'necklace'];
 const colorJa = { red: '赤色', blue: '青色', yellow: '黄色', green: '緑色', gold: '金色' };
 const typeJa = { kakashi: '🌾カカシ', ring: '💍指輪', charm: '🧿チャーム', bracelet: '💪腕輪', necklace: '📿首飾り' };
 
-// 段位に応じたストック枠数のマッピング
+// 段位に応じたストック最大枠数の定義
 const stockSlotsMap = { '見習い': 3, '三級': 4, '二級': 5, '一級': 6 };
+
+// 📦 ストック管理データ構造
+let stockMatrix = {
+    red: { kakashi: 0, ring: 0, charm: 0, bracelet: 0, necklace: 0 },
+    blue: { kakashi: 0, ring: 0, charm: 0, bracelet: 0, necklace: 0 },
+    yellow: { kakashi: 0, ring: 0, charm: 0, bracelet: 0, necklace: 0 },
+    green: { kakashi: 0, ring: 0, charm: 0, bracelet: 0, necklace: 0 },
+    gold: { kakashi: 0, ring: 0, charm: 0, bracelet: 0, necklace: 0 }
+};
 
 function getBaseScore(type) {
     const scores = { 'ring': 1, 'charm': 2, 'bracelet': 3, 'necklace': 5 };
@@ -556,53 +655,79 @@ function updateSelectColor(slotNum) {
     selectEl.classList.add(`color-${color}`);
 }
 
-// 📦 段位に応じてストックアイテムの入力枠を動的に生成する関数
-function updateStockFields() {
+// 📦 現在の全ストック登録数を合計する関数
+function getTotalStock() {
+    let total = 0;
+    for (let c of COLORS) {
+        for (let t of TYPES) {
+            total += stockMatrix[c][t];
+        }
+    }
+    return total;
+}
+
+// 📦 ストック数の増減制御と上限チェック
+function adjustStock(color, type, amount) {
     const gameLevel = document.getElementById('gameLevel').value;
-    const slotCount = stockSlotsMap[gameLevel] || 3;
-    const container = document.getElementById('stockContainer');
-    
-    // 現在の入力を一時保存
-    const savedValues = [];
-    for(let i=1; i<=6; i++) {
-        const cEl = document.getElementById(`stockColor${i}`);
-        const tEl = document.getElementById(`stockType${i}`);
-        const cntEl = document.getElementById(`stockCount${i}`);
-        if(cEl && tEl && cntEl) {
-            savedValues.push({ color: cEl.value, type: tEl.value, count: cntEl.value });
-        } else {
-            // 初期デフォルト値（使いやすいようにバラけさせる）
-            const defaultColors = ['gold', 'red', 'blue', 'yellow', 'green', 'gold'];
-            const defaultTypes = ['kakashi', 'ring', 'charm', 'bracelet', 'necklace', 'kakashi'];
-            savedValues.push({ color: defaultColors[i-1], type: defaultTypes[i-1], count: 1 });
+    const maxSlots = stockSlotsMap[gameLevel] || 3;
+    let current = stockMatrix[color][type];
+    let total = getTotalStock();
+
+    if (amount > 0) {
+        if (total >= maxSlots) {
+            alert(`現在の段位のストック上限（${maxSlots}枠）に達しているため、これ以上追加できません。`);
+            return;
+        }
+        stockMatrix[color][type] = current + 1;
+    } else if (amount < 0) {
+        if (current > 0) {
+            stockMatrix[color][type] = current - 1;
         }
     }
 
-    let html = '';
-    for (let i = 1; i <= slotCount; i++) {
-        const val = savedValues[i-1];
-        html += `
-        <div class="stock-row-inputs">
-            <span class="stock-label">枠 ${i}:</span>
-            <select id="stockColor${i}" class="select-stock-color">
-                <option value="red" ${val.color==='red'?'selected':''}>赤色</option>
-                <option value="blue" ${val.color==='blue'?'selected':''}>青色</option>
-                <option value="yellow" ${val.color==='yellow'?'selected':''}>黄色</option>
-                <option value="green" ${val.color==='green'?'selected':''}>緑色</option>
-                <option value="gold" ${val.color==='gold'?'selected':''}>金色</option>
-            </select>
-            <select id="stockType${i}" class="select-stock-type">
-                <option value="kakashi" ${val.type==='kakashi'?'selected':''}>🌾 カカシ</option>
-                <option value="ring" ${val.type==='ring'?'selected':''}>💍 指輪</option>
-                <option value="charm" ${val.type==='charm'?'selected':''}>🧿 チャーム</option>
-                <option value="bracelet" ${val.type==='bracelet'?'selected':''}>💪 腕輪</option>
-                <option value="necklace" ${val.type==='necklace'?'selected':''}>📿 首飾り</option>
-            </select>
-            <input type="number" id="stockCount${i}" value="${val.count}" min="0" class="stock-count" title="所持個数">
-            <span style="font-size:12px;color:#888;">個</span>
-        </div>`;
+    // UI表示の更新
+    const spanEl = document.getElementById(`stock-${color}-${type}`);
+    spanEl.innerText = stockMatrix[color][type];
+    if (stockMatrix[color][type] > 0) {
+        spanEl.classList.add('has-count');
+    } else {
+        spanEl.classList.remove('has-count');
     }
-    container.innerHTML = html;
+    
+    updateStockStatusDisplay();
+}
+
+// 📦 ストック全体の表示文言更新
+function updateStockStatusDisplay() {
+    const gameLevel = document.getElementById('gameLevel').value;
+    const maxSlots = stockSlotsMap[gameLevel] || 3;
+    document.getElementById('totalStockDisp').innerText = getTotalStock();
+    document.getElementById('maxStockDisp').innerText = maxSlots;
+}
+
+// 📦 ストックの全クリア
+function clearStock() {
+    for (let c of COLORS) {
+        for (let t of TYPES) {
+            stockMatrix[c][t] = 0;
+            const spanEl = document.getElementById(`stock-${c}-${t}`);
+            spanEl.innerText = 0;
+            spanEl.classList.remove('has-count');
+        }
+    }
+    updateStockStatusDisplay();
+}
+
+// 段位変更時の制御（上限を超えていたら一旦クリア）
+function onLevelChange() {
+    const gameLevel = document.getElementById('gameLevel').value;
+    const maxSlots = stockSlotsMap[gameLevel] || 3;
+    if (getTotalStock() > maxSlots) {
+        clearStock();
+        alert(`段位変更に伴い、ストック数が上限を超えたためリセットされました。`);
+    }
+    updateStockStatusDisplay();
+    calculate();
 }
 
 // 共通計算コアロジック
@@ -707,33 +832,35 @@ function calculate() {
     document.getElementById('totalScore').innerText = res.total;
 }
 
-// 🎯 【修正】現在のスロットから、登録された「ストックアイテム」のみを消費して移行できる状態を生成
-function getPossibleStatesWithStock(curColor, curType, availableStocks) {
+// 🎯 クロス表のストックデータから移行可能な状態候補を生成
+function getPossibleStatesWithMatrix(curColor, curType) {
     let states = [];
     
     // パターン①：そのまま（ストックを消費しない）
-    states.push({ color: curColor, type: curType, isCompleted: true, useStockIndex: -1 }); // そのまま完成
-    states.push({ color: curColor, type: curType, isCompleted: false, useStockIndex: -1 }); // そのまま未完成
+    states.push({ color: curColor, type: curType, isCompleted: true, useStock: null }); 
+    states.push({ color: curColor, type: curType, isCompleted: false, useStock: null }); 
 
-    // パターン②：入れ替え（登録されているストックの候補から選ぶ）
-    availableStocks.forEach((stock, index) => {
-        if (stock.count > 0) {
-            // 制約1: 色または種類のいずれかが一致している場合のみ入れ替え可能
-            if (stock.color === curColor || stock.type === curType) {
-                states.push({
-                    color: stock.color,
-                    type: stock.type,
-                    isCompleted: true,
-                    useStockIndex: index // どのストック枠を消費するか記憶
-                });
+    // パターン②：マトリクス表で1個以上ストックがあるアイテムすべてを探索
+    for (let c of COLORS) {
+        for (let t of TYPES) {
+            if (stockMatrix[c][t] > 0) {
+                // ルール：色か種類のどちらかが一致している場合のみ入れ替え可能
+                if (c === curColor || t === curType) {
+                    states.push({
+                        color: c,
+                        type: t,
+                        isCompleted: true,
+                        useStock: { color: c, type: t } // 消費アイテムを記録
+                    });
+                }
             }
         }
-    });
+    }
     
     return states;
 }
 
-// 🎯 【修正】ストック制限およびスロット間移動禁止を考慮した総当たり検索
+// 🎯 ストック制限を考慮した総当たり逆算
 function searchPatterns() {
     const target = parseInt(document.getElementById('targetScore').value);
     if (isNaN(target) || target < 0) {
@@ -742,27 +869,14 @@ function searchPatterns() {
     }
     
     const gameLevel = document.getElementById('gameLevel').value;
-    const slotCount = stockSlotsMap[gameLevel] || 3;
 
-    // 現在の画面の盤面
     const cur1 = { color: document.getElementById('color1').value, type: document.getElementById('type1').value };
     const cur2 = { color: document.getElementById('color2').value, type: document.getElementById('type2').value };
     const cur3 = { color: document.getElementById('color3').value, type: document.getElementById('type3').value };
 
-    // ユーザーが入力した現在のストック情報を取得
-    let availableStocks = [];
-    for (let i = 1; i <= slotCount; i++) {
-        availableStocks.push({
-            color: document.getElementById(`stockColor${i}`).value,
-            type: document.getElementById(`stockType${i}`).value,
-            count: parseInt(document.getElementById(`stockCount${i}`).value) || 0
-        });
-    }
-
-    // 各スロットが移行可能なパターンを割り出す
-    const states1 = getPossibleStatesWithStock(cur1.color, cur1.type, availableStocks);
-    const states2 = getPossibleStatesWithStock(cur2.color, cur2.type, availableStocks);
-    const states3 = getPossibleStatesWithStock(cur3.color, cur3.type, availableStocks);
+    const states1 = getPossibleStatesWithMatrix(cur1.color, cur1.type);
+    const states2 = getPossibleStatesWithMatrix(cur2.color, cur2.type);
+    const states3 = getPossibleStatesWithMatrix(cur3.color, cur3.type);
 
     let matches = [];
 
@@ -770,21 +884,28 @@ function searchPatterns() {
         for (let s2 of states2) {
             for (let s3 of states3) {
                 
-                // 【超重要】ストックの個数制限バリデーション
-                let stockUsage = Array(slotCount).fill(0);
-                if (s1.useStockIndex !== -1) stockUsage[s1.useStockIndex]++;
-                if (s2.useStockIndex !== -1) stockUsage[s2.useStockIndex]++;
-                if (s3.useStockIndex !== -1) stockUsage[s3.useStockIndex]++;
-
-                // いずれかのストック枠の消費数が、所持数を超えていたらこの組み合わせは不可能
-                let isInvalidUsage = false;
-                for(let i=0; i<slotCount; i++) {
-                    if (stockUsage[i] > availableStocks[i].count) {
-                        isInvalidUsage = true;
-                        break;
-                    }
+                // ストックの重複消費数をカウント＆バリデーション
+                let usage = {};
+                for (let c of COLORS) {
+                    usage[c] = {};
+                    for (let t of TYPES) usage[c][t] = 0;
                 }
-                if (isInvalidUsage) continue; // 不可能な手順としてスキップ
+
+                if (s1.useStock) usage[s1.useStock.color][s1.useStock.type]++;
+                if (s2.useStock) usage[s2.useStock.color][s2.useStock.type]++;
+                if (s3.useStock) usage[s3.useStock.color][s3.useStock.type]++;
+
+                let isInvalid = false;
+                for (let c of COLORS) {
+                    for (let t of TYPES) {
+                        if (usage[c][t] > stockMatrix[c][t]) {
+                            isInvalid = true;
+                            break;
+                        }
+                    }
+                    if (isInvalid) break;
+                }
+                if (isInvalid) continue; // 所持数を超えた無効手順はスキップ
 
                 // スコア計算
                 const res = checkScore(s1, s2, s3, gameLevel);
@@ -797,38 +918,37 @@ function searchPatterns() {
 
     const resDiv = document.getElementById('searchResults');
     if (matches.length === 0) {
-        resDiv.innerHTML = `<span style="color: #e74c3c;">現在の盤面とストックの制限内では、ぴったり ${target}pts になる組み合わせは見つかりませんでした。</span>`;
+        resDiv.innerHTML = `<span style="color: #e74c3c;">現在のストックの範囲内では、ぴったり ${target}pts になる組み合わせは見つかりませんでした。</span>`;
         return;
     }
 
-    // アクションテキストを生成する補助関数
-    function getActionText(cur, next, stockIdx) {
+    // アクションテキスト生成
+    function getActionText(cur, next) {
         let text = "";
-        if (stockIdx === -1) {
+        if (!next.useStock) {
             text += `<span class="tag-keep">[そのまま]</span> ${colorJa[next.color]}${typeJa[next.type]}`;
         } else {
-            text += `<span class="tag-change">[ストック枠${stockIdx + 1}を使用]</span> ${colorJa[next.color]}${typeJa[next.type]}`;
+            text += `<span class="tag-change">[ストックから変更]</span> ${colorJa[next.color]}${typeJa[next.type]}`;
         }
         text += next.isCompleted ? ` <span class="tag-comp">(完成)</span>` : ` <span class="tag-uncomp">(未完成)</span>`;
         return text;
     }
 
-    // 表示 HTML 組み立て
     let html = `<div style="font-weight: bold; color: #2ecc71; margin-bottom: 8px;">🎉 ${matches.length} 件の達成手順が見つかりました：</div>`;
     matches.forEach((m, idx) => {
         html += `<div class="result-item">`;
         html += `<strong>パターン ${idx + 1}:</strong><br>`;
-        html += `・スロット1: ${getActionText(cur1, m.s1, m.s1.useStockIndex)} ➔ ${m.res.final1}pts<br>`;
-        html += `・スロット2: ${getActionText(cur2, m.s2, m.s2.useStockIndex)} ➔ ${m.res.final2}pts<br>`;
-        html += `・スロット3: ${getActionText(cur3, m.s3, m.s3.useStockIndex)} ➔ ${m.res.final3}pts<br>`;
+        html += `・スロット1: ${getActionText(cur1, m.s1)} ➔ ${m.res.final1}pts<br>`;
+        html += `・スロット2: ${getActionText(cur2, m.s2)} ➔ ${m.res.final2}pts<br>`;
+        html += `・スロット3: ${getActionText(cur3, m.s3)} ➔ ${m.res.final3}pts<br>`;
         html += `<span style="font-size: 11px; color: #a0a0b0;">(ベース内訳: ${m.res.baseTotal} | 色ボ: ${m.res.colorBonus} | 種類ボ: ${m.res.typeBonus})</span>`;
         html += `</div>`;
     });
     resDiv.innerHTML = html;
 }
 
-// 初期化実行
-updateStockFields();
+// 初期化表示
+updateStockStatusDisplay();
 calculate();
 </script>
 
