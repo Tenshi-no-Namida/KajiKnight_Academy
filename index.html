@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>カジナイトアカデミー 鍛冶スコア計算/逆算ツール</title>
+    <title>カジナイトアカデミー 鍛冶スコア計算＆逆算ツール</title>
     <style>
         :root {
             --bg-color: #1a1a24;
@@ -325,33 +325,56 @@
         .text-green { color: var(--color-green); }
         .text-gold { color: var(--color-gold); }
 
+        /* 条件入力行 */
         .search-row {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
             justify-content: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .search-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         .search-input {
-            width: 80px;
-            padding: 8px;
+            width: 75px;
+            padding: 6px;
             border-radius: 6px;
             border: 1px solid var(--border-color);
             background: #2c2c3e;
             color: #fff;
             text-align: center;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
         }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #f0f0f5;
+            cursor: pointer;
+            user-select: none;
+        }
+        .checkbox-label input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
         .search-btn {
-            padding: 8px 15px;
+            width: 100%;
+            padding: 10px;
             border-radius: 6px;
             border: none;
             background: #3498db;
             color: #fff;
             font-weight: bold;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .search-btn:hover { background: #2980b9; }
         .search-results {
@@ -413,6 +436,7 @@
 <div class="container">
     <h1>カジナイトアカデミー<br>鍛冶スコア計算＆逆算ツール</h1>
 
+    <!-- 段位 ＆ ボーナス表示 -->
     <div class="level-bonus-row">
         <div class="level-select-group">
             <label for="gameLevel"><strong>段位:</strong></label>
@@ -429,10 +453,12 @@
         </div>
     </div>
 
+    <!-- 中間の詳細情報 -->
     <div class="mid-details" id="midDetails">
         ベース合計: 0点 | ボーナス合計: 0点
     </div>
 
+    <!-- スロット1（濃い紫背景） -->
     <div class="slot-card slot1-special">
         <div class="slot-header">
             <span>スロット 1 (現在の状態)</span>
@@ -459,6 +485,7 @@
         </div>
     </div>
 
+    <!-- スロット2 -->
     <div class="slot-card">
         <div class="slot-header">
             <span>スロット 2 (現在の状態)</span>
@@ -485,6 +512,7 @@
         </div>
     </div>
 
+    <!-- スロット3 -->
     <div class="slot-card">
         <div class="slot-header">
             <span>スロット 3 (現在の状態)</span>
@@ -511,23 +539,26 @@
         </div>
     </div>
 
+    <!-- 最下部：獲得鍛冶スコア -->
     <div class="result-box">
-        <div>獲得鍛冶スコア</div>
+        <div>獲得鍛冶スコア (現在の状態の合計値)</div>
         <div class="total-score" id="totalScore">0</div>
     </div>
 
+    <!-- 🎯 逆算検索シミュレーター -->
     <div class="search-box">
-        <h3>目標ポイント逆算ツール</h3>
+        <h3>🎯 目標ポイント達成シミュレーター</h3>
         <p style="font-size: 11px; color: #a0a0b0; text-align: center; margin: -5px 0 10px 0;">
-            現在の盤面から、手持ちのストック表の範囲内で1手以内に目標点にする手順を割り出します。
+            現在の点数から目標点に届く（または最高得点を狙える）ストック消費ルートを割り出します。
         </p>
 
+        <!-- 📦 マトリクス形式ストック設定エリア -->
         <div class="stock-section">
-            <div class="stock-section-title">ストック中の鍛冶レシピ</div>
+            <div class="stock-section-title">📦 手持ちのストックアイテム（直接タップで増減）</div>
             
             <div class="stock-status-bar">
                 <span>登録数: <strong id="totalStockDisp">0</strong> / <span id="maxStockDisp">3</span> 枠</span>
-                <button onclick="clearStock()" class="clear-btn">全てクリア</button>
+                <button onclick="clearStock()" class="clear-btn">全クリア</button>
             </div>
 
             <table class="stock-table">
@@ -586,20 +617,38 @@
             </table>
         </div>
 
+        <!-- 🎯 点数条件の入力エリア -->
         <div class="search-row">
-            <label for="targetScore"><strong>目標ポイント:</strong></label>
-            <input type="number" id="targetScore" value="20" min="0" class="search-input">
-            <button onclick="searchPatterns()" class="search-btn">手順の割り出し</button>
+            <div class="search-group">
+                <label for="currentScore"><strong>現在の点数:</strong></label>
+                <input type="number" id="currentScore" value="0" min="0" class="search-input">
+            </div>
+            <div class="search-group">
+                <label for="targetScore"><strong>目標とする点数:</strong></label>
+                <input type="number" id="targetScore" value="20" min="0" class="search-input">
+            </div>
         </div>
+        <div class="search-row">
+            <label class="checkbox-label">
+                <input type="checkbox" id="includeExcess" checked>
+                <strong>目標を超過するものを含む（高得点ルート狙い）</strong>
+            </label>
+        </div>
+        <div class="search-row">
+            <button onclick="searchPatterns()" class="search-btn">手順を割り出す</button>
+        </div>
+        
         <div id="searchResults" class="search-results">
-            ストックを入力して「手順の割り出し」ボタンを押してください。
+            ストックを入力して「手順を割り出す」ボタンを押してください。
         </div>
     </div>
     
+    <!-- 注意書きボックス -->
     <div class="warning-box">
-        ※計算結果に間違いが含まれる可能性があります。あらかじめご了承ください。
+        ※当ツールは有志による計算シミュレーターです。細心の注意を払ってロジックを実装しておりますが、計算結果に間違いが含まれる可能性があります。あらかじめご了承ください。
     </div>
 
+    <!-- フッターリンクエリア -->
     <div class="footer-links">
         <p class="support-link">
             <strong>不具合・ご要望・ご意見はこちら：</strong><br>
@@ -832,7 +881,7 @@ function calculate() {
     document.getElementById('totalScore').innerText = res.total;
 }
 
-// 🎯 クロス表のストックデータから移行可能な状態候補を生成
+// 📦 クロス表のストックデータから移行可能な状態候補を生成
 function getPossibleStatesWithMatrix(curColor, curType) {
     let states = [];
     
@@ -860,14 +909,19 @@ function getPossibleStatesWithMatrix(curColor, curType) {
     return states;
 }
 
-// 🎯 ストック制限を考慮した総当たり逆算
+// 🎯 ストック制限を考慮した総当たり逆算（現在点・目標点対応版）
 function searchPatterns() {
-    const target = parseInt(document.getElementById('targetScore').value);
-    if (isNaN(target) || target < 0) {
-        document.getElementById('searchResults').innerHTML = `<span style="color: #e74c3c;">正しい目標数値を入力してください。</span>`;
+    const currentScore = parseInt(document.getElementById('currentScore').value);
+    const targetScore = parseInt(document.getElementById('targetScore').value);
+    const includeExcess = document.getElementById('includeExcess').checked;
+
+    if (isNaN(currentScore) || currentScore < 0 || isNaN(targetScore) || targetScore < 0) {
+        document.getElementById('searchResults').innerHTML = `<span style="color: #e74c3c;">正しい数値を入力してください。</span>`;
         return;
     }
     
+    // この鍛冶で稼ぐ必要があるポイント数
+    const requiredPoints = targetScore - currentScore;
     const gameLevel = document.getElementById('gameLevel').value;
 
     const cur1 = { color: document.getElementById('color1').value, type: document.getElementById('type1').value };
@@ -909,7 +963,18 @@ function searchPatterns() {
 
                 // スコア計算
                 const res = checkScore(s1, s2, s3, gameLevel);
-                if (res.total === target) {
+                
+                // 条件判定（ぴったり狙い or 超過含む）
+                let isConditionMet = false;
+                if (includeExcess) {
+                    // 超過含む：必要スコア以上であればOK（必要スコアがマイナスの場合はすべてOK）
+                    if (res.total >= Math.max(0, requiredPoints)) isConditionMet = true;
+                } else {
+                    // ぴったり：必要スコアと完全に一致（必要スコアがマイナスなら不成立）
+                    if (requiredPoints >= 0 && res.total === requiredPoints) isConditionMet = true;
+                }
+
+                if (isConditionMet) {
                     matches.push({ s1, s2, s3, res });
                 }
             }
@@ -918,9 +983,13 @@ function searchPatterns() {
 
     const resDiv = document.getElementById('searchResults');
     if (matches.length === 0) {
-        resDiv.innerHTML = `<span style="color: #e74c3c;">現在のストックの範囲内では、ぴったり ${target}pts になる組み合わせは見つかりませんでした。</span>`;
+        const condText = includeExcess ? `${requiredPoints}pts 以上` : `ぴったり ${requiredPoints}pts`;
+        resDiv.innerHTML = `<span style="color: #e74c3c;">現在のストックの範囲内では、目標を達成できる手順（今回獲得：${condText}）は見つかりませんでした。</span>`;
         return;
     }
+
+    // 🎯 スコアの降順（大きい順）にソート！これによって最高得点ルートが一番上にくる
+    matches.sort((a, b) => b.res.total - a.res.total);
 
     // アクションテキスト生成
     function getActionText(cur, next) {
@@ -934,13 +1003,24 @@ function searchPatterns() {
         return text;
     }
 
-    let html = `<div style="font-weight: bold; color: #2ecc71; margin-bottom: 8px;">🎉 ${matches.length} 件の達成手順が見つかりました：</div>`;
+    let summaryHtml = `<div style="font-size: 12px; color: #a0a0b0; margin-bottom: 8px; text-align: center; background:#191924; padding:6px; border-radius:4px;">`;
+    if (requiredPoints > 0) {
+        summaryHtml += `目標ラインまで あと <strong>${requiredPoints} pts</strong> 必要です。`;
+    } else {
+        summaryHtml += `すでに目標を達成しています！さらにスコアを伸ばせる手順を表示します。`;
+    }
+    summaryHtml += `</div>`;
+
+    let html = summaryHtml + `<div style="font-weight: bold; color: #2ecc71; margin-bottom: 8px;">🎉 ${matches.length} 件の達成手順が見つかりました（得点の高い順）：</div>`;
+    
     matches.forEach((m, idx) => {
-        html += `<div class="result-item">`;
-        html += `<strong>パターン ${idx + 1}:</strong><br>`;
+        const finalTotalScore = currentScore + m.res.total;
+        html += `<div class="result-item" ${idx === 0 ? 'style="background: rgba(46, 204, 113, 0.05); border-left: 3px solid #2ecc71;"' : ''}>`;
+        html += `<strong>パターン ${idx + 1}: ${idx === 0 ? '✨最高得点ルート' : ''}</strong><br>`;
         html += `・スロット1: ${getActionText(cur1, m.s1)} ➔ ${m.res.final1}pts<br>`;
         html += `・スロット2: ${getActionText(cur2, m.s2)} ➔ ${m.res.final2}pts<br>`;
         html += `・スロット3: ${getActionText(cur3, m.s3)} ➔ ${m.res.final3}pts<br>`;
+        html += `🔥 今回獲得: <strong>+${m.res.total} pts</strong> ➔ <strong>合計: ${finalTotalScore} pts</strong><br>`;
         html += `<span style="font-size: 11px; color: #a0a0b0;">(ベース内訳: ${m.res.baseTotal} | 色ボ: ${m.res.colorBonus} | 種類ボ: ${m.res.typeBonus})</span>`;
         html += `</div>`;
     });
