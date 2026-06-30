@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>カジナイトアカデミー 鍛冶スコア計算＆逆算ツール</title>
+    <title>カジナイトアカデミー 鍛冶スコア逆算ツール</title>
     <style>
         :root {
             --bg-color: #1a1a24;
@@ -53,59 +53,6 @@
             padding-bottom: 10px;
         }
 
-        /* 段位 ＆ ボーナス表示 */
-        .level-bonus-row {
-            padding: 12px;
-            background: #1f1f2e;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid var(--border-color);
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .level-select-group {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .level-select-group select {
-            padding: 6px 10px;
-            font-size: 15px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background: #2c2c3e;
-            color: #fff;
-        }
-        .bonus-display-group {
-            display: flex;
-            gap: 10px;
-            font-size: 13px;
-            font-weight: bold;
-        }
-        .bonus-badge {
-            background: #11111a;
-            padding: 6px 10px;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-        }
-        .bonus-badge span {
-            color: #2ecc71;
-            margin-left: 3px;
-        }
-        
-        /* 中間の詳細情報 */
-        .mid-details {
-            font-size: 13px;
-            color: #a0a0b0;
-            background: #191924;
-            padding: 10px;
-            border-radius: 6px;
-            text-align: center;
-            border: 1px solid #2a2a3a;
-        }
-
         /* 各スロットカード */
         .slot-card {
             border: 1px solid var(--border-color);
@@ -128,31 +75,12 @@
             font-size: 15px;
             margin-bottom: 10px;
         }
-        .slot-pt-display {
-            color: #ffcc00;
-            font-size: 14px;
-        }
         
         /* 入力パーツを行形式に配置 */
         .slot-row {
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-        
-        /* チェックボックス */
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 4px;
-            cursor: pointer;
-        }
-        .checkbox-container input {
-            width: 24px;
-            height: 24px;
-            margin: 0;
-            cursor: pointer;
         }
 
         /* プルダウン幅調整 */
@@ -190,47 +118,30 @@
         option[value="green"] { background-color: #2ecc71; color: #fff; }
         option[value="gold"] { background-color: #f1c40f; color: #000; }
 
-        /* 最下部：獲得鍛冶スコア */
-        .result-box {
-            padding: 25px 15px;
-            background: #11111a;
-            color: #fff;
-            border-radius: 8px;
-            text-align: center;
-            border: 2px solid #2ecc71;
-            box-shadow: 0 4px 20px rgba(46, 204, 113, 0.2);
-            margin-top: 10px;
-        }
-        .total-score {
-            font-size: 54px;
-            font-weight: bold;
-            color: #2ecc71;
-            margin: 10px 0 0 0;
-            text-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
-        }
-
-        /* 🎯 逆算検索シミュレーターのスタイル */
+        /* 逆算検索シミュレーターのスタイル */
         .search-box {
             padding: 15px;
             background: #1f1f2e;
             border-radius: 8px;
             border: 1px solid #3498db;
             margin-top: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
         .search-box h3 {
-            margin: 0 0 5px 0;
+            margin: 0;
             font-size: 16px;
             color: #3498db;
             text-align: center;
         }
         
-        /* 📦 クロス表（マトリクス）形式のスタイル */
+        /* クロス表（マトリクス）形式のスタイル */
         .stock-section {
             background: #14141f;
             padding: 12px;
             border-radius: 6px;
             border: 1px solid #2c2c3e;
-            margin-bottom: 12px;
         }
         .stock-section-title {
             font-size: 13px;
@@ -328,19 +239,23 @@
         /* 条件入力行 */
         .search-row {
             display: flex;
-            gap: 12px;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 10px;
+            background: #191924;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
         }
         .search-group {
             display: flex;
             align-items: center;
-            gap: 6px;
+            justify-content: space-between;
+        }
+        .search-group label {
+            font-size: 14px;
         }
         .search-input {
-            width: 75px;
+            width: 100px;
             padding: 6px;
             border-radius: 6px;
             border: 1px solid var(--border-color);
@@ -350,14 +265,26 @@
             font-size: 15px;
             font-weight: bold;
         }
+        .level-select {
+            width: 114px;
+            padding: 6px;
+            font-size: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #2c2c3e;
+            color: #fff;
+            font-weight: bold;
+        }
         .checkbox-label {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             font-size: 13px;
             color: #f0f0f5;
             cursor: pointer;
             user-select: none;
+            justify-content: center;
+            margin-top: 5px;
         }
         .checkbox-label input {
             width: 18px;
@@ -366,7 +293,7 @@
         }
         .search-btn {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border-radius: 6px;
             border: none;
             background: #3498db;
@@ -377,26 +304,23 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .search-btn:hover { background: #2980b9; }
+        
         .search-results {
             text-align: left;
-            max-height: 250px;
+            max-height: 300px;
             overflow-y: auto;
             background: #11111a;
-            padding: 10px;
+            padding: 12px;
             border-radius: 6px;
             font-size: 13px;
             line-height: 1.6;
             border: 1px solid var(--border-color);
         }
         .result-item {
-            padding: 8px;
+            padding: 10px;
             border-bottom: 1px solid #2a2a3a;
         }
         .result-item:last-child { border-bottom: none; }
-        .tag-change { color: #e67e22; font-weight: bold; }
-        .tag-keep { color: #95a5a6; font-weight: bold; }
-        .tag-comp { color: #2ecc71; font-weight: bold; }
-        .tag-uncomp { color: #e74c3c; font-weight: bold; }
         
         /* 注意書き文言 */
         .warning-box {
@@ -434,127 +358,82 @@
 <body>
 
 <div class="container">
-    <h1>カジナイトアカデミー<br>鍛冶スコア計算＆逆算ツール</h1>
+    <h1>カジナイトアカデミー<br>鍛冶スコア逆算ツール</h1>
 
-    <!-- 段位 ＆ ボーナス表示 -->
-    <div class="level-bonus-row">
-        <div class="level-select-group">
-            <label for="gameLevel"><strong>段位:</strong></label>
-            <select id="gameLevel" onchange="onLevelChange();">
-                <option value="見習い">見習い</option>
-                <option value="三級">三級</option>
-                <option value="二級">二級</option>
-                <option value="一級">一級</option>
-            </select>
-        </div>
-        <div class="bonus-display-group">
-            <div class="bonus-badge">色ボーナス:<span id="colorBonusDisp">0</span></div>
-            <div class="bonus-badge">種類ボーナス:<span id="typeBonusDisp">0</span></div>
-        </div>
-    </div>
-
-    <!-- 中間の詳細情報 -->
-    <div class="mid-details" id="midDetails">
-        ベース合計: 0点 | ボーナス合計: 0点
-    </div>
-
-    <!-- スロット1（濃い紫背景） -->
     <div class="slot-card slot1-special">
         <div class="slot-header">
             <span>スロット 1 (現在の状態)</span>
-            <span class="slot-pt-display" id="slot1Pt">スロット1：0pts</span>
         </div>
         <div class="slot-row">
-            <label class="checkbox-container" title="完成">
-                <input type="checkbox" id="complete1" checked onchange="calculate()">
-            </label>
-            <select id="color1" onchange="updateSelectColor(1); calculate();" class="select-color color-red">
+            <select id="color1" onchange="updateSelectColor(1);" class="select-color color-red">
                 <option value="red">赤色</option>
                 <option value="blue">青色</option>
                 <option value="yellow">黄色</option>
                 <option value="green">緑色</option>
                 <option value="gold">金色</option>
             </select>
-            <select id="type1" onchange="calculate()" class="select-type">
-                <option value="kakashi">🌾 カカシ</option>
-                <option value="ring">💍 指輪</option>
-                <option value="charm">🧿 チャーム</option>
-                <option value="bracelet">💪 腕輪</option>
-                <option value="necklace">📿 首飾り</option>
+            <select id="type1" class="select-type">
+                <option value="kakashi">カカシ</option>
+                <option value="ring">指輪</option>
+                <option value="charm">チャーム</option>
+                <option value="bracelet">腕輪</option>
+                <option value="necklace">首飾り</option>
             </select>
         </div>
     </div>
 
-    <!-- スロット2 -->
     <div class="slot-card">
         <div class="slot-header">
             <span>スロット 2 (現在の状態)</span>
-            <span class="slot-pt-display" id="slot2Pt">スロット2：0pts</span>
         </div>
         <div class="slot-row">
-            <label class="checkbox-container" title="完成">
-                <input type="checkbox" id="complete2" checked onchange="calculate()">
-            </label>
-            <select id="color2" onchange="updateSelectColor(2); calculate();" class="select-color color-red">
+            <select id="color2" onchange="updateSelectColor(2);" class="select-color color-red">
                 <option value="red">赤色</option>
                 <option value="blue">青色</option>
                 <option value="yellow">黄色</option>
                 <option value="green">緑色</option>
                 <option value="gold">金色</option>
             </select>
-            <select id="type2" onchange="calculate()" class="select-type">
-                <option value="kakashi">🌾 カカシ</option>
-                <option value="ring">💍 指輪</option>
-                <option value="charm">🧿 チャーム</option>
-                <option value="bracelet">💪 腕輪</option>
-                <option value="necklace">📿 首飾り</option>
+            <select id="type2" class="select-type">
+                <option value="kakashi">カカシ</option>
+                <option value="ring">指輪</option>
+                <option value="charm">チャーム</option>
+                <option value="bracelet">腕輪</option>
+                <option value="necklace">首飾り</option>
             </select>
         </div>
     </div>
 
-    <!-- スロット3 -->
     <div class="slot-card">
         <div class="slot-header">
             <span>スロット 3 (現在の状態)</span>
-            <span class="slot-pt-display" id="slot3Pt">スロット3：0pts</span>
         </div>
         <div class="slot-row">
-            <label class="checkbox-container" title="完成">
-                <input type="checkbox" id="complete3" checked onchange="calculate()">
-            </label>
-            <select id="color3" onchange="updateSelectColor(3); calculate();" class="select-color color-red">
+            <select id="color3" onchange="updateSelectColor(3);" class="select-color color-red">
                 <option value="red">赤色</option>
                 <option value="blue">青色</option>
                 <option value="yellow">黄色</option>
                 <option value="green">緑色</option>
                 <option value="gold">金色</option>
             </select>
-            <select id="type3" onchange="calculate()" class="select-type">
-                <option value="kakashi">🌾 カカシ</option>
-                <option value="ring">💍 指輪</option>
-                <option value="charm">🧿 チャーム</option>
-                <option value="bracelet">💪 腕輪</option>
-                <option value="necklace">📿 首飾り</option>
+            <select id="type3" class="select-type">
+                <option value="kakashi">カカシ</option>
+                <option value="ring">指輪</option>
+                <option value="charm">チャーム</option>
+                <option value="bracelet">腕輪</option>
+                <option value="necklace">首飾り</option>
             </select>
         </div>
     </div>
 
-    <!-- 最下部：獲得鍛冶スコア -->
-    <div class="result-box">
-        <div>獲得鍛冶スコア (現在の状態の合計値)</div>
-        <div class="total-score" id="totalScore">0</div>
-    </div>
-
-    <!-- 🎯 逆算検索シミュレーター -->
     <div class="search-box">
-        <h3>🎯 目標ポイント達成シミュレーター</h3>
-        <p style="font-size: 11px; color: #a0a0b0; text-align: center; margin: -5px 0 10px 0;">
+        <h3>目標ポイント達成シミュレーター</h3>
+        <p style="font-size: 11px; color: #a0a0b0; text-align: center; margin: -5px 0 5px 0;">
             現在の点数から目標点に届く（または最高得点を狙える）ストック消費ルートを割り出します。
         </p>
 
-        <!-- 📦 マトリクス形式ストック設定エリア -->
         <div class="stock-section">
-            <div class="stock-section-title">📦 手持ちのストックアイテム（直接タップで増減）</div>
+            <div class="stock-section-title">手持ちのストックアイテム（直接タップで増減）</div>
             
             <div class="stock-status-bar">
                 <span>登録数: <strong id="totalStockDisp">0</strong> / <span id="maxStockDisp">3</span> 枠</span>
@@ -565,11 +444,11 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th>🌾カカシ</th>
-                        <th>💍指輪</th>
-                        <th>🧿チャム</th>
-                        <th>💪腕輪</th>
-                        <th>📿首飾</th>
+                        <th>カカシ</th>
+                        <th>指輪</th>
+                        <th>チャム</th>
+                        <th>腕輪</th>
+                        <th>首飾</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -602,435 +481,4 @@
                         <td><div class="stock-ctrl"><button onclick="adjustStock('green', 'kakashi', -1)">-</button><span id="stock-green-kakashi">0</span><button onclick="adjustStock('green', 'kakashi', 1)">+</button></div></td>
                         <td><div class="stock-ctrl"><button onclick="adjustStock('green', 'ring', -1)">-</button><span id="stock-green-ring">0</span><button onclick="adjustStock('green', 'ring', 1)">+</button></div></td>
                         <td><div class="stock-ctrl"><button onclick="adjustStock('green', 'charm', -1)">-</button><span id="stock-green-charm">0</span><button onclick="adjustStock('green', 'charm', 1)">+</button></div></td>
-                        <td><div class="stock-ctrl"><button onclick="adjustStock('green', 'bracelet', -1)">-</button><span id="stock-green-bracelet">0</span><button onclick="adjustStock('green', 'bracelet', 1)">+</button></div></td>
-                        <td><div class="stock-ctrl"><button onclick="adjustStock('green', 'necklace', -1)">-</button><span id="stock-green-necklace">0</span><button onclick="adjustStock('green', 'necklace', 1)">+</button></div></td>
-                    </tr>
-                    <tr>
-                        <td class="row-hdr text-gold">金色</td>
-                        <td><div class="stock-ctrl"><button onclick="adjustStock('gold', 'kakashi', -1)">-</button><span id="stock-gold-kakashi">0</span><button onclick="adjustStock('gold', 'kakashi', 1)">+</button></div></td>
-                        <td><div class="stock-ctrl"><button onclick="adjustStock('gold', 'ring', -1)">-</button><span id="stock-gold-ring">0</span><button onclick="adjustStock('gold', 'ring', 1)">+</button></div></td>
-                        <td><div class="stock-ctrl"><button onclick="adjustStock('gold', 'charm', -1)">-</button><span id="stock-gold-charm">0</span><button onclick="adjustStock('gold', 'charm', 1)">+</button></div></td>
-                        <td><div class="stock-ctrl"><button onclick="adjustStock('gold', 'bracelet', -1)">-</button><span id="stock-gold-bracelet">0</span><button onclick="adjustStock('gold', 'bracelet', 1)">+</button></div></td>
-                        <td><div class="stock-ctrl"><button onclick="adjustStock('gold', 'necklace', -1)">-</button><span id="stock-gold-necklace">0</span><button onclick="adjustStock('gold', 'necklace', 1)">+</button></div></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- 🎯 点数条件の入力エリア -->
-        <div class="search-row">
-            <div class="search-group">
-                <label for="currentScore"><strong>現在の点数:</strong></label>
-                <input type="number" id="currentScore" value="0" min="0" class="search-input">
-            </div>
-            <div class="search-group">
-                <label for="targetScore"><strong>目標とする点数:</strong></label>
-                <input type="number" id="targetScore" value="20" min="0" class="search-input">
-            </div>
-        </div>
-        <div class="search-row">
-            <label class="checkbox-label">
-                <input type="checkbox" id="includeExcess" checked>
-                <strong>目標を超過するものを含む（高得点ルート狙い）</strong>
-            </label>
-        </div>
-        <div class="search-row">
-            <button onclick="searchPatterns()" class="search-btn">手順を割り出す</button>
-        </div>
-        
-        <div id="searchResults" class="search-results">
-            ストックを入力して「手順を割り出す」ボタンを押してください。
-        </div>
-    </div>
-    
-    <!-- 注意書きボックス -->
-    <div class="warning-box">
-        ※当ツールは有志による計算シミュレーターです。細心の注意を払ってロジックを実装しておりますが、計算結果に間違いが含まれる可能性があります。あらかじめご了承ください。
-    </div>
-
-    <!-- フッターリンクエリア -->
-    <div class="footer-links">
-        <p class="support-link">
-            <strong>不具合・ご要望・ご意見はこちら：</strong><br>
-            <a href="https://x.com/cgV9GpPq6v69083" target="_blank" rel="noopener noreferrer">https://x.com/cgV9GpPq6v69083</a>
-        </p>
-        <p>
-            <strong>パワフルコネクト for パワプロアドベンチャーズ（パワアド）：</strong><br>
-            <a href="https://pawafuru-connect.konami.net/" target="_blank" rel="noopener noreferrer">https://pawafuru-connect.konami.net/</a>
-        </p>
-        <p>
-            <strong>パワアド公式X：</strong><br>
-            <a href="https://x.com/pawa_adventures" target="_blank" rel="noopener noreferrer">https://x.com/pawa_adventures</a>
-        </p>
-        <p>
-            <strong>株式会社コナミデジタルエンタテインメント：</strong><br>
-            <a href="https://www.konami.com/games/corporate/ja/" target="_blank" rel="noopener noreferrer">https://www.konami.com/games/corporate/ja/</a>
-        </p>
-        <p>
-            <strong>パワスピ・ポイントクラブ：</strong><br>
-            <a href="https://pawaspi-point.konami.net/" target="_blank" rel="noopener noreferrer">https://pawaspi-point.konami.net/</a>
-        </p>
-    </div>
-</div>
-
-<script>
-const COLORS = ['red', 'blue', 'yellow', 'green', 'gold'];
-const TYPES = ['kakashi', 'ring', 'charm', 'bracelet', 'necklace'];
-
-const colorJa = { red: '赤色', blue: '青色', yellow: '黄色', green: '緑色', gold: '金色' };
-const typeJa = { kakashi: '🌾カカシ', ring: '💍指輪', charm: '🧿チャーム', bracelet: '💪腕輪', necklace: '📿首飾り' };
-
-// 段位に応じたストック最大枠数の定義
-const stockSlotsMap = { '見習い': 3, '三級': 4, '二級': 5, '一級': 6 };
-
-// 📦 ストック管理データ構造
-let stockMatrix = {
-    red: { kakashi: 0, ring: 0, charm: 0, bracelet: 0, necklace: 0 },
-    blue: { kakashi: 0, ring: 0, charm: 0, bracelet: 0, necklace: 0 },
-    yellow: { kakashi: 0, ring: 0, charm: 0, bracelet: 0, necklace: 0 },
-    green: { kakashi: 0, ring: 0, charm: 0, bracelet: 0, necklace: 0 },
-    gold: { kakashi: 0, ring: 0, charm: 0, bracelet: 0, necklace: 0 }
-};
-
-function getBaseScore(type) {
-    const scores = { 'ring': 1, 'charm': 2, 'bracelet': 3, 'necklace': 5 };
-    return scores[type] || 0;
-}
-
-function updateSelectColor(slotNum) {
-    const selectEl = document.getElementById(`color${slotNum}`);
-    const color = selectEl.value;
-    selectEl.classList.remove('color-red', 'color-blue', 'color-yellow', 'color-green', 'color-gold');
-    selectEl.classList.add(`color-${color}`);
-}
-
-// 📦 現在の全ストック登録数を合計する関数
-function getTotalStock() {
-    let total = 0;
-    for (let c of COLORS) {
-        for (let t of TYPES) {
-            total += stockMatrix[c][t];
-        }
-    }
-    return total;
-}
-
-// 📦 ストック数の増減制御と上限チェック
-function adjustStock(color, type, amount) {
-    const gameLevel = document.getElementById('gameLevel').value;
-    const maxSlots = stockSlotsMap[gameLevel] || 3;
-    let current = stockMatrix[color][type];
-    let total = getTotalStock();
-
-    if (amount > 0) {
-        if (total >= maxSlots) {
-            alert(`現在の段位のストック上限（${maxSlots}枠）に達しているため、これ以上追加できません。`);
-            return;
-        }
-        stockMatrix[color][type] = current + 1;
-    } else if (amount < 0) {
-        if (current > 0) {
-            stockMatrix[color][type] = current - 1;
-        }
-    }
-
-    // UI表示の更新
-    const spanEl = document.getElementById(`stock-${color}-${type}`);
-    spanEl.innerText = stockMatrix[color][type];
-    if (stockMatrix[color][type] > 0) {
-        spanEl.classList.add('has-count');
-    } else {
-        spanEl.classList.remove('has-count');
-    }
-    
-    updateStockStatusDisplay();
-}
-
-// 📦 ストック全体の表示文言更新
-function updateStockStatusDisplay() {
-    const gameLevel = document.getElementById('gameLevel').value;
-    const maxSlots = stockSlotsMap[gameLevel] || 3;
-    document.getElementById('totalStockDisp').innerText = getTotalStock();
-    document.getElementById('maxStockDisp').innerText = maxSlots;
-}
-
-// 📦 ストックの全クリア
-function clearStock() {
-    for (let c of COLORS) {
-        for (let t of TYPES) {
-            stockMatrix[c][t] = 0;
-            const spanEl = document.getElementById(`stock-${c}-${t}`);
-            spanEl.innerText = 0;
-            spanEl.classList.remove('has-count');
-        }
-    }
-    updateStockStatusDisplay();
-}
-
-// 段位変更時の制御（上限を超えていたら一旦クリア）
-function onLevelChange() {
-    const gameLevel = document.getElementById('gameLevel').value;
-    const maxSlots = stockSlotsMap[gameLevel] || 3;
-    if (getTotalStock() > maxSlots) {
-        clearStock();
-        alert(`段位変更に伴い、ストック数が上限を超えたためリセットされました。`);
-    }
-    updateStockStatusDisplay();
-    calculate();
-}
-
-// 共通計算コアロジック
-function checkScore(s1, s2, s3, gameLevel) {
-    const nMap = { '見習い': 1, '三級': 2, '二級': 3, '一級': 4 };
-    const n = nMap[gameLevel] || 0;
-
-    const k1 = s1.isCompleted && s1.type === 'kakashi' && s1.color !== 'gold';
-    const k2 = s2.isCompleted && s2.type === 'kakashi' && s2.color !== 'gold';
-    const k3 = s3.isCompleted && s3.type === 'kakashi' && s3.color !== 'gold';
-
-    let base1 = s1.isCompleted ? (s1.color === 'gold' ? 10 : (k1 ? 0 : getBaseScore(s1.type))) : 0;
-    let base2 = s2.isCompleted ? (s2.color === 'gold' ? 10 : (k2 ? 0 : getBaseScore(s2.type))) : 0;
-    let base3 = s3.isCompleted ? (s3.color === 'gold' ? 10 : (k3 ? 0 : getBaseScore(s3.type))) : 0;
-
-    let s1_doubled = k1 ? base1 : base1 * 2;
-
-    let final1 = 0, final2 = 0, final3 = 0;
-
-    if (!k1 && !k2 && !k3) {
-        final1 = s1_doubled; final2 = base2; final3 = base3;
-    } else if (k1 && !k2 && !k3) {
-        final2 = base2; final1 = final2 * 2; final3 = base3;
-    } else if (!k1 && k2 && !k3) {
-        final1 = s1_doubled; final3 = base3; final2 = final1 + final3;
-    } else if (!k1 && !k2 && k3) {
-        final1 = s1_doubled; final2 = base2; final3 = final2;
-    } else if (k1 && k2 && !k3) {
-        final3 = base3; final2 = final3; final1 = final2 * 2;
-    } else if (k1 && !k2 && k3) {
-        final2 = base2; final1 = final2 * 2; final3 = final2;
-    } else if (!k1 && k2 && k3) {
-        final1 = s1_doubled; final2 = final1; final3 = final2;
-    } else {
-        final1 = 0; final2 = 0; final3 = 0;
-    }
-
-    let baseTotal = 0;
-    let completedItems = [];
-    if (s1.isCompleted) { baseTotal += final1; completedItems.push(s1); }
-    if (s2.isCompleted) { baseTotal += final2; completedItems.push(s2); }
-    if (s3.isCompleted) { baseTotal += final3; completedItems.push(s3); }
-
-    let colorBonus = 0;
-    let typeBonus = 0;
-
-    if (completedItems.length >= 2) {
-        if (completedItems.length === 3) {
-            const item1 = completedItems[0]; const item2 = completedItems[1]; const item3 = completedItems[2];
-            if (item1.color === item2.color && item2.color === item3.color && item1.type === item2.type && item2.type === item3.type) {
-                colorBonus = n; typeBonus = n;
-            } 
-            else if ((item1.color === item2.color && item1.type === item2.type) || (item2.color === item3.color && item2.type === item3.type) || (item1.color === item3.color && item1.type === item3.type)) {
-                colorBonus = n; typeBonus = n;
-            } 
-            else {
-                if (item1.color === item2.color || item2.color === item3.color || item1.color === item3.color) colorBonus = n;
-                if (item1.type === item2.type || item2.type === item3.type || item1.type === item3.type) typeBonus = n;
-            }
-        } else if (completedItems.length === 2) {
-            const item1 = completedItems[0]; const item2 = completedItems[1];
-            if (item1.color === item2.color && item1.type === item2.type) {
-                colorBonus = n; typeBonus = n;
-            } else {
-                if (item1.color === item2.color) colorBonus = n;
-                if (item1.type === item2.type) typeBonus = n;
-            }
-        }
-    }
-
-    return {
-        total: baseTotal + colorBonus + typeBonus,
-        baseTotal: baseTotal,
-        colorBonus: colorBonus,
-        typeBonus: typeBonus,
-        final1: final1,
-        final2: final2,
-        final3: final3
-    };
-}
-
-function calculate() {
-    const gameLevel = document.getElementById('gameLevel').value;
-    const slot1 = { color: document.getElementById('color1').value, type: document.getElementById('type1').value, isCompleted: document.getElementById('complete1').checked };
-    const slot2 = { color: document.getElementById('color2').value, type: document.getElementById('type2').value, isCompleted: document.getElementById('complete2').checked };
-    const slot3 = { color: document.getElementById('color3').value, type: document.getElementById('type3').value, isCompleted: document.getElementById('complete3').checked };
-
-    const res = checkScore(slot1, slot2, slot3, gameLevel);
-
-    function formatPt(val) {
-        return val === 1 ? `${val}pt` : `${val}pts`;
-    }
-
-    document.getElementById('colorBonusDisp').innerText = res.colorBonus;
-    document.getElementById('typeBonusDisp').innerText = res.typeBonus;
-    document.getElementById('midDetails').innerText = `ベース合計: ${res.baseTotal}点 | ボーナス合計: ${(res.colorBonus + res.typeBonus)}点`;
-    
-    document.getElementById('slot1Pt').innerText = `スロット1：${formatPt(res.final1)}`;
-    document.getElementById('slot2Pt').innerText = `スロット2：${formatPt(res.final2)}`;
-    document.getElementById('slot3Pt').innerText = `スロット3：${formatPt(res.final3)}`;
-    
-    document.getElementById('totalScore').innerText = res.total;
-}
-
-// 📦 クロス表のストックデータから移行可能な状態候補を生成
-function getPossibleStatesWithMatrix(curColor, curType) {
-    let states = [];
-    
-    // パターン①：そのまま（ストックを消費しない）
-    states.push({ color: curColor, type: curType, isCompleted: true, useStock: null }); 
-    states.push({ color: curColor, type: curType, isCompleted: false, useStock: null }); 
-
-    // パターン②：マトリクス表で1個以上ストックがあるアイテムすべてを探索
-    for (let c of COLORS) {
-        for (let t of TYPES) {
-            if (stockMatrix[c][t] > 0) {
-                // ルール：色か種類のどちらかが一致している場合のみ入れ替え可能
-                if (c === curColor || t === curType) {
-                    states.push({
-                        color: c,
-                        type: t,
-                        isCompleted: true,
-                        useStock: { color: c, type: t } // 消費アイテムを記録
-                    });
-                }
-            }
-        }
-    }
-    
-    return states;
-}
-
-// 🎯 ストック制限を考慮した総当たり逆算（現在点・目標点対応版）
-function searchPatterns() {
-    const currentScore = parseInt(document.getElementById('currentScore').value);
-    const targetScore = parseInt(document.getElementById('targetScore').value);
-    const includeExcess = document.getElementById('includeExcess').checked;
-
-    if (isNaN(currentScore) || currentScore < 0 || isNaN(targetScore) || targetScore < 0) {
-        document.getElementById('searchResults').innerHTML = `<span style="color: #e74c3c;">正しい数値を入力してください。</span>`;
-        return;
-    }
-    
-    // この鍛冶で稼ぐ必要があるポイント数
-    const requiredPoints = targetScore - currentScore;
-    const gameLevel = document.getElementById('gameLevel').value;
-
-    const cur1 = { color: document.getElementById('color1').value, type: document.getElementById('type1').value };
-    const cur2 = { color: document.getElementById('color2').value, type: document.getElementById('type2').value };
-    const cur3 = { color: document.getElementById('color3').value, type: document.getElementById('type3').value };
-
-    const states1 = getPossibleStatesWithMatrix(cur1.color, cur1.type);
-    const states2 = getPossibleStatesWithMatrix(cur2.color, cur2.type);
-    const states3 = getPossibleStatesWithMatrix(cur3.color, cur3.type);
-
-    let matches = [];
-
-    for (let s1 of states1) {
-        for (let s2 of states2) {
-            for (let s3 of states3) {
-                
-                // ストックの重複消費数をカウント＆バリデーション
-                let usage = {};
-                for (let c of COLORS) {
-                    usage[c] = {};
-                    for (let t of TYPES) usage[c][t] = 0;
-                }
-
-                if (s1.useStock) usage[s1.useStock.color][s1.useStock.type]++;
-                if (s2.useStock) usage[s2.useStock.color][s2.useStock.type]++;
-                if (s3.useStock) usage[s3.useStock.color][s3.useStock.type]++;
-
-                let isInvalid = false;
-                for (let c of COLORS) {
-                    for (let t of TYPES) {
-                        if (usage[c][t] > stockMatrix[c][t]) {
-                            isInvalid = true;
-                            break;
-                        }
-                    }
-                    if (isInvalid) break;
-                }
-                if (isInvalid) continue; // 所持数を超えた無効手順はスキップ
-
-                // スコア計算
-                const res = checkScore(s1, s2, s3, gameLevel);
-                
-                // 条件判定（ぴったり狙い or 超過含む）
-                let isConditionMet = false;
-                if (includeExcess) {
-                    // 超過含む：必要スコア以上であればOK（必要スコアがマイナスの場合はすべてOK）
-                    if (res.total >= Math.max(0, requiredPoints)) isConditionMet = true;
-                } else {
-                    // ぴったり：必要スコアと完全に一致（必要スコアがマイナスなら不成立）
-                    if (requiredPoints >= 0 && res.total === requiredPoints) isConditionMet = true;
-                }
-
-                if (isConditionMet) {
-                    matches.push({ s1, s2, s3, res });
-                }
-            }
-        }
-    }
-
-    const resDiv = document.getElementById('searchResults');
-    if (matches.length === 0) {
-        const condText = includeExcess ? `${requiredPoints}pts 以上` : `ぴったり ${requiredPoints}pts`;
-        resDiv.innerHTML = `<span style="color: #e74c3c;">現在のストックの範囲内では、目標を達成できる手順（今回獲得：${condText}）は見つかりませんでした。</span>`;
-        return;
-    }
-
-    // 🎯 スコアの降順（大きい順）にソート！これによって最高得点ルートが一番上にくる
-    matches.sort((a, b) => b.res.total - a.res.total);
-
-    // アクションテキスト生成
-    function getActionText(cur, next) {
-        let text = "";
-        if (!next.useStock) {
-            text += `<span class="tag-keep">[そのまま]</span> ${colorJa[next.color]}${typeJa[next.type]}`;
-        } else {
-            text += `<span class="tag-change">[ストックから変更]</span> ${colorJa[next.color]}${typeJa[next.type]}`;
-        }
-        text += next.isCompleted ? ` <span class="tag-comp">(完成)</span>` : ` <span class="tag-uncomp">(未完成)</span>`;
-        return text;
-    }
-
-    let summaryHtml = `<div style="font-size: 12px; color: #a0a0b0; margin-bottom: 8px; text-align: center; background:#191924; padding:6px; border-radius:4px;">`;
-    if (requiredPoints > 0) {
-        summaryHtml += `目標ラインまで あと <strong>${requiredPoints} pts</strong> 必要です。`;
-    } else {
-        summaryHtml += `すでに目標を達成しています！さらにスコアを伸ばせる手順を表示します。`;
-    }
-    summaryHtml += `</div>`;
-
-    let html = summaryHtml + `<div style="font-weight: bold; color: #2ecc71; margin-bottom: 8px;">🎉 ${matches.length} 件の達成手順が見つかりました（得点の高い順）：</div>`;
-    
-    matches.forEach((m, idx) => {
-        const finalTotalScore = currentScore + m.res.total;
-        html += `<div class="result-item" ${idx === 0 ? 'style="background: rgba(46, 204, 113, 0.05); border-left: 3px solid #2ecc71;"' : ''}>`;
-        html += `<strong>パターン ${idx + 1}: ${idx === 0 ? '✨最高得点ルート' : ''}</strong><br>`;
-        html += `・スロット1: ${getActionText(cur1, m.s1)} ➔ ${m.res.final1}pts<br>`;
-        html += `・スロット2: ${getActionText(cur2, m.s2)} ➔ ${m.res.final2}pts<br>`;
-        html += `・スロット3: ${getActionText(cur3, m.s3)} ➔ ${m.res.final3}pts<br>`;
-        html += `🔥 今回獲得: <strong>+${m.res.total} pts</strong> ➔ <strong>合計: ${finalTotalScore} pts</strong><br>`;
-        html += `<span style="font-size: 11px; color: #a0a0b0;">(ベース内訳: ${m.res.baseTotal} | 色ボ: ${m.res.colorBonus} | 種類ボ: ${m.res.typeBonus})</span>`;
-        html += `</div>`;
-    });
-    resDiv.innerHTML = html;
-}
-
-// 初期化表示
-updateStockStatusDisplay();
-calculate();
-</script>
-
-</body>
-</html>
+                        <td><div class="
