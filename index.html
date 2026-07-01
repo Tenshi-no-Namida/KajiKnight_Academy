@@ -1138,4 +1138,51 @@ function executeAdvancedAnalysis() {
     advancedSolutions.slice(0, 20).forEach((sol, i) => {
         html += `<div class="result-row-item" onclick="renderFlowchart(${i})">` +
                 `<strong>ルート ${i+1}: 獲得 +${sol.scoreRes.total} pts (${sol.trainName})</strong><br>` +
-                `<span style="font-size:11px; opacity:0.8;">達成判定: スロット1(${sol.compFlags
+                `<span style="font-size:11px; opacity:0.8;">達成判定: スロット1(${sol.compFlags[0]?'○':'×'}) | スロット2(${sol.compFlags[1]?'○':'×'}) | スロット3(${sol.compFlags[2]?'○':'×'})</span></div>`;
+    });
+    out.innerHTML = html;
+}
+
+function renderFlowchart(idx) {
+    const sol = advancedSolutions[idx];
+    const target = document.getElementById('flowchart-output');
+    
+    let html = `<div class="flow-container"><h4 style="margin:0 0 6px 0; font-size:12px;">【解析ルート ${idx+1} 実行の手順】</h4>`;
+    let swapNotes = [];
+    for(let s=0; s<3; s++) {
+        if(sol.swaps[s] !== null) {
+            swapNotes.push(`スロット${s+1}をストック内の [${COLOR_JA[sol.activeSlots[s].color]}・${TYPE_JA[sol.activeSlots[s].type]}(${TYPE_NUMS[sol.activeSlots[s].type]})] と入れ替える（既存の引き継ぎ鉱石は消失）`);
+        }
+    }
+    
+    if(swapNotes.length > 0) {
+        swapNotes.forEach(n => html += `<div>・${n}</div>`);
+    } else {
+        html += `<div>・スロットの入れ替え操作は不要です</div>`;
+    }
+
+    if(sol.converts.length > 0) {
+        let items = sol.converts.map(c => `[${COLOR_JA[c.color]}・${TYPE_JA[c.type]}]`).join(', ');
+        html += `<div>・手持ストック内のレシピ ${items} を鉱石へ一括変換する</div>`;
+    } else {
+        html += `<div>・ストックレシピの変換操作は不要です</div>`;
+    }
+
+    html += `<div>・訓練<strong>「${sol.trainName}」</strong>を実行し、該当領域の鉱石群を完全回収する</div>`;
+
+    let comps = [];
+    if(sol.compFlags[0]) comps.push("スロット1");
+    if(sol.compFlags[1]) comps.push("スロット2");
+    if(sol.compFlags[2]) comps.push("スロット3");
+    
+    html += `<div style="margin-top:6px; font-weight:bold; color:var(--color-green);">➔ 結末: ${comps.join(', ')} が完成。計 +${sol.scoreRes.total} pts が加算されます。</div></div>`;
+    
+    target.innerHTML = html;
+    target.scrollIntoView({ behavior: 'smooth' });
+}
+
+initSystem();
+</script>
+
+</body>
+</html>
