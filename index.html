@@ -19,9 +19,8 @@
             --color-yellow: #ff9500;
             --color-green: #34c759;
             --color-gold: #ffcc00;
-            --color-none: #718096;
             
-            --slot1-bg: #6b21a8; /* 少し薄く調整した紫 */
+            --slot1-bg: #6b21a8; 
             --slot-normal-bg: #1e293b;
             --ore-box-bg: #2a2a2e;
         }
@@ -51,7 +50,7 @@
         
         .container {
             width: 100%;
-            max-width: 650px;
+            max-width: 1350px;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -81,6 +80,34 @@
             cursor: pointer;
         }
 
+        /* 2x2 グリッドレイアウトの設定 */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .grid-block-flex {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .panel-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
         .section-title {
             font-size: 14px;
             font-weight: bold;
@@ -89,6 +116,24 @@
             border-bottom: 1px solid var(--border-color);
             color: var(--text-color);
         }
+
+        /* 動的アイテムカラー適用スタイル */
+        .btn-active-red { background-color: #ff3b30 !important; color: #ffffff !important; }
+        .btn-active-blue { background-color: #007aff !important; color: #ffffff !important; }
+        .btn-active-yellow { background-color: #ff9500 !important; color: #ffffff !important; }
+        .btn-active-green { background-color: #34c759 !important; color: #ffffff !important; }
+        .btn-active-gold { 
+            background: linear-gradient(135deg, #ffe066 0%, #f5b041 50%, #d4ac0d 100%) !important; 
+            color: #000000 !important; 
+        }
+
+        /* テンプカラーテキスト表示用 */
+        .text-red { color: #ff3b30 !important; }
+        .text-blue { color: #007aff !important; }
+        .text-yellow { color: #ff9500 !important; }
+        .text-green { color: #34c759 !important; }
+        .text-gold { color: #b7950b !important; font-weight: bold; }
+        .dark-mode .text-gold { color: #ffd700 !important; font-weight: bold; }
 
         .trigger-btn {
             display: block;
@@ -105,9 +150,7 @@
             margin-bottom: 10px;
             transition: background 0.2s;
         }
-        .trigger-btn:hover {
-            background-color: var(--border-color);
-        }
+        .trigger-btn:hover { opacity: 0.8; }
 
         .matrix-wrapper {
             display: none;
@@ -124,13 +167,13 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 11px;
-            table-layout: fixed; /* 列幅を固定一律に */
+            table-layout: fixed;
         }
         .matrix-table th, .matrix-table td {
             border: 1px solid var(--border-color);
             padding: 6px 2px;
             text-align: center;
-            width: 16.66%; /* 6列を完全に同じ幅に分割 */
+            width: 16.66%;
             box-sizing: border-box;
         }
         .matrix-table th {
@@ -157,7 +200,6 @@
             border-radius: 3px;
         }
         
-        /* 選択時（アクティブ）の鮮やかな色彩変化 */
         .matrix-cell-btn.active.r { background-color: #ff3b30 !important; color: #ffffff !important; }
         .matrix-cell-btn.active.b { background-color: #007aff !important; color: #ffffff !important; }
         .matrix-cell-btn.active.y { background-color: #ff9500 !important; color: #ffffff !important; }
@@ -167,68 +209,55 @@
             color: #000000 !important; 
         }
 
+        /* ライトモード時のスロット1表の白文字化バグ対策 */
+        body.light-mode .slot-1 .matrix-wrapper { background-color: #ffffff; color: #2d3748; }
+        body.light-mode .slot-1 .matrix-table th { color: #2d3748; background-color: #f7fafc; }
+        body.light-mode .slot-1 .matrix-table td button:not(.active) { color: #2d3748; }
+
         /* スロット構造 */
         .slot-container {
             background-color: var(--slot-normal-bg);
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 15px;
+            padding: 12px;
         }
         .slot-container.slot-1 {
             background-color: var(--slot1-bg);
             color: #ffffff !important;
         }
-        body.light-mode .slot-container.slot-1 {
-            color: #ffffff !important;
-        }
-        body.light-mode .slot-container.slot-1 .section-title {
-            color: #ffffff !important;
-            border-color: rgba(255, 255, 255, 0.3) !important;
-        }
-        body.light-mode .slot-container.slot-1 .trigger-btn {
-            background-color: rgba(255,255,255,0.1);
-            color: #ffffff;
-            border-color: rgba(255,255,255,0.3);
-        }
+        body.light-mode .slot-container.slot-1 { color: #ffffff !important; }
+        body.light-mode .slot-container.slot-1 .section-title { color: #ffffff !important; border-color: rgba(255, 255, 255, 0.3) !important; }
+        body.light-mode .slot-container.slot-1 .trigger-btn:not([class*="btn-active"]) { background-color: rgba(255,255,255,0.1); color: #ffffff; border-color: rgba(255,255,255,0.3); }
 
-        .slot-layout {
-            display: flex;
-            gap: 15px;
-            align-items: flex-start;
-        }
+        .slot-layout { display: flex; gap: 12px; align-items: flex-start; }
         .slot-main { flex: 2; }
         .slot-side {
             flex: 1;
             background: rgba(0,0,0,0.15);
-            padding: 10px;
+            padding: 8px;
             border-radius: 4px;
-            min-height: 80px;
+            min-height: 75px;
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* 鉱石デザイン（選択時をより鮮やかに変更） */
-        .ore-grid {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-            margin-top: 5px;
-        }
+        /* 鉱石デザイン（ON時のフォント色をテーマ連動に変更） */
+        .ore-grid { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; }
         .ore-square {
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border-radius: 4px;
             border: 2px solid #000000;
             background: var(--ore-box-bg);
             font-family: sans-serif;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             user-select: none;
             box-sizing: border-box;
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; 
+            color: #ffffff;
         }
         
         .ore-square.ore-R { color: var(--color-red); }
@@ -236,36 +265,18 @@
         .ore-square.ore-Y { color: var(--color-yellow); }
         .ore-square.ore-G { color: var(--color-green); }
 
-        /* 有色鉱石ON時の鮮やかな色彩 */
+        /* 有色鉱石ON時：テーマに応じたフォント色 */
         .ore-square.active-R { background-color: #ff3b30 !important; color: #ffffff !important; }
         .ore-square.active-B { background-color: #007aff !important; color: #ffffff !important; }
         .ore-square.active-Y { background-color: #ff9500 !important; color: #ffffff !important; }
         .ore-square.active-G { background-color: #34c759 !important; color: #ffffff !important; }
+        body.light-mode .ore-square[class*="active-"] { color: #000000 !important; }
         
-        /* ALLボタン仕様：OFFならグラデーション無し、ON(active-ALL)のみ発動 */
-        .ore-square.ore-all-style {
-            border: 2px solid #000000;
-            color: #ffffff;
-            background: var(--ore-box-bg);
-        }
-        .ore-square.ore-all-style.active-ALL {
-            background: linear-gradient(to bottom, #00ffff, #ffffff, #ff00ff) !important;
-        }
-        .ore-square.ore-all-style .all-text {
-            font-family: sans-serif;
-            font-weight: bold;
-            font-size: 10px;
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-        }
+        .ore-square.ore-all-style { border: 2px solid #000000; background: var(--ore-box-bg); }
+        .ore-square.ore-all-style.active-ALL { background: linear-gradient(to bottom, #00ffff, #ffffff, #ff00ff) !important; color: #000000 !important;}
+        .ore-square.ore-all-style .all-text { font-family: sans-serif; font-weight: bold; font-size: 10px; }
 
-        .panel-box {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 15px;
-        }
-
-        /* 新設：手持ストックアイテム用 3行2列デザイン */
+        /* 手持ストックアイテム用 3行2列デザイン */
         .stock-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -276,7 +287,7 @@
         .stock-block {
             background: rgba(0,0,0,0.04);
             border: 1px solid var(--border-color);
-            border-radius: 8px; /* 角丸長方形 */
+            border-radius: 8px;
             padding: 10px;
             cursor: pointer;
             min-height: 55px;
@@ -286,34 +297,13 @@
             justify-content: center;
             transition: background 0.2s, border-color 0.2s;
         }
-        body.light-mode .stock-block { background: #edf2f7; }
-        .stock-block.focused {
-            border: 1px solid var(--text-color);
-            background: rgba(0,0,0,0.12);
-        }
-        .stock-block.disabled {
-            opacity: 0.35;
-            pointer-events: none;
-            background: rgba(0,0,0,0.08) !important;
-        }
-        .stock-lbl { 
-            font-size: 11px; 
-            font-weight: bold; 
-            opacity: 0.6; 
-            margin-bottom: 2px;
-        }
-        .stock-val-text { 
-            font-size: 12px; 
-            font-weight: bold; 
-        }
+        body.light-mode .stock-block:not([class*="btn-active"]) { background: #edf2f7; }
+        .stock-block.focused { border: 2px solid var(--text-color); }
+        .stock-block.disabled { opacity: 0.35; pointer-events: none; background: rgba(0,0,0,0.08) !important; }
+        .stock-lbl { font-size: 11px; font-weight: bold; opacity: 0.7; margin-bottom: 2px; }
+        .stock-val-text { font-size: 12px; font-weight: bold; }
 
-        .control-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 12px;
-        }
+        .control-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 12px; }
 
         .input-group {
             display: flex;
@@ -324,169 +314,51 @@
             border-radius: 4px;
             border: 1px solid var(--border-color);
         }
-        .input-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .sys-input {
-            width: 80px;
-            padding: 4px;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            background: transparent;
-            color: var(--text-color);
-            text-align: center;
-        }
-        .sys-select {
-            width: 90px;
-            padding: 4px;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            background: transparent;
-            color: var(--text-color);
-        }
+        .input-item { display: flex; justify-content: space-between; align-items: center; }
+        .sys-input { width: 80px; padding: 4px; border-radius: 4px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color); text-align: center; }
+        .sys-select { width: 90px; padding: 4px; border-radius: 4px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color); }
 
-        .action-btn {
-            width: 100%;
-            padding: 10px;
-            background-color: var(--accent-color);
-            color: #ffffff;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 13px;
-        }
+        .action-btn { width: 100%; padding: 10px; background-color: var(--accent-color); color: #ffffff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 13px; }
         .action-btn:hover { background-color: var(--accent-hover); }
 
-        .toggle-panel-btn {
-            width: 100%;
-            padding: 8px;
-            background: transparent;
-            color: var(--text-color);
-            border: 1px dashed var(--border-color);
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            text-align: center;
-        }
+        .sort-toggle-btn { padding: 4px 10px; background-color: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-color); cursor: pointer; font-size: 11px; font-weight: bold; }
+        body.light-mode .sort-toggle-btn { background-color: #edf2f7; }
 
-        .results-area {
-            max-height: 250px;
-            overflow-y: auto;
-            background: rgba(0,0,0,0.1);
-            padding: 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            border: 1px solid var(--border-color);
-        }
-        .result-row-item {
-            padding: 8px;
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
-        }
+        .results-area { max-height: 280px; overflow-y: auto; background: rgba(0,0,0,0.1); padding: 10px; border-radius: 4px; font-size: 12px; border: 1px solid var(--border-color); }
+        .result-row-item { padding: 8px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
         .result-row-item:hover { background: rgba(0,0,0,0.05); }
 
-        /* 訓練セクション：2行3列配置、角丸長方形 */
-        .advanced-section {
-            display: none;
-            flex-direction: column;
-            gap: 15px;
-            border-top: 2px dashed var(--border-color);
-            padding-top: 15px;
-        }
-        .training-matrix {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(2, auto);
-            gap: 8px;
-        }
-        .train-block {
-            background: rgba(0,0,0,0.03);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 8px;
-            cursor: pointer;
-            min-height: 65px;
-            box-sizing: border-box;
-        }
-        .train-block.focused {
-            border: 1px solid var(--text-color);
-            background: rgba(0,0,0,0.12);
-        }
+        /* 訓練セクション：2行3列配置 */
+        .training-matrix { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, auto); gap: 8px; margin-bottom: 10px; }
+        .train-block { background: rgba(0,0,0,0.03); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; cursor: pointer; min-height: 65px; box-sizing: border-box; }
+        body.light-mode .train-block { background: #edf2f7; }
+        .train-block.focused { border: 2px solid var(--text-color); background: rgba(0,0,0,0.08); }
         .train-lbl { font-size: 11px; font-weight: bold; margin-bottom: 4px;}
-        
-        .train-val { 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 3px; 
-            width: 100%;
-            max-width: 115px; 
-        }
+        .train-val { display: flex; flex-wrap: wrap; gap: 3px; width: 100%; }
 
-        /* 訓練内正方形チップ：対応した色を背景に薄く投入 */
-        .train-chip {
-            width: 20px;
-            height: 20px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-family: sans-serif;
-            font-weight: 900;
-            font-size: 12px;
-            border: 1px solid #000000;
-            border-radius: 3px;
-            box-sizing: border-box;
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-        }
+        /* 訓練内正方形チップ */
+        .train-chip { width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; font-family: sans-serif; font-weight: 900; font-size: 11px; border: 1px solid #000000; border-radius: 3px; box-sizing: border-box; }
         .train-chip.chip-R { background-color: rgba(255, 59, 48, 0.25); color: var(--color-red); }
         .train-chip.chip-B { background-color: rgba(0, 122, 255, 0.25); color: var(--color-blue); }
         .train-chip.chip-Y { background-color: rgba(255, 149, 0, 0.25); color: var(--color-yellow); }
         .train-chip.chip-G { background-color: rgba(52, 199, 89, 0.25); color: var(--color-green); }
         .train-chip.chip-N { background-color: rgba(113, 128, 150, 0.25); color: #e0e0e0; }
+        body.light-mode .train-chip { color: #000000 !important; }
 
-        /* パッドボタン：対応した色を背景に薄く投入 */
-        .pad-box {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            background: rgba(0,0,0,0.1);
-            padding: 8px;
-            border-radius: 4px;
-        }
+        /* パッドボタン */
+        .pad-box { display: flex; flex-direction: column; gap: 6px; background: rgba(0,0,0,0.1); padding: 8px; border-radius: 4px; }
         .pad-line { display: flex; gap: 6px; }
-        .p-btn {
-            flex: 1;
-            padding: 10px 0;
-            font-weight: bold;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-        }
+        .p-btn { flex: 1; padding: 10px 0; font-weight: bold; border-radius: 4px; border: 1px solid var(--border-color); cursor: pointer; }
         .p-btn.c-r { background-color: rgba(255, 59, 48, 0.2); color: var(--color-red); }
         .p-btn.c-b { background-color: rgba(0, 122, 255, 0.2); color: var(--color-blue); }
         .p-btn.c-y { background-color: rgba(255, 149, 0, 0.2); color: var(--color-yellow); }
         .p-btn.c-g { background-color: rgba(52, 199, 89, 0.2); color: var(--color-green); }
-        .p-btn.c-n { background-color: rgba(113, 128, 150, 0.2); color: #ffffff; }
-        
-        .p-btn.sys-op {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            text-shadow: none;
-        }
+        .p-btn.c-n { background-color: rgba(113, 128, 150, 0.2); color: var(--text-color); }
+        .p-btn.sys-op { background-color: var(--card-bg); color: var(--text-color); font-size: 11px; }
+        body.light-mode .p-btn:not(.sys-op) { color: #000000; font-weight: 900; }
 
-        .flow-container {
-            background: rgba(0,0,0,0.15);
-            border-left: 3px solid var(--accent-color);
-            padding: 10px;
-            border-radius: 0 4px 4px 0;
-            font-size: 11px;
-            line-height: 1.5;
-        }
-        
-        .info-text { font-size: 11px; color: #718096; line-height: 1.4; }
+        .flow-container { background: rgba(0,0,0,0.15); border-left: 3px solid var(--accent-color); padding: 10px; border-radius: 0 4px 4px 0; font-size: 11px; line-height: 1.6; margin-top: 10px;}
+        .info-text { font-size: 11px; color: #718096; text-align: center; margin-top: 10px; }
     </style>
 </head>
 <body class="dark-mode">
@@ -497,129 +369,135 @@
         <button class="mode-toggle" onclick="toggleDisplayMode()">表示モード切替</button>
     </div>
 
-    <div class="slot-container slot-1">
-        <div class="slot-layout">
-            <div class="slot-main">
-                <div class="section-title">スロット 1</div>
-                <button class="trigger-btn" onclick="toggleWrapper('slot-matrix-wrapper-1')">[ アイテムを入力 ]</button>
-                <div id="slot-matrix-wrapper-1" class="matrix-wrapper">
-                    <div id="slot-matrix-1"></div>
+    <div class="main-grid">
+        
+        <div class="grid-block-flex">
+            <div class="slot-container slot-1">
+                <div class="slot-layout">
+                    <div class="slot-main">
+                        <div class="section-title">スロット 1</div>
+                        <button id="slot-trigger-btn-1" class="trigger-btn" onclick="toggleWrapper('slot-matrix-wrapper-1')">[ アイテムを入力 ]</button>
+                        <div id="slot-matrix-wrapper-1" class="matrix-wrapper">
+                            <div id="slot-matrix-1"></div>
+                        </div>
+                    </div>
+                    <div class="slot-side">
+                        <div style="font-size:11px; font-weight:bold;">引き継ぎ鉱石</div>
+                        <div id="slot-retained-1" class="ore-grid"></div>
+                    </div>
                 </div>
             </div>
-            <div class="slot-side">
-                <div style="font-size:11px; font-weight:bold;">引き継ぎ鉱石</div>
-                <div id="slot-retained-1" class="ore-grid"></div>
-            </div>
-        </div>
-    </div>
 
-    <div class="slot-container">
-        <div class="slot-layout">
-            <div class="slot-main">
-                <div class="section-title">スロット 2</div>
-                <button class="trigger-btn" onclick="toggleWrapper('slot-matrix-wrapper-2')">[ アイテムを入力 ]</button>
-                <div id="slot-matrix-wrapper-2" class="matrix-wrapper">
-                    <div id="slot-matrix-2"></div>
+            <div class="slot-container">
+                <div class="slot-layout">
+                    <div class="slot-main">
+                        <div class="section-title">スロット 2</div>
+                        <button id="slot-trigger-btn-2" class="trigger-btn" onclick="toggleWrapper('slot-matrix-wrapper-2')">[ アイテムを入力 ]</button>
+                        <div id="slot-matrix-wrapper-2" class="matrix-wrapper">
+                            <div id="slot-matrix-2"></div>
+                        </div>
+                    </div>
+                    <div class="slot-side">
+                        <div style="font-size:11px; font-weight:bold;">引き継ぎ鉱石</div>
+                        <div id="slot-retained-2" class="ore-grid"></div>
+                    </div>
                 </div>
             </div>
-            <div class="slot-side">
-                <div style="font-size:11px; font-weight:bold;">引き継ぎ鉱石</div>
-                <div id="slot-retained-2" class="ore-grid"></div>
-            </div>
-        </div>
-    </div>
 
-    <div class="slot-container">
-        <div class="slot-layout">
-            <div class="slot-main">
-                <div class="section-title">スロット 3</div>
-                <button class="trigger-btn" onclick="toggleWrapper('slot-matrix-wrapper-3')">[ アイテムを入力 ]</button>
-                <div id="slot-matrix-wrapper-3" class="matrix-wrapper">
-                    <div id="slot-matrix-3"></div>
+            <div class="slot-container">
+                <div class="slot-layout">
+                    <div class="slot-main">
+                        <div class="section-title">スロット 3</div>
+                        <button id="slot-trigger-btn-3" class="trigger-btn" onclick="toggleWrapper('slot-matrix-wrapper-3')">[ アイテムを入力 ]</button>
+                        <div id="slot-matrix-wrapper-3" class="matrix-wrapper">
+                            <div id="slot-matrix-3"></div>
+                        </div>
+                    </div>
+                    <div class="slot-side">
+                        <div style="font-size:11px; font-weight:bold;">引き継ぎ鉱石</div>
+                        <div id="slot-retained-3" class="ore-grid"></div>
+                    </div>
                 </div>
             </div>
-            <div class="slot-side">
-                <div style="font-size:11px; font-weight:bold;">引き継ぎ鉱石</div>
-                <div id="slot-retained-3" class="ore-grid"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="panel-box">
-        <div class="section-title">手持ストックアイテム設定（3行2列）</div>
-        
-        <div id="stock-slots-container" class="stock-grid"></div>
-        
-        <div id="stock-matrix-wrapper" class="matrix-wrapper">
-            <div id="stock-matrix-title" style="font-size:11px; font-weight:bold; margin-bottom:6px; text-align:center; color:var(--text-color);"></div>
-            <div id="stock-matrix-container"></div>
-        </div>
-        
-        <div class="control-row">
-            <span>登録総数: <strong id="lbl-total-stock">0</strong> / <span id="lbl-max-stock">3</span> 枠</span>
-            <button onclick="resetAllStockSlots()" style="padding:2px 6px; font-size:11px; cursor:pointer;">全リセット</button>
         </div>
 
-        <div class="input-group" style="margin-bottom:12px;">
-            <div class="input-item">
-                <label>現在の段位:</label>
-                <select id="sys-level" onchange="processLevelTransition()" class="sys-select">
-                    <option value="見習い">見習い</option><option value="三級">三級</option><option value="二級">二級</option><option value="一級">一級</option>
-                </select>
+        <div class="panel-box">
+            <div class="section-title">手持ストックアイテム設定（3行2列）</div>
+            <div id="stock-slots-container" class="stock-grid"></div>
+            
+            <div id="stock-matrix-wrapper" class="matrix-wrapper">
+                <div id="stock-matrix-title" style="font-size:11px; font-weight:bold; margin-bottom:6px; text-align:center;"></div>
+                <div id="stock-matrix-container"></div>
             </div>
-            <div class="input-item">
-                <label>現在保有スコア:</label>
-                <input type="number" id="sys-cur-score" value="0" min="0" class="sys-input">
+            
+            <div class="control-row">
+                <span>登録総数: <strong id="lbl-total-stock">0</strong> / <span id="lbl-max-stock">3</span> 枠</span>
+                <button onclick="resetAllStockSlots()" style="padding:2px 6px; font-size:11px; cursor:pointer;">全リセット</button>
             </div>
-            <div class="input-item">
-                <label>目標達成スコア:</label>
-                <input type="number" id="sys-tar-score" value="20" min="0" class="sys-input">
-            </div>
-            <div style="text-align:center; font-size:11px;">
-                <label><input type="checkbox" id="sys-over-score"> 目標スコア超過ルートを含める</label>
-            </div>
+            <div id="adv-retained-sync-area" style="background:rgba(0,0,0,0.03); padding:8px; border-radius:4px; display:flex; flex-direction:column; gap:6px; font-size:11px;"></div>
         </div>
 
-        <button onclick="executeStandardAnalysis()" class="action-btn" style="margin-bottom:10px;">最適手順の解析実行</button>
-        <button onclick="toggleAdvancedPanel()" class="toggle-panel-btn">高度分析モード（訓練・変換シミュレーター）を展開</button>
-        
-        <div id="standard-results" class="results-area" style="margin-top:10px;">データを入力し、解析を実行してください。</div>
-    </div>
-
-    <div id="advanced-panel" class="panel-box advanced-section">
-        <div class="section-title">高度分析シミュレーター</div>
-        
-        <div style="font-size:12px; font-weight:bold; margin-bottom:4px;">1. 引き継ぎ鉱石状態（上記スロット内と連動）</div>
-        <div id="adv-retained-sync-area" style="background:rgba(0,0,0,0.05); padding:8px; border-radius:4px; display:flex; flex-direction:column; gap:8px;"></div>
-
-        <div style="font-size:12px; font-weight:bold; margin-top:5px; margin-bottom:4px;">2. 6種訓練における鉱石分布入力</div>
-        
-        <div class="training-matrix">
-            <div id="tb-0" class="train-block focused" onclick="setTrainingFocus(0)"><div class="train-lbl">持久力</div><div id="td-0" class="train-val"></div></div>
-            <div id="tb-1" class="train-block" onclick="setTrainingFocus(1)"><div class="train-lbl">筋力</div><div id="td-1" class="train-val"></div></div>
-            <div id="tb-2" class="train-block" onclick="setTrainingFocus(2)"><div class="train-lbl">瞬発力</div><div id="td-2" class="train-val"></div></div>
-            <div id="tb-3" class="train-block" onclick="setTrainingFocus(3)"><div class="train-lbl">命中力</div><div id="td-3" class="train-val"></div></div>
-            <div id="tb-4" class="train-block" onclick="setTrainingFocus(4)"><div class="train-lbl">知力</div><div id="td-4" class="train-val"></div></div>
-            <div id="tb-5" class="train-block" onclick="setTrainingFocus(5)"><div class="train-lbl">精神力</div><div id="td-5" class="train-val"></div></div>
-        </div>
-
-        <div class="pad-box">
-            <div class="pad-line">
-                <button onclick="handlePadInput('R')" class="p-btn c-r">R</button>
-                <button onclick="handlePadInput('B')" class="p-btn c-b">B</button>
-                <button onclick="handlePadInput('Y')" class="p-btn c-y">Y</button>
-                <button onclick="handlePadInput('G')" class="p-btn c-g">G</button>
-                <button onclick="handlePadInput('N')" class="p-btn c-n">N</button>
+        <div class="panel-box">
+            <div class="section-title">6種訓練における鉱石分布入力</div>
+            <div class="training-matrix">
+                <div id="tb-0" class="train-block focused" onclick="setTrainingFocus(0)"><div class="train-lbl">持久力</div><div id="td-0" class="train-val"></div></div>
+                <div id="tb-1" class="train-block" onclick="setTrainingFocus(1)"><div class="train-lbl">筋力</div><div id="td-1" class="train-val"></div></div>
+                <div id="tb-2" class="train-block" onclick="setTrainingFocus(2)"><div class="train-lbl">瞬発力</div><div id="td-2" class="train-val"></div></div>
+                <div id="tb-3" class="train-block" onclick="setTrainingFocus(3)"><div class="train-lbl">命中力</div><div id="td-3" class="train-val"></div></div>
+                <div id="tb-4" class="train-block" onclick="setTrainingFocus(4)"><div class="train-lbl">知力</div><div id="td-4" class="train-val"></div></div>
+                <div id="tb-5" class="train-block" onclick="setTrainingFocus(5)"><div class="train-lbl">精神力</div><div id="td-5" class="train-val"></div></div>
             </div>
-            <div class="pad-line">
-                <button onclick="handlePadInput('DEL')" class="p-btn sys-op">1文字削除</button>
-                <button onclick="handlePadInput('ENTER')" class="p-btn sys-op" style="flex:2;">Enter (次へ進む)</button>
+
+            <div class="pad-box">
+                <div class="pad-line">
+                    <button onclick="handlePadInput('R')" class="p-btn c-r">R</button>
+                    <button onclick="handlePadInput('B')" class="p-btn c-b">B</button>
+                    <button onclick="handlePadInput('Y')" class="p-btn c-y">Y</button>
+                    <button onclick="handlePadInput('G')" class="p-btn c-g">G</button>
+                    <button onclick="handlePadInput('N')" class="p-btn c-n">N</button>
+                </div>
+                <div class="pad-line">
+                    <button onclick="handlePadInput('DEL')" class="p-btn sys-op">1文字削除</button>
+                    <button onclick="handlePadInput('ENTER')" class="p-btn sys-op">Enter (次へ)</button>
+                    <button onclick="handlePadInput('RESET')" class="p-btn sys-op">Delete (分布リセット)</button>
+                </div>
             </div>
         </div>
 
-        <button onclick="executeAdvancedAnalysis()" class="action-btn" style="background-color:var(--accent-color);">精密シミュレーション実行</button>
-        <div id="advanced-results" class="results-area">訓練分布を設定後、シミュレーションを実行してください。</div>
-        <div id="flowchart-output"></div>
+        <div class="panel-box">
+            <div class="section-title">分析条件 ＆ シミュレーション結果</div>
+            
+            <div class="input-group" style="margin-bottom:12px;">
+                <div class="input-item">
+                    <label>現在の段位:</label>
+                    <select id="sys-level" onchange="processLevelTransition()" class="sys-select">
+                        <option value="見習い">見習い</option><option value="三級">三級</option><option value="二級">二級</option><option value="一級">一級</option>
+                    </select>
+                </div>
+                <div class="input-item">
+                    <label>現在保有スコア:</label>
+                    <input type="number" id="sys-cur-score" value="0" min="0" class="sys-input">
+                </div>
+                <div class="input-item">
+                    <label>目標達成スコア:</label>
+                    <input type="number" id="sys-tar-score" value="20" min="0" class="sys-input">
+                </div>
+                <div style="text-align:center; font-size:11px;">
+                    <label><input type="checkbox" id="sys-over-score" checked> 目標スコア不一致（超過等）ルートも表示する</label>
+                </div>
+            </div>
+
+            <button onclick="executeAdvancedAnalysis()" class="action-btn" style="margin-bottom:10px;">手順の分析実行</button>
+            
+            <div class="control-row" style="margin-top:5px; margin-bottom:5px;">
+                <span>結果一覧</span>
+                <button id="btn-toggle-sort" class="sort-toggle-btn" onclick="toggleSortOrder()">降順にする</button>
+            </div>
+
+            <div id="advanced-results" class="results-area">データを入力し、分析を実行してください。</div>
+            <div id="flowchart-output"></div>
+        </div>
+
     </div>
 
     <div class="info-text">
@@ -632,7 +510,7 @@ const COLOR_KEYS = ['red', 'blue', 'yellow', 'green', 'gold'];
 const TYPE_KEYS = ['kakashi', 'ring', 'charm', 'bracelet', 'necklace'];
 const COLOR_JA = { red: '赤色', blue: '青色', yellow: '黄色', green: '緑色', gold: '金色' };
 const TYPE_JA = { kakashi: 'カカシ', ring: '指輪', charm: 'チャーム', bracelet: '腕輪', necklace: '首飾り' };
-const TYPE_NUMS = { kakashi: '0', ring: '1', charm: '2', bracelet: '3', necklace: '5' }; // セル内表示用数値
+const TYPE_NUMS = { kakashi: '0', ring: '1', charm: '2', bracelet: '3', necklace: '5' };
 const RANK_LIMITS = { '見習い': 3, '三級': 4, '二級': 5, '一級': 6 };
 
 const RECIPES = {
@@ -643,21 +521,16 @@ const RECIPES = {
     gold: { kakashi: { R: 0, B: 0, Y: 1, G: 0, ALL: 0 }, ring: { R: 0, B: 0, Y: 1, G: 0, ALL: 1 }, charm: { R: 0, B: 0, Y: 1, G: 0, ALL: 2 }, bracelet: { R: 0, B: 0, Y: 1, G: 0, ALL: 3 }, necklace: { R: 0, B: 0, Y: 1, G: 0, ALL: 4 } }
 };
 
-// 状態管理
+// 初期状態
 let slotSelections = {
     1: { color: 'red', type: 'kakashi' },
     2: { color: 'blue', type: 'kakashi' },
     3: { color: 'yellow', type: 'kakashi' }
 };
 
-// 3行2列ストック管理(最大6枠)
 let stockSlots = [
-    { color: null, type: null },
-    { color: null, type: null },
-    { color: null, type: null },
-    { color: null, type: null },
-    { color: null, type: null },
-    { color: null, type: null }
+    { color: null, type: null }, { color: null, type: null }, { color: null, type: null },
+    { color: null, type: null }, { color: null, type: null }, { color: null, type: null }
 ];
 let currentStockFocus = 0;
 
@@ -666,6 +539,7 @@ let trainingData = [[], [], [], [], [], []];
 let currentTrainFocus = 0;
 let retainedOresState = { 1: [], 2: [], 3: [] };
 let advancedSolutions = [];
+let sortOrderDesc = false;
 
 function toggleDisplayMode() {
     const body = document.body;
@@ -676,6 +550,7 @@ function toggleDisplayMode() {
         body.classList.remove('light-mode');
         body.classList.add('dark-mode');
     }
+    syncRetainedOres();
 }
 
 function toggleWrapper(id) {
@@ -686,13 +561,31 @@ function toggleWrapper(id) {
 function initSystem() {
     renderSlotMatrices();
     renderStockSlotsUI();
+    updateAllSlotButtons();
     syncRetainedOres();
 }
 
-// 5x5 スロット用等幅マトリクスの描画
+// スロットボタンテキスト＆色連動
+function updateSlotTriggerButton(slot) {
+    const btn = document.getElementById(`slot-trigger-btn-${slot}`);
+    const sel = slotSelections[slot];
+    if (sel.color && sel.type) {
+        btn.innerText = `${COLOR_JA[sel.color]}の${TYPE_JA[sel.type]}`;
+        btn.className = `trigger-btn btn-active-${sel.color}`;
+    } else {
+        btn.innerText = `[ アイテムを入力 ]`;
+        btn.className = `trigger-btn`;
+    }
+}
+
+function updateAllSlotButtons() {
+    for (let s = 1; s <= 3; s++) updateSlotTriggerButton(s);
+}
+
+// 5x5 スロットマトリクス(ヘッダー空欄化)
 function renderSlotMatrices() {
     for (let s = 1; s <= 3; s++) {
-        let html = `<table class="matrix-table"><thead><tr><th>色\\数</th>`;
+        let html = `<table class="matrix-table"><thead><tr><th></th>`;
         TYPE_KEYS.forEach(t => html += `<th>${TYPE_JA[t]}</th>`);
         html += `</tr></thead><tbody>`;
         
@@ -713,12 +606,12 @@ function selectSlotItem(slot, color, type) {
     slotSelections[slot].color = color;
     slotSelections[slot].type = type;
     renderSlotMatrices();
+    updateSlotTriggerButton(slot);
     syncRetainedOres();
-    // 自動的に折り畳む
     document.getElementById(`slot-matrix-wrapper-${slot}`).style.display = 'none';
 }
 
-// 手持ストック(3行2列ブロック)の描画
+// 右上：手持ストック（3行2列）描画
 function renderStockSlotsUI() {
     const container = document.getElementById('stock-slots-container');
     const limit = RANK_LIMITS[document.getElementById('sys-level').value] || 3;
@@ -731,12 +624,14 @@ function renderStockSlotsUI() {
         const focusedClass = (!isDisabled && currentStockFocus === i && document.getElementById('stock-matrix-wrapper')?.style.display === 'block') ? ' focused' : '';
         
         let valText = "未設定";
+        let colorClass = "";
         if (slot.color && slot.type) {
-            valText = `${COLOR_JA[slot.color]}・${TYPE_JA[slot.type]}(${TYPE_NUMS[slot.type]})`;
+            valText = `${COLOR_JA[slot.color]}の${TYPE_JA[slot.type]}`;
+            colorClass = ` btn-active-${slot.color}`;
         }
         
-        html += `<div id="stock-block-${i}" class="stock-block${disabledClass}${focusedClass}" onclick="openStockMatrix(${i})">
-            <div class="stock-lbl">ストック ${i + 1}</div>
+        html += `<div id="stock-block-${i}" class="stock-block${disabledClass}${focusedClass}${colorClass}" onclick="openStockMatrix(${i})">
+            <div class="stock-lbl" style="${slot.color === 'gold' ? 'color:#000;' : ''}">ストック ${i + 1}</div>
             <div class="stock-val-text">${valText}</div>
         </div>`;
     }
@@ -744,13 +639,13 @@ function renderStockSlotsUI() {
     calculateTotalStock();
 }
 
+// ストックマトリクス：重複時は「取消」表記
 function openStockMatrix(idx) {
     currentStockFocus = idx;
     const wrapper = document.getElementById('stock-matrix-wrapper');
-    document.getElementById('stock-matrix-title').innerText = `【ストック ${idx + 1}】のアイテムを設定 (行を選択して数値を決定)`;
+    document.getElementById('stock-matrix-title').innerText = `【ストック ${idx + 1}】アイテム設定（選択済タップで取消）`;
     
-    // ストック選択専用の5x5等幅マトリクスを動的描画
-    let html = `<table class="matrix-table"><thead><tr><th>色\\数</th>`;
+    let html = `<table class="matrix-table"><thead><tr><th></th>`;
     TYPE_KEYS.forEach(t => html += `<th>${TYPE_JA[t]}</th>`);
     html += `</tr></thead><tbody>`;
     
@@ -758,8 +653,10 @@ function openStockMatrix(idx) {
     COLOR_KEYS.forEach(c => {
         html += `<tr class="matrix-row-${c}"><td><strong>${COLOR_JA[c][0]}</strong></td>`;
         TYPE_KEYS.forEach(t => {
-            const isActive = (curSlot.color === c && curSlot.type === t) ? 'active ' + (c === 'gold' ? 'gold' : c[0]) : '';
-            html += `<td><button class="matrix-cell-btn ${isActive}" onclick="selectStockItem('${c}', '${t}')">${TYPE_NUMS[t]}</button></td>`;
+            const isCurrent = (curSlot.color === c && curSlot.type === t);
+            const isActive = isCurrent ? 'active ' + (c === 'gold' ? 'gold' : c[0]) : '';
+            const displayText = isCurrent ? '取消' : TYPE_NUMS[t];
+            html += `<td><button class="matrix-cell-btn ${isActive}" onclick="selectStockItem('${c}', '${t}')">${displayText}</button></td>`;
         });
         html += `</tr>`;
     });
@@ -768,19 +665,19 @@ function openStockMatrix(idx) {
     document.getElementById('stock-matrix-container').innerHTML = html;
     wrapper.style.display = 'block';
     
-    // フォーカス枠の同期更新
     for(let i=0; i<6; i++) {
         const el = document.getElementById(`stock-block-${i}`);
-        if(el) {
-            el.classList.remove('focused');
-            if(i === idx) el.classList.add('focused');
-        }
+        if(el) { el.classList.remove('focused'); if(i === idx) el.classList.add('focused'); }
     }
 }
 
 function selectStockItem(color, type) {
-    stockSlots[currentStockFocus] = { color, type };
-    // 自動的に折り畳む
+    const cur = stockSlots[currentStockFocus];
+    if (cur.color === color && cur.type === type) {
+        stockSlots[currentStockFocus] = { color: null, type: null }; // 取消時空枠化
+    } else {
+        stockSlots[currentStockFocus] = { color, type };
+    }
     document.getElementById('stock-matrix-wrapper').style.display = 'none';
     renderStockSlotsUI();
 }
@@ -788,10 +685,7 @@ function selectStockItem(color, type) {
 function calculateTotalStock() {
     const limit = RANK_LIMITS[document.getElementById('sys-level').value] || 3;
     let total = 0;
-    for (let i = 0; i < limit; i++) {
-        if (stockSlots[i].color && stockSlots[i].type) total++;
-    }
-    
+    for (let i = 0; i < limit; i++) { if (stockSlots[i].color && stockSlots[i].type) total++; }
     document.getElementById('lbl-total-stock').innerText = total;
     document.getElementById('lbl-max-stock').innerText = limit;
 }
@@ -807,18 +701,15 @@ function resetAllStockSlots() {
 
 function processLevelTransition() {
     const limit = RANK_LIMITS[document.getElementById('sys-level').value] || 3;
-    // 上限枠を超えた登録は安全のためクリア
-    for (let i = limit; i < 6; i++) {
-        stockSlots[i] = { color: null, type: null };
-    }
+    for (let i = limit; i < 6; i++) stockSlots[i] = { color: null, type: null };
     document.getElementById('stock-matrix-wrapper').style.display = 'none';
     renderStockSlotsUI();
 }
 
-// 引き継ぎ鉱石領域の同期（ALLのOFF時グラデーション排除＆有色鮮やか化対応）
+// 引き継ぎ鉱石（緑の腕輪 GGRN 配列最適化＆フォント連動）
 function syncRetainedOres() {
     const advSyncArea = document.getElementById('adv-retained-sync-area');
-    if(advSyncArea) advSyncArea.innerHTML = "";
+    if(advSyncArea) advSyncArea.innerHTML = "<strong>引き継ぎ鉱石の現在状態同期:</strong>";
 
     for (let s = 1; s <= 3; s++) {
         const color = slotSelections[s].color;
@@ -826,10 +717,12 @@ function syncRetainedOres() {
         const recipe = RECIPES[color][type];
         
         let expectedOres = [];
-        ['R', 'B', 'Y', 'G'].forEach(k => {
-            for(let i=0; i<recipe[k]; i++) expectedOres.push(k);
-        });
-        for(let i=0; i<recipe.ALL; i++) expectedOres.push('ALL');
+        if (color === 'green' && type === 'bracelet') {
+            expectedOres = ['G', 'G', 'R', 'ALL']; // 緑の腕輪専用順
+        } else {
+            ['R', 'B', 'Y', 'G'].forEach(k => { for(let i=0; i<recipe[k]; i++) expectedOres.push(k); });
+            for(let i=0; i<recipe.ALL; i++) expectedOres.push('ALL');
+        }
 
         if (!retainedOresState[s] || retainedOresState[s].length !== expectedOres.length) {
             retainedOresState[s] = new Array(expectedOres.length).fill(false);
@@ -838,7 +731,6 @@ function syncRetainedOres() {
         let oreButtonsHtml = "";
         expectedOres.forEach((ore, idx) => {
             if (ore === 'ALL') {
-                // active-ALLがある場合のみグラデーションが適用される
                 let activeClass = retainedOresState[s][idx] ? " active-ALL" : "";
                 oreButtonsHtml += `<div class="ore-square ore-all-style${activeClass}" onclick="toggleRetainedOreState(${s}, ${idx})"><span class="all-text">ALL</span></div>`;
             } else {
@@ -850,10 +742,7 @@ function syncRetainedOres() {
         document.getElementById(`slot-retained-${s}`).innerHTML = oreButtonsHtml || `<span style="font-size:10px;color:#718096;">不要</span>`;
         
         if (advSyncArea) {
-            let syncRow = `<div style="font-size:11px;">
-                <strong>スロット${s} [${COLOR_JA[color]}${TYPE_JA[type]}]:</strong>
-                <div class="ore-grid">${oreButtonsHtml || 'なし'}</div>
-            </div>`;
+            let syncRow = `<div style="margin-top:2px;">スロット${s} [${COLOR_JA[color]}${TYPE_JA[type]}]: ${oreButtonsHtml || 'なし'}</div>`;
             advSyncArea.innerHTML += syncRow;
         }
     }
@@ -864,33 +753,27 @@ function toggleRetainedOreState(slot, idx) {
     syncRetainedOres();
 }
 
-function toggleAdvancedPanel() {
-    const panel = document.getElementById('advanced-panel');
-    if (panel.style.display === 'flex') {
-        panel.style.display = 'none';
-    } else {
-        panel.style.display = 'flex';
-        syncRetainedOres();
-    }
-}
-
 function setTrainingFocus(idx) {
     currentTrainFocus = idx;
     for(let i=0; i<6; i++) document.getElementById(`tb-${i}`).classList.remove('focused');
     document.getElementById(`tb-${idx}`).classList.add('focused');
 }
 
+// 鉱石分布入力（R, B, Y, G, N 自動ソート実装）
 function handlePadInput(cmd) {
     if (['R', 'B', 'Y', 'G', 'N'].includes(cmd)) {
         trainingData[currentTrainFocus].push(cmd);
+        const sortOrder = { 'R': 1, 'B': 2, 'Y': 3, 'G': 4, 'N': 5 };
+        trainingData[currentTrainFocus].sort((a, b) => sortOrder[a] - sortOrder[b]); // 自動並び替え
         refreshTrainingDisplay(currentTrainFocus);
     } else if (cmd === 'DEL') {
         trainingData[currentTrainFocus].pop();
         refreshTrainingDisplay(currentTrainFocus);
+    } else if (cmd === 'RESET') {
+        trainingData[currentTrainFocus] = []; // 該当箇所リセット
+        refreshTrainingDisplay(currentTrainFocus);
     } else if (cmd === 'ENTER') {
-        if (currentTrainFocus < 5) {
-            setTrainingFocus(currentTrainFocus + 1);
-        }
+        if (currentTrainFocus < 5) setTrainingFocus(currentTrainFocus + 1);
     }
 }
 
@@ -952,66 +835,7 @@ function computePatternScore(s1, s2, s3, level) {
     return { total: (f1 + f2 + f3) + cBonus + tBonus, f1, f2, f3 };
 }
 
-function executeStandardAnalysis() {
-    const curScore = parseInt(document.getElementById('sys-cur-score').value) || 0;
-    const tarScore = parseInt(document.getElementById('sys-tar-score').value) || 0;
-    const allowOver = document.getElementById('sys-over-score').checked;
-    const gap = tarScore - curScore;
-    const lv = document.getElementById('sys-level').value;
-    const limit = RANK_LIMITS[lv] || 3;
-
-    // 有効な3行2列ストックを取得
-    let flatStock = [];
-    for (let i = 0; i < limit; i++) {
-        if (stockSlots[i].color && stockSlots[i].type) {
-            flatStock.push({ color: stockSlots[i].color, type: stockSlots[i].type });
-        }
-    }
-
-    let options1 = [{ color: slotSelections[1].color, type: slotSelections[1].type, sIdx: null }];
-    let options2 = [{ color: slotSelections[2].color, type: slotSelections[2].type, sIdx: null }];
-    let options3 = [{ color: slotSelections[3].color, type: slotSelections[3].type, sIdx: null }];
-
-    flatStock.forEach((st, idx) => {
-        if (st.color === slotSelections[1].color || st.type === slotSelections[1].type) options1.push({ color: st.color, type: st.type, sIdx: idx });
-        if (st.color === slotSelections[2].color || st.type === slotSelections[2].type) options2.push({ color: st.color, type: st.type, sIdx: idx });
-        if (st.color === slotSelections[3].color || st.type === slotSelections[3].type) options3.push({ color: st.color, type: st.type, sIdx: idx });
-    });
-
-    let matches = [];
-    for (let o1 of options1) {
-        for (let o2 of options2) {
-            for (let o3 of options3) {
-                let u = new Set();
-                if (o1.sIdx !== null) u.add(o1.sIdx);
-                if (o2.sIdx !== null) { if(u.has(o2.sIdx)) continue; u.add(o2.sIdx); }
-                if (o3.sIdx !== null) { if(u.has(o3.sIdx)) continue; u.add(o3.sIdx); }
-
-                let res = computePatternScore({color: o1.color, type: o1.type, isCompleted: true}, {color: o2.color, type: o2.type, isCompleted: true}, {color: o3.color, type: o3.type, isCompleted: true}, lv);
-                let valid = allowOver ? (res.total >= Math.max(0, gap)) : (res.total === gap);
-                if (valid) matches.push({ o1, o2, o3, res });
-            }
-        }
-    }
-
-    const out = document.getElementById('standard-results');
-    if (matches.length === 0) {
-        out.innerHTML = `<span style="color:#ff3b30;">条件に合致する交換手順は存在しません。</span>`;
-        return;
-    }
-
-    matches.sort((a,b) => b.res.total - a.res.total);
-    let html = `<div style="margin-bottom:8px; font-weight:bold;">解析結果: 必要スコア差分 ${gap} pts</div>`;
-    matches.forEach((m, i) => {
-        html += `<div class="result-row-item">` +
-                `<strong>パターン ${i+1}: 獲得 +${m.res.total} pts (合計: ${curScore + m.res.total} pts)</strong><br>` +
-                `・スロット1: [${COLOR_JA[m.o1.color]}${TYPE_JA[m.o1.type]}(${TYPE_NUMS[m.o1.type]})] (➔ ${m.res.f1}pts)<br>` +
-                `・スロット2: [${COLOR_JA[m.o2.color]}${TYPE_JA[m.o2.type]}(${TYPE_NUMS[m.o2.type]})] (➔ ${m.res.f2}pts)<br>` +
-                `・スロット3: [${COLOR_JA[m.o3.color]}${TYPE_JA[m.o3.type]}(${TYPE_NUMS[m.o3.type]})] (➔ ${m.res.f3}pts)</div>`;
-    });
-    out.innerHTML = html;
-}
-
+// 分析シミュレーションのメイン集約
 function executeAdvancedAnalysis() {
     const curScore = parseInt(document.getElementById('sys-cur-score').value) || 0;
     const tarScore = parseInt(document.getElementById('sys-tar-score').value) || 0;
@@ -1080,15 +904,18 @@ function executeAdvancedAnalysis() {
                         for (let s = 0; s < 3; s++) {
                             const item = activeSlots[s];
                             const rec = RECIPES[item.color][item.type];
-                            
                             let pool = { R: cBonus.R + tCounts.R, B: cBonus.B + tCounts.B, Y: cBonus.Y + tCounts.Y, G: cBonus.G + tCounts.G, N: tCounts.N };
                             
                             if ((s === 0 && c0 === null) || (s === 1 && c1 === null) || (s === 2 && c2 === null)) {
                                 const states = retainedOresState[s+1] || [];
                                 const origRec = RECIPES[slotSelections[s+1].color][slotSelections[s+1].type];
                                 let origList = [];
-                                ['R', 'B', 'Y', 'G'].forEach(k => { for(let i=0; i<origRec[k]; i++) origList.push(k); });
-                                for(let i=0; i<origRec.ALL; i++) origList.push('ALL');
+                                if (slotSelections[s+1].color === 'green' && slotSelections[s+1].type === 'bracelet') {
+                                    origList = ['G', 'G', 'R', 'ALL'];
+                                } else {
+                                    ['R', 'B', 'Y', 'G'].forEach(k => { for(let i=0; i<origRec[k]; i++) origList.push(k); });
+                                    for(let i=0; i<origRec.ALL; i++) origList.push('ALL');
+                                }
                                 
                                 states.forEach((act, oIdx) => {
                                     if(act && oIdx < origList.length) {
@@ -1098,15 +925,9 @@ function executeAdvancedAnalysis() {
                                 });
                             }
 
-                            let dR = pool.R - rec.R;
-                            let dB = pool.B - rec.B;
-                            let dY = pool.Y - rec.Y;
-                            let dG = pool.G - rec.G;
-
+                            let dR = pool.R - rec.R; let dB = pool.B - rec.B; let dY = pool.Y - rec.Y; let dG = pool.G - rec.G;
                             if (dR >= 0 && dB >= 0 && dY >= 0 && dG >= 0) {
-                                if ((dR + dB + dY + dG + pool.N) >= rec.ALL) {
-                                    compFlags[s] = true;
-                                }
+                                if ((dR + dB + dY + dG + pool.N) >= rec.ALL) compFlags[s] = true;
                             }
                         }
 
@@ -1117,8 +938,8 @@ function executeAdvancedAnalysis() {
                             lv
                         );
 
-                        let valid = allowOver ? (scoreRes.total >= Math.max(0, gap)) : (scoreRes.total === gap);
-                        if (valid && scoreRes.total > 0) {
+                        let valid = allowOver ? (scoreRes.total > 0) : (scoreRes.total === gap);
+                        if (valid) {
                             advancedSolutions.push({ swaps: [c0, c1, c2], activeSlots, converts: convList, trainIdx: t, trainName: TRAIN_LABELS[t], scoreRes, compFlags });
                         }
                     }
@@ -1126,56 +947,98 @@ function executeAdvancedAnalysis() {
             }
         }
     }
+    renderAdvancedResults();
+}
+
+function toggleSortOrder() {
+    sortOrderDesc = !sortOrderDesc;
+    document.getElementById('btn-toggle-sort').innerText = sortOrderDesc ? "昇順/訓練順に戻す" : "降順にする";
+    renderAdvancedResults();
+}
+
+// 結果描画（条件分岐ソート：一致は訓練順、不一致はpt昇順、降順トグル対応）
+function renderAdvancedResults() {
+    const curScore = parseInt(document.getElementById('sys-cur-score').value) || 0;
+    const tarScore = parseInt(document.getElementById('sys-tar-score').value) || 0;
+    const gap = tarScore - curScore;
+
+    advancedSolutions.sort((a, b) => {
+        const aMatch = a.scoreRes.total === gap;
+        const bMatch = b.scoreRes.total === gap;
+        
+        if (aMatch && !bMatch) return sortOrderDesc ? 1 : -1;
+        if (!aMatch && bMatch) return sortOrderDesc ? -1 : 1;
+        
+        if (aMatch && bMatch) {
+            return sortOrderDesc ? b.trainIdx - a.trainIdx : a.trainIdx - b.trainIdx; // 訓練順
+        } else {
+            return sortOrderDesc ? b.scoreRes.total - a.scoreRes.total : a.scoreRes.total - b.scoreRes.total; // pt昇順
+        }
+    });
 
     const out = document.getElementById('advanced-results');
     if (advancedSolutions.length === 0) {
-        out.innerHTML = `<span style="color:#ff3b30;">目標を満たすルートは検出されませんでした。</span>`;
+        out.innerHTML = `<span style="color:#ff3b30;">条件を満たすシミュレーションルートは存在しません。</span>`;
         return;
     }
 
-    advancedSolutions.sort((a,b) => b.scoreRes.total - a.scoreRes.total);
-    let html = `<div style="font-weight:bold; margin-bottom:6px;">検出ルート: ${advancedSolutions.length} 件 (クリックで詳細手順展開)</div>`;
-    advancedSolutions.slice(0, 20).forEach((sol, i) => {
+    let html = `<div style="font-weight:bold; margin-bottom:6px;">検出ルート: ${advancedSolutions.length} 件 (クリックで手順展開)</div>`;
+    advancedSolutions.slice(0, 30).forEach((sol, i) => {
+        let itemStatusHtml = [];
+        for(let s=0; s<3; s++) {
+            const item = sol.activeSlots[s];
+            const compMark = sol.compFlags[s] ? '○' : '×';
+            itemStatusHtml.push(`スロット${s+1}: <span class="text-${item.color}"><strong>${COLOR_JA[item.color]}の${TYPE_JA[item.type]}</strong></span> (${compMark})`);
+        }
+
         html += `<div class="result-row-item" onclick="renderFlowchart(${i})">` +
                 `<strong>ルート ${i+1}: 獲得 +${sol.scoreRes.total} pts (${sol.trainName})</strong><br>` +
-                `<span style="font-size:11px; opacity:0.8;">達成判定: スロット1(${sol.compFlags[0]?'○':'×'}) | スロット2(${sol.compFlags[1]?'○':'×'}) | スロット3(${sol.compFlags[2]?'○':'×'})</span></div>`;
+                `<div style="font-size:11px; margin-top:2px; line-height:1.4;">${itemStatusHtml.join(' | ')}</div></div>`;
     });
     out.innerHTML = html;
 }
 
+// 精密フローチャート描画
 function renderFlowchart(idx) {
     const sol = advancedSolutions[idx];
     const target = document.getElementById('flowchart-output');
     
-    let html = `<div class="flow-container"><h4 style="margin:0 0 6px 0; font-size:12px;">【解析ルート ${idx+1} 実行の手順】</h4>`;
+    let html = `<div class="flow-container"><h4 style="margin:0 0 8px 0; font-size:12px;">【分析ルート ${idx+1} 実行手順】</h4>`;
+    let step = 1;
+    
+    // 操作1: スロット入れ替え
     let swapNotes = [];
     for(let s=0; s<3; s++) {
         if(sol.swaps[s] !== null) {
-            swapNotes.push(`スロット${s+1}をストック内の [${COLOR_JA[sol.activeSlots[s].color]}・${TYPE_JA[sol.activeSlots[s].type]}(${TYPE_NUMS[sol.activeSlots[s].type]})] と入れ替える（既存の引き継ぎ鉱石は消失）`);
+            const item = sol.activeSlots[s];
+            swapNotes.push(`スロット${s+1}をストックの <span class="text-${item.color}"><strong>${COLOR_JA[item.color]}の${TYPE_JA[item.type]}</strong></span> と入れ替える（既存の引き継ぎ鉱石は消失）`);
         }
     }
-    
     if(swapNotes.length > 0) {
-        swapNotes.forEach(n => html += `<div>・${n}</div>`);
+        swapNotes.forEach(n => { html += `<div>${step}. ${n}</div>`; step++; });
     } else {
-        html += `<div>・スロットの入れ替え操作は不要です</div>`;
+        html += `<div style="opacity:0.65;">${step}. （スロットの入れ替え操作は不要です）</div>`; step++;
     }
 
+    // 操作2: ストックレシピ変換
     if(sol.converts.length > 0) {
-        let items = sol.converts.map(c => `[${COLOR_JA[c.color]}・${TYPE_JA[c.type]}]`).join(', ');
-        html += `<div>・手持ストック内のレシピ ${items} を鉱石へ一括変換する</div>`;
+        let items = sol.converts.map(c => `<span class="text-${c.color}"><strong>${COLOR_JA[c.color]}の${TYPE_JA[c.type]}</strong></span>`).join(', ');
+        html += `<div>${step}. 手持ストック内のレシピ ${items} を鉱石へ一括変換する</div>`; step++;
     } else {
-        html += `<div>・ストックレシピの変換操作は不要です</div>`;
+        html += `<div style="opacity:0.65;">${step}. （ストックレシピの変換操作は不要です）</div>`; step++;
     }
 
-    html += `<div>・訓練<strong>「${sol.trainName}」</strong>を実行し、該当領域の鉱石群を完全回収する</div>`;
+    // 操作3: 訓練実行
+    html += `<div>${step}. 訓練<strong>「${sol.trainName}」</strong>を実行し、該当領域の鉱石群を完全回収する</div>`; step++;
 
+    // 結果
     let comps = [];
-    if(sol.compFlags[0]) comps.push("スロット1");
-    if(sol.compFlags[1]) comps.push("スロット2");
-    if(sol.compFlags[2]) comps.push("スロット3");
-    
-    html += `<div style="margin-top:6px; font-weight:bold; color:var(--color-green);">➔ 結末: ${comps.join(', ')} が完成。計 +${sol.scoreRes.total} pts が加算されます。</div></div>`;
+    for(let s=0; s<3; s++) {
+        const item = sol.activeSlots[s];
+        if(sol.compFlags[s]) comps.push(`<span class="text-${item.color}"><strong>${COLOR_JA[item.color]}の${TYPE_JA[item.type]}</strong></span>`);
+    }
+    let resultText = comps.length > 0 ? `${comps.join('、')} が完成。` : "完成したアイテムはありません。";
+    html += `<div style="margin-top:8px; font-weight:bold; color:var(--color-green);">➔ 結果: ${resultText}計 +${sol.scoreRes.total} pts が加算されます。</div></div>`;
     
     target.innerHTML = html;
     target.scrollIntoView({ behavior: 'smooth' });
