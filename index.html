@@ -17,8 +17,7 @@
             --color-yellow: #f39c12;
             --color-green: #2ecc71;
             --color-gold: #f1c40f;
-            --color-none: #95a5a6;
-            --color-all: #a4b0be;
+            --color-none: #a0a0b0;
             
             --slot1-bg: #1d142b;
             --slot1-border: #4a346b;
@@ -33,809 +32,1172 @@
             flex-direction: column;
             align-items: center;
         }
+        
         .container {
             width: 100%;
-            max-width: 800px;
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-            box-sizing: border-box;
+            max-width: 550px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
-        h1, h2, h3 {
+
+        h1 {
             text-align: center;
+            font-size: 22px;
+            margin: 0 0 10px 0;
             color: #fff;
-            margin-top: 0;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 10px;
         }
-        .section {
-            background: rgba(255,255,255,0.03);
-            padding: 15px;
+
+        h2 {
+            font-size: 16px;
+            color: #3498db;
+            margin: 0 0 10px 0;
+            text-align: center;
+            border-bottom: 1px solid #3498db;
+            padding-bottom: 5px;
+        }
+
+        .slot-card {
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border-color);
+            padding: 15px;
+            background: #1f1f2e;
         }
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-        .slot-box {
-            background: rgba(0,0,0,0.2);
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            text-align: center;
-        }
-        .slot-box.slot1 {
+        .slot-card.slot1-special {
             background: var(--slot1-bg);
-            border-color: var(--slot1-border);
+            border: 1px solid var(--slot1-border);
+            box-shadow: 0 0 10px rgba(74, 52, 107, 0.4);
         }
-        select, input, button {
-            width: 100%;
-            padding: 10px;
-            background: #32324a;
-            border: 1px solid var(--border-color);
-            color: #fff;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-        button {
-            background: var(--primary-color);
-            cursor: pointer;
-            font-weight: bold;
-            border: none;
-            transition: background 0.2s;
-        }
-        button:hover { background: #2980b9; }
-        
-        /* ストック入力用 */
-        .stock-container {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 5px;
-            text-align: center;
-        }
-        .stock-row {
-            display: contents;
-        }
-        .stock-label {
-            font-size: 12px;
-            align-self: center;
-            font-weight: bold;
-        }
-        .counter-btn {
+
+        .slot-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #32324a;
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .slot-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .select-color {
+            width: 85px;
+            padding: 10px 5px;
+            font-size: 15px;
             border-radius: 6px;
             border: 1px solid var(--border-color);
-            overflow: hidden;
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
         }
-        .counter-btn button {
-            width: 30px;
-            height: 35px;
-            background: #424263;
+        .select-type {
+            width: 125px;
+            padding: 10px 5px;
+            font-size: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #2c2c3e;
+            color: #fff;
+            font-weight: bold;
         }
-        .counter-btn span { width: 100%; text-align: center; font-weight: bold;}
+        
+        select.color-red { background-color: #ff4d4d !important; color: #fff !important; }
+        select.color-blue { background-color: #3399ff !important; color: #fff !important; }
+        select.color-yellow { background-color: var(--color-yellow) !important; color: #fff !important; }
+        select.color-green { background-color: var(--color-green) !important; color: #fff !important; }
+        select.color-gold { background-color: #f1c40f !important; color: #000 !important; }
 
-        /* 高度分析エリア */
-        .hidden { display: none; }
-        .analyze-toggle-btn {
-            background: #e67e22;
-            margin: 10px 0 20px 0;
-            font-size: 16px;
-        }
-        .analyze-toggle-btn:hover { background: #d35400; }
+        option[value="red"] { background-color: #ff4d4d; color: #fff; }
+        option[value="blue"] { background-color: #3399ff; color: #fff; }
+        option[value="yellow"] { background-color: #ffcc00; color: #000; }
+        option[value="green"] { background-color: #2ecc71; color: #fff; }
+        option[value="gold"] { background-color: #f1c40f; color: #000; }
 
-        /* 独立正方形鉱石ボタン */
-        .ore-btn-container {
+        .search-box {
+            padding: 15px;
+            background: #1f1f2e;
+            border-radius: 8px;
+            border: 1px solid #3498db;
+            margin-top: 5px;
             display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .search-box h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #3498db;
+            text-align: center;
+        }
+        
+        .stock-section {
+            background: #14141f;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #2c2c3e;
+        }
+        .stock-section-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #a0a0b0;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        .stock-status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            background: #191924;
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .clear-btn {
+            padding: 2px 8px;
+            font-size: 11px;
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .clear-btn:hover { background: #c0392b; }
+
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            table-layout: fixed;
+        }
+        .stock-table th, .stock-table td {
+            border: 1px solid var(--border-color);
+            padding: 5px 2px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .stock-table th {
+            background: #2c2c3e;
+            color: #fff;
+            font-weight: bold;
+        }
+        .stock-table th:first-child, .stock-table td:first-child {
+            width: 45px;
+            font-weight: bold;
+        }
+        .row-hdr { background: #191924; }
+        
+        .stock-ctrl {
+            display: flex;
+            align-items: center;
             justify-content: center;
+            gap: 3px;
+        }
+        .stock-ctrl button {
+            width: 18px;
+            height: 18px;
+            padding: 0;
+            font-size: 12px;
+            font-weight: bold;
+            background: #3a3a52;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .stock-ctrl span {
+            min-width: 10px;
+            font-weight: bold;
+            font-size: 12px;
+            color: #fff;
+        }
+        .stock-ctrl span.has-count {
+            color: #2ecc71;
+            text-shadow: 0 0 5px rgba(46,204,113,0.5);
+        }
+
+        .text-red { color: var(--color-red); }
+        .text-blue { color: var(--color-blue); }
+        .text-yellow { color: var(--color-yellow); }
+        .text-green { color: var(--color-green); }
+        .text-gold { color: var(--color-gold); }
+        .text-none { color: var(--color-none); }
+
+        .search-row {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #191924;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+        .search-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .search-group label { font-size: 14px; }
+        .search-input {
+            width: 100px;
+            padding: 6px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #2c2c3e;
+            color: #fff;
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .level-select {
+            width: 114px;
+            padding: 6px;
+            font-size: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #2c2c3e;
+            color: #fff;
+            font-weight: bold;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #f0f0f5;
+            cursor: pointer;
+            justify-content: center;
+            margin-top: 5px;
+        }
+        .checkbox-label input { width: 18px; height: 18px; }
+        
+        .search-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            background: #3498db;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        .search-btn:hover { background: #2980b9; }
+        
+        .adv-toggle-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 2px dashed #e67e22;
+            background: rgba(230, 126, 34, 0.1);
+            color: #e67e22;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+            text-align: center;
+        }
+        .adv-toggle-btn:hover { background: rgba(230, 126, 34, 0.2); }
+
+        .search-results {
+            text-align: left;
+            max-height: 300px;
+            overflow-y: auto;
+            background: #11111a;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.6;
+            border: 1px solid var(--border-color);
+        }
+        .result-item {
+            padding: 10px;
+            border-bottom: 1px solid #2a2a3a;
+            cursor: pointer;
+        }
+        .result-item:hover { background: #1c1c2b; }
+        
+        /* 高度な分析セクションのスタイル */
+        .advanced-panel {
+            display: none;
+            border: 2px solid #e67e22;
+            border-radius: 8px;
+            padding: 15px;
+            background: #191926;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* 引き継ぎ正方形ボタン */
+        .retained-container {
+            background: #11111a;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+        .retained-row {
+            margin-bottom: 10px;
+        }
+        .retained-row:last-child { margin-bottom: 0; }
+        .retained-grid {
+            display: flex;
             gap: 6px;
-            margin-top: 8px;
+            margin-top: 5px;
             flex-wrap: wrap;
         }
         .ore-square {
             width: 36px;
             height: 36px;
+            border-radius: 4px;
+            border: 2px solid #3a3a52;
+            background: #252535;
+            color: #fff;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            border: 2px solid transparent;
             user-select: none;
-            opacity: 0.4;
-            color: #fff;
         }
-        .ore-square.active {
-            opacity: 1;
-            box-shadow: 0 0 8px rgba(255,255,255,0.2);
-        }
-        .bg-R { background-color: var(--color-red); }
-        .bg-B { background-color: var(--color-blue); }
-        .bg-Y { background-color: var(--color-yellow); }
-        .bg-G { background-color: var(--color-green); }
-        .bg-N { background-color: var(--color-none); }
-        .bg-ALL { background-color: var(--color-all); color: #1a1a24; }
+        .ore-square.active-R { background: var(--color-red); border-color: #ff8080; }
+        .ore-square.active-B { background: var(--color-blue); border-color: #80bfff; }
+        .ore-square.active-Y { background: var(--color-yellow); border-color: #ffcc66; }
+        .ore-square.active-G { background: var(--color-green); border-color: #80ffaa; }
+        .ore-square.active-ALL { background: #9b59b6; border-color: #d6a2e8; }
 
-        /* 3行2列の練習グリッド */
-        .practice-grid {
+        /* 3行2列の訓練グリッド */
+        .training-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 15px;
+            gap: 10px;
         }
-        .practice-window {
-            background: #1e1e2d;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            padding: 10px;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-        }
-        .practice-window.active {
-            border-color: #e67e22;
-            background: #252538;
-            box-shadow: 0 0 10px rgba(230,126,34,0.2);
-        }
-        .practice-title {
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 6px;
-            color: #eab543;
-        }
-        .practice-ores-disp {
-            display: flex;
-            gap: 4px;
-            font-size: 12px;
-            min-height: 20px;
-        }
-        .ore-badge {
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-
-        /* 電卓キーパッド */
-        .keypad {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        .keypad button {
-            height: 45px;
-            font-size: 16px;
-        }
-        .keypad .btn-enter {
-            background: #2ecc71;
-            grid-column: span 3;
-        }
-        .keypad .btn-enter:hover { background: #27ae60; }
-
-        /* 結果とフローチャート */
-        .result-item {
-            background: rgba(255,255,255,0.02);
+        .train-card {
+            background: #222230;
             border: 1px solid var(--border-color);
-            padding: 12px;
             border-radius: 6px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .result-item:hover {
-            background: rgba(255,255,255,0.05);
-        }
-        .flowchart {
-            margin-top: 10px;
-            background: #151522;
-            border-left: 3px solid #e67e22;
             padding: 10px;
-            border-radius: 0 6px 6px 0;
+            min-height: 50px;
+            cursor: pointer;
+            position: relative;
+        }
+        .train-card.focused {
+            border: 2px solid #e67e22;
+            background: #2b2b3d;
+        }
+        .train-title {
             font-size: 13px;
-            line-height: 1.6;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 4px;
+        }
+        .train-display {
+            font-size: 12px;
+            font-family: monospace;
+            color: #fff;
+            word-break: break-all;
+        }
+
+        /* 入力パッド */
+        .pad-container {
+            background: #14141f;
+            padding: 10px;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        .pad-row {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+        }
+        .pad-btn {
+            flex: 1;
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            text-align: center;
+        }
+        .p-r { background: var(--color-red); }
+        .p-b { background: var(--color-blue); }
+        .p-y { background: var(--color-yellow); }
+        .p-g { background: var(--color-green); }
+        .p-n { background: var(--color-none); }
+        .p-del { background: #7f8c8d; }
+        .p-enter { background: #e67e22; flex: 2; }
+        
+        /* フローチャート表示 */
+        .flowchart-box {
+            background: #0f0f18;
+            border-left: 4px solid #e67e22;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 0 6px 6px 0;
+            font-size: 12px;
+            line-height: 1.5;
         }
         .flow-step {
-            display: flex;
-            align-items: center;
             margin-bottom: 6px;
+            position: relative;
+            padding-left: 15px;
+        }
+        .flow-step::before {
+            content: "➔";
+            position: absolute;
+            left: 0;
+            color: #e67e22;
         }
         .flow-step:last-child { margin-bottom: 0; }
-        .flow-arrow {
-            color: #e67e22;
-            margin: 0 8px;
-            font-weight: bold;
+
+        .warning-box {
+            font-size: 11px;
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+            padding: 10px;
+            border-radius: 6px;
+            line-height: 1.4;
         }
+        
+        .footer-links {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 13px;
+            line-height: 1.8;
+            width: 100%;
+        }
+        .footer-links p { margin: 8px 0; }
+        .footer-links a { color: #3498db; text-decoration: none; word-break: break-all; }
+        .support-link {
+            background: #2c3e50;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px !important;
+            border-left: 4px solid #e74c3c;
+        }
+        .support-link a { color: #ff7675; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>カジナイトアカデミー 逆算＆精密分析</h1>
+    <h1>カジナイトアカデミー<br>鍛冶スコア逆算＆高度分析</h1>
 
-    <div class="section">
-        <h2>現在の状態</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-            <div>
-                <label>現在の段位:</label>
-                <select id="gameLevel">
-                    <option value="初段">初段 (通常1倍 / 金1.2倍)</option>
-                    <option value="二段">二段 (通常1.1倍 / 金1.3倍)</option>
-                    <option value="三段">三段 (通常1.2倍 / 金1.4倍)</option>
-                    <option value="四段">四段 (通常1.3倍 / 金1.5倍)</option>
-                    <option value="皆伝" selected>皆伝 (通常1.5倍 / 金2.0倍)</option>
+    <div class="slot-card slot1-special">
+        <div class="slot-header"><span>スロット 1 (現在の状態)</span></div>
+        <div class="slot-row">
+            <select id="color1" onchange="updateSelectColor(1); onSlotChanged();" class="select-color color-red">
+                <option value="red">赤色</option><option value="blue">青色</option><option value="yellow">黄色</option><option value="green">緑色</option><option value="gold">金色</option>
+            </select>
+            <select id="type1" onchange="onSlotChanged();" class="select-type">
+                <option value="kakashi">カカシ</option><option value="ring">指輪</option><option value="charm">チャーム</option><option value="bracelet">腕輪</option><option value="necklace">首飾り</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="slot-card">
+        <div class="slot-header"><span>スロット 2 (現在の状態)</span></div>
+        <div class="slot-row">
+            <select id="color2" onchange="updateSelectColor(2); onSlotChanged();" class="select-color color-red">
+                <option value="red">赤色</option><option value="blue">青色</option><option value="yellow">黄色</option><option value="green">緑色</option><option value="gold">金色</option>
+            </select>
+            <select id="type2" class="select-type" onchange="onSlotChanged();">
+                <option value="kakashi">カカシ</option><option value="ring">指輪</option><option value="charm">チャーム</option><option value="bracelet">腕輪</option><option value="necklace">首飾り</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="slot-card">
+        <div class="slot-header"><span>スロット 3 (現在の状態)</span></div>
+        <div class="slot-row">
+            <select id="color3" onchange="updateSelectColor(3); onSlotChanged();" class="select-color color-red">
+                <option value="red">赤色</option><option value="blue">青色</option><option value="yellow">黄色</option><option value="green">緑色</option><option value="gold">金色</option>
+            </select>
+            <select id="type3" class="select-type" onchange="onSlotChanged();">
+                <option value="kakashi">カカシ</option><option value="ring">指輪</option><option value="charm">チャーム</option><option value="bracelet">腕輪</option><option value="necklace">首飾り</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="search-box">
+        <h3>目標ポイント達成シミュレーター</h3>
+        
+        <div class="stock-section">
+            <div class="stock-section-title">手持ちのストックアイテム（直接タップで増減）</div>
+            <div class="stock-status-bar">
+                <span>登録数: <strong id="totalStockDisp">0</strong> / <span id="maxStockDisp">3</span> 枠</span>
+                <button onclick="clearStock()" class="clear-btn">全クリア</button>
+            </div>
+            <table class="stock-table">
+                <thead><tr><th></th><th>カカシ</th><th>指輪</th><th>チャム</th><th>腕輪</th><th>首飾</th></tr></thead>
+                <tbody id="stockTableBody"></tbody>
+            </table>
+        </div>
+
+        <div class="search-row">
+            <div class="search-group">
+                <label for="gameLevel"><strong>段位:</strong></label>
+                <select id="gameLevel" onchange="onLevelChange();" class="level-select">
+                    <option value="見習い">見習い</option><option value="三級">三級</option><option value="二級">二級</option><option value="一級">一級</option>
                 </select>
             </div>
-            <div>
-                <label>現在の合計スコア:</label>
-                <input type="number" id="currentScore" value="0">
+            <div style="border-top: 1px solid #2a2a3a; margin: 4px 0;"></div>
+            <div class="search-group">
+                <label for="currentScore"><strong>現在の点数:</strong></label>
+                <input type="number" id="currentScore" value="0" min="0" class="search-input" onchange="syncScores()">
+            </div>
+            <div style="border-top: 1px solid #2a2a3a; margin: 4px 0;"></div>
+            <div class="search-group">
+                <label for="targetScore"><strong>目標とする点数:</strong></label>
+                <input type="number" id="targetScore" value="20" min="0" class="search-input" onchange="syncScores()">
             </div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <div>
-                <label>目標スコア:</label>
-                <input type="number" id="targetScore" value="60000">
-            </div>
-            <div>
-                <label>金色カカシ倍率補正:</label>
-                <select id="goldKakashiBonus">
-                    <option value="0">なし</option>
-                    <option value="1">1本所持 (+10%)</option>
-                    <option value="2">2本所持 (+20%)</option>
-                    <option value="3">3本所持 (+30%)</option>
-                </select>
-            </div>
+        
+        <div>
+            <label class="checkbox-label">
+                <input type="checkbox" id="includeExcess" onchange="syncScores()">
+                <strong>目標を超過するものを含む（高得点ルート狙い）</strong>
+            </label>
         </div>
+        
+        <button onclick="searchPatterns()" class="search-btn">手順を割り出す</button>
+        <button type="button" onclick="toggleAdvancedPanel()" class="adv-toggle-btn">詳細な分析（訓練・変換シミュレーター）はこちら</button>
+        
+        <div id="searchResults" class="search-results">ストックを入力してボタンを押してください。</div>
     </div>
 
-    <div class="section">
-        <h2>現在のアカデミースロット</h2>
-        <div class="grid-3">
-            <div class="slot-box slot1">
-                <div style="font-weight: bold; color: #a55eea; margin-bottom: 4px;">スロット 1</div>
-                <select id="s1_color" onchange="updateOREInputs()"></select>
-                <select id="s1_type" onchange="updateOREInputs()" style="margin-top: 5px;"></select>
-                <div class="ore-btn-container" id="s1_ores_container"></div>
-            </div>
-            <div class="slot-box">
-                <div style="font-weight: bold; margin-bottom: 4px;">スロット 2</div>
-                <select id="s2_color" onchange="updateOREInputs()"></select>
-                <select id="s2_type" onchange="updateOREInputs()" style="margin-top: 5px;"></select>
-                <div class="ore-btn-container" id="s2_ores_container"></div>
-            </div>
-            <div class="slot-box">
-                <div style="font-weight: bold; margin-bottom: 4px;">スロット 3</div>
-                <select id="s3_color" onchange="updateOREInputs()"></select>
-                <select id="s3_type" onchange="updateOREInputs()" style="margin-top: 5px;"></select>
-                <div class="ore-btn-container" id="s3_ores_container"></div>
+    <div id="advancedPanel" class="advanced-panel">
+        <h2>高度な分析シミュレーター</h2>
+        
+        <div class="retained-container">
+            <div style="font-size: 13px; font-weight: bold; color: #e67e22; margin-bottom: 6px;">1. 引き継ぎ鉱石の入力（タップで取得済みに切り替え）</div>
+            <div id="retainedOresArea"></div>
+        </div>
+
+        <div>
+            <div style="font-size: 13px; font-weight: bold; color: #e67e22; margin-bottom: 6px;">2. 6つの練習における鉱石の分布入力</div>
+            <div class="training-grid">
+                <div id="train-0" class="train-card focused" onclick="focusTrain(0)"><div class="train-title">持久力</div><div id="td-0" class="train-display"></div></div>
+                <div id="train-1" class="train-card" onclick="focusTrain(1)"><div class="train-title">筋力</div><div id="td-1" class="train-display"></div></div>
+                <div id="train-2" class="train-card" onclick="focusTrain(2)"><div class="train-title">瞬発力</div><div id="td-2" class="train-display"></div></div>
+                <div id="train-3" class="train-card" onclick="focusTrain(3)"><div class="train-title">命中力</div><div id="td-3" class="train-display"></div></div>
+                <div id="train-4" class="train-card" onclick="focusTrain(4)"><div class="train-title">知力</div><div id="td-4" class="train-display"></div></div>
+                <div id="train-5" class="train-card" onclick="focusTrain(5)"><div class="train-title">精神力</div><div id="td-5" class="train-display"></div></div>
             </div>
         </div>
+
+        <div class="pad-container">
+            <div class="pad-row">
+                <button type="button" class="pad-btn p-r" onclick="pressPad('R')">R</button>
+                <button type="button" class="pad-btn p-b" onclick="pressPad('B')">B</button>
+                <button type="button" class="pad-btn p-y" onclick="pressPad('Y')">Y</button>
+                <button type="button" class="pad-btn p-g" onclick="pressPad('G')">G</button>
+                <button type="button" class="pad-btn p-n" onclick="pressPad('N')">N</button>
+            </div>
+            <div class="pad-row">
+                <button type="button" class="pad-btn p-del" onclick="pressPad('DEL')">1つ削除</button>
+                <button type="button" class="pad-btn p-enter" onclick="pressPad('ENTER')">Enter (次の練習へ)</button>
+            </div>
+        </div>
+
+        <button type="button" onclick="runAdvancedAnalysis()" class="search-btn" style="background:#e67e22;">詳細な分析を実行</button>
+        <div id="advResults" class="search-results">練習の分布を入力して分析を実行してください。</div>
+        <div id="flowchartArea"></div>
+    </div>
+    
+    <div class="warning-box">
+        ※当ツールは有志による計算シミュレーターです。実際の挙動と異なる場合がありますのでご了承ください。
     </div>
 
-    <div class="section">
-        <h2>手持ちのストックレシピ数</h2>
-        <div class="stock-container">
-            <div class="stock-row" id="stockRows"></div>
-        </div>
-    </div>
-
-    <button class="analyze-toggle-btn" onclick="toggleAdvancedAnalysis()">詳細な分析（実現可能性の検証）はこちら</button>
-
-    <div id="advancedAnalysisArea" class="section hidden">
-        <h2>高度精密シミュレーション</h2>
-        <p style="font-size: 12px; color: #a4b0be; margin-top: -5px; margin-bottom: 15px;">
-            ※スロットの各アイテムの下に表示された鉱石ボタンをタップして、現在すでに取得済みの引き継ぎ鉱石を登録してください。
-        </p>
-
-        <h3>1. 今ターンの練習の分布入力</h3>
-        <div class="practice-grid">
-            <div class="practice-window active" id="win-0" onclick="setFocusPractice(0)">
-                <div class="practice-title">持久力</div>
-                <div class="practice-ores-disp" id="disp-0"></div>
-            </div>
-            <div class="practice-window" id="win-1" onclick="setFocusPractice(1)">
-                <div class="practice-title">筋力</div>
-                <div class="practice-ores-disp" id="disp-1"></div>
-            </div>
-            <div class="practice-window" id="win-2" onclick="setFocusPractice(2)">
-                <div class="practice-title">瞬発力</div>
-                <div class="practice-ores-disp" id="disp-2"></div>
-            </div>
-            <div class="practice-window" id="win-3" onclick="setFocusPractice(3)">
-                <div class="practice-title">命中力</div>
-                <div class="practice-ores-disp" id="disp-3"></div>
-            </div>
-            <div class="practice-window" id="win-4" onclick="setFocusPractice(4)">
-                <div class="practice-title">知力</div>
-                <div class="practice-ores-disp" id="disp-4"></div>
-            </div>
-            <div class="practice-window" id="win-5" onclick="setFocusPractice(5)">
-                <div class="practice-title">精神力</div>
-                <div class="practice-ores-disp" id="disp-5"></div>
-            </div>
-        </div>
-
-        <div class="keypad">
-            <button class="bg-R" onclick="inputOreToCurrent('R')">R (赤)</button>
-            <button class="bg-B" onclick="inputOreToCurrent('B')">B (青)</button>
-            <button class="bg-Y" onclick="inputOreToCurrent('Y')">Y (黄)</button>
-            <button class="bg-G" onclick="inputOreToCurrent('G')">G (緑)</button>
-            <button class="bg-N" onclick="inputOreToCurrent('N')">N (無色)</button>
-            <button style="background: #e74c3c;" onclick="clearCurrentPracticeOres()">Clear</button>
-            <button class="btn-enter" onclick="advancePracticeFocus()">Enter (次へ移動)</button>
-        </div>
-    </div>
-
-    <div class="section">
-        <h2>分析結果・おすすめ手順</h2>
-        <div id="resultArea">
-            <div style="color: #a4b0be; text-align: center; padding: 20px;">条件を入力してEnterを押すか、通常の逆算結果をお待ちください。</div>
-        </div>
+    <div class="footer-links">
+        <p class="support-link"><strong>不具合・ご要望はこちら：</strong><br><a href="https://x.com/cgV9GpPq6v69083" target="_blank" rel="noopener noreferrer">https://x.com/cgV9GpPq6v69083</a></p>
+        <p><strong>パワフルコネクト for パワプロアドベンチャーズ：</strong><br><a href="https://pawafuru-connect.konami.net/" target="_blank" rel="noopener noreferrer">https://pawafuru-connect.konami.net/</a></p>
     </div>
 </div>
 
 <script>
-// ==========================================
-// データの定義 (マトリクス完全版)
-// ==========================================
 const COLORS = ['red', 'blue', 'yellow', 'green', 'gold'];
-const COLOR_LABELS = { red: '赤色', blue: '青色', yellow: '黄色', green: '緑色', gold: '金色' };
 const TYPES = ['kakashi', 'ring', 'charm', 'bracelet', 'necklace'];
-const TYPE_LABELS = { kakashi: 'カカシ', ring: '指輪', charm: 'チャーム', bracelet: '腕輪', necklace: '首飾り' };
+const colorJa = { red: '赤色', blue: '青色', yellow: '黄色', green: '緑色', gold: '金色' };
+const typeJa = { kakashi: 'カカシ', ring: '指輪', charm: 'チャーム', bracelet: '腕輪', necklace: '首飾り' };
+const stockSlotsMap = { '見習い': 3, '三級': 4, '二級': 5, '一級': 6 };
 
+// レシピ必要鉱石マスター
 const RECIPES = {
     red: {
-        kakashi:  { R: 1, B: 0, Y: 0, G: 0, ALL: 0 },
-        ring:     { R: 1, B: 0, Y: 0, G: 0, ALL: 1 },
-        charm:    { R: 2, B: 0, Y: 0, G: 0, ALL: 1 },
+        kakashi: { R: 1, B: 0, Y: 0, G: 0, ALL: 0 },
+        ring: { R: 1, B: 0, Y: 0, G: 0, ALL: 1 },
+        charm: { R: 2, B: 0, Y: 0, G: 0, ALL: 1 },
         bracelet: { R: 2, B: 1, Y: 0, G: 0, ALL: 1 },
         necklace: { R: 4, B: 0, Y: 0, G: 0, ALL: 1 }
     },
     blue: {
-        kakashi:  { R: 0, B: 1, Y: 0, G: 0, ALL: 0 },
-        ring:     { R: 0, B: 1, Y: 0, G: 0, ALL: 1 },
-        charm:    { R: 0, B: 2, Y: 0, G: 0, ALL: 1 },
+        kakashi: { R: 0, B: 1, Y: 0, G: 0, ALL: 0 },
+        ring: { R: 0, B: 1, Y: 0, G: 0, ALL: 1 },
+        charm: { R: 0, B: 2, Y: 0, G: 0, ALL: 1 },
         bracelet: { R: 0, B: 2, Y: 0, G: 1, ALL: 1 },
         necklace: { R: 0, B: 4, Y: 0, G: 0, ALL: 1 }
     },
     yellow: {
-        kakashi:  { R: 0, B: 0, Y: 0, G: 0, ALL: 1 },
-        ring:     { R: 0, B: 0, Y: 0, G: 0, ALL: 2 },
-        charm:    { R: 0, B: 0, Y: 1, G: 0, ALL: 2 },
+        kakashi: { R: 0, B: 0, Y: 0, G: 0, ALL: 1 },
+        ring: { R: 0, B: 0, Y: 0, G: 0, ALL: 2 },
+        charm: { R: 0, B: 0, Y: 1, G: 0, ALL: 2 },
         bracelet: { R: 0, B: 0, Y: 2, G: 0, ALL: 2 },
         necklace: { R: 0, B: 0, Y: 3, G: 0, ALL: 2 }
     },
     green: {
-        kakashi:  { R: 0, B: 0, Y: 0, G: 1, ALL: 0 },
-        ring:     { R: 0, B: 0, Y: 0, G: 1, ALL: 1 },
-        charm:    { R: 0, B: 0, Y: 0, G: 2, ALL: 1 },
+        kakashi: { R: 0, B: 0, Y: 0, G: 1, ALL: 0 },
+        ring: { R: 0, B: 0, Y: 0, G: 1, ALL: 1 },
+        charm: { R: 0, B: 0, Y: 0, G: 2, ALL: 1 },
         bracelet: { R: 1, B: 0, Y: 0, G: 2, ALL: 1 },
         necklace: { R: 0, B: 0, Y: 0, G: 4, ALL: 1 }
     },
     gold: {
-        kakashi:  { R: 0, B: 0, Y: 1, G: 0, ALL: 0 },
-        ring:     { R: 0, B: 0, Y: 1, G: 0, ALL: 1 },
-        charm:    { R: 0, B: 0, Y: 1, G: 0, ALL: 2 },
+        kakashi: { R: 0, B: 0, Y: 1, G: 0, ALL: 0 },
+        ring: { R: 0, B: 0, Y: 1, G: 0, ALL: 1 },
+        charm: { R: 0, B: 0, Y: 1, G: 0, ALL: 2 },
         bracelet: { R: 0, B: 0, Y: 1, G: 0, ALL: 3 },
         necklace: { R: 0, B: 0, Y: 1, G: 0, ALL: 4 }
     }
 };
 
-const BASE_SCORES = { kakashi: 1000, ring: 2000, charm: 3000, bracelet: 4000, necklace: 5000 };
-
-// 状態管理変数
-let isAdvancedMode = false;
-let currentFocusPractice = 0;
-const PRACTICE_NAMES = ["持久力", "筋力", "瞬発力", "命中力", "知力", "精神力"];
-let practiceData = Array.from({length: 6}, () => []); // 各練習の入ってきた鉱石の配列 ['R', 'B', ...]
-let slotOresState = { s1: [], s2: [], s3: [] }; // 各スロットのどの独立ボタンがアクティブか [true, false, ...]
-
-// ==========================================
-// 初期化・UI構築
-// ==========================================
-window.onload = function() {
-    // セレクトボックスの生成
-    for(let i=1; i<=3; i++) {
-        const colSel = document.getElementById(`s${i}_color`);
-        const typSel = document.getElementById(`s${i}_type`);
-        COLORS.forEach(c => colSel.add(new Option(COLOR_LABELS[c], c)));
-        TYPES.forEach(t => typSel.add(new Option(TYPE_LABELS[t], t)));
-        
-        // デフォルトの分散配置
-        if(i===1) { colSel.value = 'red'; typSel.value = 'necklace'; }
-        if(i===2) { colSel.value = 'blue'; typSel.value = 'bracelet'; }
-        if(i===3) { colSel.value = 'gold'; typSel.value = 'kakashi'; }
-    }
-
-    // ストック入力欄の生成
-    const stockRows = document.getElementById('stockRows');
-    COLORS.forEach(c => {
-        let rowHtml = `<div class="stock-label" style="color:var(--color-${c})">${COLOR_LABELS[c]}</div>`;
-        TYPES.forEach(t => {
-            rowHtml += `
-                <div class="counter-btn">
-                    <button onclick="changeStock('${c}','${t}', -1)">-</button>
-                    <span id="stock_${c}_${t}">0</span>
-                    <button onclick="changeStock('${c}','${t}', 1)">+</button>
-                </div>`;
-        });
-        stockRows.innerHTML += rowHtml;
-    });
-
-    // テスト初期値の設定
-    setStockValue('red', 'kakashi', 2);
-    setStockValue('gold', 'necklace', 1);
-
-    updateOREInputs();
-    renderPracticeDisps();
-};
-
-// ストック便利関数
 let stockMatrix = {};
-function changeStock(c, t, val) {
-    const key = `${c}_${t}`;
-    stockMatrix[key] = Math.max(0, (stockMatrix[key] || 0) + val);
-    document.getElementById(`stock_${key}`).innerText = stockMatrix[key];
-    if(!isAdvancedMode) runBasicSimulation();
+COLORS.forEach(c => { stockMatrix[c] = {}; TYPES.forEach(t => stockMatrix[c][t] = 0); });
+
+// 訓練データ用
+const TRAIN_NAMES = ['持久力', '筋力', '瞬発力', '命中力', '知力', '精神力'];
+let trainingData = [[], [], [], [], [], []]; 
+let currentTrainFocus = 0;
+
+// 引き継ぎ鉱石保持用フラグ
+let retainedOresState = { 1: [], 2: [], 3: [] };
+
+function getBaseScore(type) {
+    return { 'ring': 1, 'charm': 2, 'bracelet': 3, 'necklace': 5 }[type] || 0;
 }
-function setStockValue(c, t, val) {
-    const key = `${c}_${t}`;
-    stockMatrix[key] = val;
-    document.getElementById(`stock_${key}`).innerText = val;
-}
 
-// ==========================================
-// 仕様1: スロット連動・独立ボタンによる引継ぎ鉱石入力
-// ==========================================
-function updateOREInputs() {
-    for(let i=1; i<=3; i++) {
-        const color = document.getElementById(`s${i}_color`).value;
-        const type = document.getElementById(`s${i}_type`).value;
-        const recipe = RECIPES[color][type];
-        const container = document.getElementById(`s${i}_ores_container`);
-        container.innerHTML = '';
-
-        let flatRecipe = [];
-        if(recipe.R > 0) for(let r=0; r<recipe.R; r++) flatRecipe.push('R');
-        if(recipe.B > 0) for(let b=0; b<recipe.B; b++) flatRecipe.push('B');
-        if(recipe.Y > 0) for(let y=0; y<recipe.Y; y++) flatRecipe.push('Y');
-        if(recipe.G > 0) for(let g=0; g<recipe.G; g++) flatRecipe.push('G');
-        if(recipe.ALL > 0) for(let a=0; a<recipe.ALL; a++) flatRecipe.push('ALL');
-
-        // 状態配列の初期化（サイズが変わった場合のみ）
-        if(!slotOresState[`s${i}`] || slotOresState[`s${i}`].length !== flatRecipe.length) {
-            slotOresState[`s${i}`] = Array(flatRecipe.length).fill(false);
-        }
-
-        flatRecipe.forEach((ore, idx) => {
-            const square = document.createElement('div');
-            square.className = `ore-square bg-${ore} ${slotOresState[`s${i}`][idx] ? 'active' : ''}`;
-            square.innerText = ore;
-            square.onclick = () => {
-                slotOresState[`s${i}`][idx] = !slotOresState[`s${i}`][idx];
-                square.classList.toggle('active');
-                if(isAdvancedMode) executeAdvancedAnalysis();
-            };
-            container.appendChild(square);
+// 初期テーブル生成
+function buildStockTable() {
+    let html = "";
+    COLORS.forEach(c => {
+        html += `<tr><td class="row-hdr text-${c}">${colorJa[c]}</td>`;
+        TYPES.forEach(t => {
+            html += `<td><div class="stock-ctrl">
+                <button onclick="adjustStock('${c}', '${t}', -1)">-</button>
+                <span id="stock-${c}-${t}">0</span>
+                <button onclick="adjustStock('${c}', '${t}', 1)">+</button>
+            </div></td>`;
         });
-    }
-    if(!isAdvancedMode) runBasicSimulation();
-}
-
-// 登録されている引き継ぎ鉱石オブジェクトを構築
-function getInheritedOres(slotKey, color, type) {
-    const recipe = RECIPES[color][type];
-    let flatRecipe = [];
-    if(recipe.R > 0) for(let r=0; r<recipe.R; r++) flatRecipe.push('R');
-    if(recipe.B > 0) for(let b=0; b<recipe.B; b++) flatRecipe.push('B');
-    if(recipe.Y > 0) for(let y=0; y<recipe.Y; y++) flatRecipe.push('Y');
-    if(recipe.G > 0) for(let g=0; g<recipe.G; g++) flatRecipe.push('G');
-    if(recipe.ALL > 0) for(let a=0; a<recipe.ALL; a++) flatRecipe.push('ALL');
-
-    let ores = { R:0, B:0, Y:0, G:0, N:0 };
-    const states = slotOresState[slotKey];
-    
-    flatRecipe.forEach((ore, idx) => {
-        if(states && states[idx]) {
-            if(ore === 'ALL') ores.N += 1; // 自由色枠の引き継ぎ分は無色ストックとしてカウント
-            else ores[ore] += 1;
-        }
+        html += `</tr>`;
     });
-    return ores;
+    document.getElementById('stockTableBody').innerHTML = html;
 }
 
-// ==========================================
-// 仕様2: 3行2列の練習グリッドと電卓キーパッド
-// ==========================================
-function toggleAdvancedAnalysis() {
-    isAdvancedMode = !isAdvancedMode;
-    const area = document.getElementById('advancedAnalysisArea');
-    if(isAdvancedMode) {
-        area.classList.remove('hidden');
-        executeAdvancedAnalysis();
-    } else {
-        area.classList.add('hidden');
-        runBasicSimulation();
-    }
+function updateSelectColor(slotNum) {
+    const el = document.getElementById(`color${slotNum}`);
+    el.className = `select-color color-${el.value}`;
 }
 
-function setFocusPractice(index) {
-    document.getElementById(`win-${currentFocusPractice}`).classList.remove('active');
-    currentFocusPractice = index;
-    document.getElementById(`win-${currentFocusPractice}`).classList.add('active');
+function getTotalStock() {
+    let total = 0;
+    COLORS.forEach(c => TYPES.forEach(t => total += stockMatrix[c][t]));
+    return total;
 }
 
-function inputOreToCurrent(ore) {
-    if(practiceData[currentFocusPractice].length < 10) {
-        practiceData[currentFocusPractice].push(ore);
-        renderPracticeDisps();
-    }
-}
-
-function clearCurrentPracticeOres() {
-    practiceData[currentFocusPractice] = [];
-    renderPracticeDisps();
-    executeAdvancedAnalysis();
-}
-
-function advancePracticeFocus() {
-    if(currentFocusPractice < 5) {
-        setFocusPractice(currentFocusPractice + 1);
-    } else {
-        // 精神力まで入力し終えたら、最初の持久力に戻して演算結果を表示
-        setFocusPractice(0);
-        executeAdvancedAnalysis();
-    }
-}
-
-function renderPracticeDisps() {
-    for(let i=0; i<6; i++) {
-        const disp = document.getElementById(`disp-${i}`);
-        disp.innerHTML = '';
-        practiceData[i].forEach(ore => {
-            const badge = document.createElement('span');
-            badge.className = `ore-badge bg-${ore}`;
-            badge.innerText = ore;
-            disp.appendChild(badge);
-        });
-    }
-}
-
-// ==========================================
-// 演算コアロジック (スコア計算システム)
-// ==========================================
-function checkScore(s1, s2, s3, gameLevel, goldKakashiCount) {
-    let base = 0;
-    let kakashiCount = 0;
-    let goldKakashiInSlots = 0;
-
-    // スロット1の判定（1.5倍加算、未完成なら破棄）
-    if (s1.isCompleted) {
-        let val = BASE_SCORES[s1.type];
-        if (s1.color === 'gold') val *= (gameLevel === '皆伝' ? 2.0 : 1.5);
-        else val *= (gameLevel === '皆伝' ? 1.5 : 1.0); // 基本段位倍率の近似値
-        base += val * 1.5; 
-        if(s1.type === 'kakashi') {
-            kakashiCount++;
-            if(s1.color === 'gold') goldKakashiInSlots++;
-        }
-    }
-
-    // スロット2の判定
-    if (s2.isCompleted) {
-        let val = BASE_SCORES[s2.type];
-        if (s2.color === 'gold') val *= (gameLevel === '皆伝' ? 2.0 : 1.5);
-        base += val;
-        if(s2.type === 'kakashi') {
-            kakashiCount++;
-            if(s2.color === 'gold') goldKakashiInSlots++;
-        }
-    }
-
-    // スロット3の判定
-    if (s3.isCompleted) {
-        let val = BASE_SCORES[s3.type];
-        if (s3.color === 'gold') val *= (gameLevel === '皆伝' ? 2.0 : 1.5);
-        base += val;
-        if(s3.type === 'kakashi') {
-            kakashiCount++;
-            if(s3.color === 'gold') goldKakashiInSlots++;
-        }
-    }
-
-    // カカシ倍率の計算
-    let multiplier = 1.0;
-    if (kakashiCount === 1) multiplier = 1.2;
-    if (kakashiCount === 2) multiplier = 1.5;
-    if (kakashiCount === 3) multiplier = 2.0;
-
-    // 金色カカシ補正（手持ち + スロット内）
-    let totalGoldKakashi = goldKakashiCount + goldKakashiInSlots;
-    multiplier += (totalGoldKakashi * 0.1);
-
-    return {
-        total: Math.floor(base * multiplier),
-        s1Completed: s1.isCompleted,
-        s2Completed: s2.isCompleted,
-        s3Completed: s3.isCompleted
-    };
-}
-
-// 【補足1】ALL自由色を考慮した精密なレシピ適合チェック関数
-function canCompleteItem(color, type, totalOres) {
-    const recipe = RECIPES[color][type];
-    const diffR = totalOres.R - recipe.R;
-    const diffB = totalOres.B - recipe.B;
-    const diffY = totalOres.Y - recipe.Y;
-    const diffG = totalOres.G - recipe.G;
-
-    if (diffR < 0 || diffB < 0 || diffY < 0 || diffG < 0) return false;
-    
-    // 余剰有色鉱石と無色NをすべてALL枠に合算
-    const poolForAll = diffR + diffB + diffY + diffG + totalOres.N;
-    return poolForAll >= recipe.ALL;
-}
-
-// ==========================================
-// 高度精密分析シミュレータの実装
-// ==========================================
-function executeAdvancedAnalysis() {
+function adjustStock(color, type, amount) {
     const gameLevel = document.getElementById('gameLevel').value;
+    const maxSlots = stockSlotsMap[gameLevel] || 3;
+    let current = stockMatrix[color][type];
+    
+    if (amount > 0) {
+        if (getTotalStock() >= maxSlots) {
+            alert(`現在の段位のストック上限（${maxSlots}枠）に達しています。`);
+            return;
+        }
+        stockMatrix[color][type] = current + 1;
+    } else if (amount < 0 && current > 0) {
+        stockMatrix[color][type] = current - 1;
+    }
+
+    const span = document.getElementById(`stock-${color}-${type}`);
+    span.innerText = stockMatrix[color][type];
+    if (stockMatrix[color][type] > 0) span.classList.add('has-count');
+    else span.classList.remove('has-count');
+    
+    updateStockStatusDisplay();
+}
+
+function updateStockStatusDisplay() {
+    const gameLevel = document.getElementById('gameLevel').value;
+    const maxSlots = stockSlotsMap[gameLevel] || 3;
+    document.getElementById('totalStockDisp').innerText = getTotalStock();
+    document.getElementById('maxStockDisp').innerText = maxSlots;
+}
+
+function clearStock() {
+    COLORS.forEach(c => TYPES.forEach(t => {
+        stockMatrix[c][t] = 0;
+        const span = document.getElementById(`stock-${c}-${t}`);
+        if(span) { span.innerText = 0; span.classList.remove('has-count'); }
+    }));
+    updateStockStatusDisplay();
+}
+
+function onLevelChange() {
+    const maxSlots = stockSlotsMap[document.getElementById('gameLevel').value] || 3;
+    if (getTotalStock() > maxSlots) { clearStock(); alert(`段位変更に伴いストックがリセットされました。`); }
+    updateStockStatusDisplay();
+}
+
+function toggleAdvancedPanel() {
+    const panel = document.getElementById('advancedPanel');
+    if (panel.style.display === 'flex') {
+        panel.style.display = 'none';
+    } else {
+        panel.style.display = 'flex';
+        renderRetainedOres();
+    }
+}
+
+function syncScores() { /* 同期処理用必要時記述 */ }
+
+function onSlotChanged() {
+    renderRetainedOres();
+}
+
+// 引き継ぎ鉱石正方形ボタンの描画
+function renderRetainedOres() {
+    const container = document.getElementById('retainedOresArea');
+    if (!container) return;
+    container.innerHTML = "";
+
+    for (let s = 1; s <= 3; s++) {
+        const color = document.getElementById(`color${s}`).value;
+        const type = document.getElementById(`type1`).value; // 各スロットに対応
+        const slotColor = document.getElementById(`color${s}`).value;
+        const slotType = document.getElementById(`type${s}`).value;
+        
+        const recipe = RECIPES[slotColor][slotType];
+        if (!recipe) continue;
+
+        let oreList = [];
+        ['R', 'B', 'Y', 'G'].forEach(key => {
+            for(let i=0; i<recipe[key]; i++) oreList.push(key);
+        });
+        for(let i=0; i<recipe.ALL; i++) oreList.push('ALL');
+
+        // 状態の初期化か長さ確認
+        if (!retainedOresState[s] || retainedOresState[s].length !== oreList.length) {
+            retainedOresState[s] = new Array(oreList.length).fill(false);
+        }
+
+        let slotHtml = `<div class="retained-row">
+            <span style="font-size:12px; font-weight:bold;" class="text-${slotColor}">スロット${s} [${colorJa[slotColor]}${typeJa[slotType]}]:</span>
+            <div class="retained-grid">`;
+        
+        oreList.forEach((ore, idx) => {
+            const isActive = retainedOresState[s][idx] ? `active-${ore}` : '';
+            slotHtml += `<div class="ore-square ${isActive}" onclick="toggleRetainedOre(${s}, ${idx})">${ore}</div>`;
+        });
+        slotHtml += `</div></div>`;
+        container.innerHTML += slotHtml;
+    }
+}
+
+function toggleRetainedOre(slot, idx) {
+    retainedOresState[slot][idx] = !retainedOresState[slot][idx];
+    renderRetainedOres();
+}
+
+// 練習用入力パッド処理
+function focusTrain(idx) {
+    currentTrainFocus = idx;
+    for(let i=0; i<6; i++) {
+        document.getElementById(`train-${i}`).classList.remove('focused');
+    }
+    document.getElementById(`train-${idx}`).classList.add('focused');
+}
+
+function pressPad(cmd) {
+    if (['R', 'B', 'Y', 'G', 'N'].includes(cmd)) {
+        trainingData[currentTrainFocus].push(cmd);
+        updateTrainDisplay(currentTrainFocus);
+    } else if (cmd === 'DEL') {
+        trainingData[currentTrainFocus].pop();
+        updateTrainDisplay(currentTrainFocus);
+    } else if (cmd === 'ENTER') {
+        if (currentTrainFocus < 5) {
+            focusTrain(currentTrainFocus + 1);
+        } else {
+            alert("すべての練習入力が終わりました。「詳細な分析を実行」を押してください。");
+        }
+    }
+}
+
+function updateTrainDisplay(idx) {
+    const el = document.getElementById(`td-${idx}`);
+    el.innerText = trainingData[idx].join(', ');
+}
+
+// スコア計算コア（共通利用）
+function checkScore(s1, s2, s3, gameLevel) {
+    const n = { '見習い': 1, '三級': 2, '二級': 3, '一級': 4 }[gameLevel] || 0;
+    const k1 = s1.isCompleted && s1.type === 'kakashi' && s1.color !== 'gold';
+    const k2 = s2.isCompleted && s2.type === 'kakashi' && s2.color !== 'gold';
+    const k3 = s3.isCompleted && s3.type === 'kakashi' && s3.color !== 'gold';
+
+    let base1 = s1.isCompleted ? (s1.color === 'gold' ? 10 : (k1 ? 0 : getBaseScore(s1.type))) : 0;
+    let base2 = s2.isCompleted ? (s2.color === 'gold' ? 10 : (k2 ? 0 : getBaseScore(s2.type))) : 0;
+    let base3 = s3.isCompleted ? (s3.color === 'gold' ? 10 : (k3 ? 0 : getBaseScore(s3.type))) : 0;
+
+    let s1_doubled = k1 ? base1 : base1 * 2;
+    let final1 = 0, final2 = 0, final3 = 0;
+
+    if (!k1 && !k2 && !k3) { final1 = s1_doubled; final2 = base2; final3 = base3; }
+    else if (k1 && !k2 && !k3) { final2 = base2; final1 = final2 * 2; final3 = base3; }
+    else if (!k1 && k2 && !k3) { final1 = s1_doubled; final3 = base3; final2 = final1 + final3; }
+    else if (!k1 && !k2 && k3) { final1 = s1_doubled; final2 = base2; final3 = final2; }
+    else if (k1 && k2 && !k3) { final3 = base3; final2 = final3; final1 = final2 * 2; }
+    else if (k1 && !k2 && k3) { final2 = base2; final1 = final2 * 2; final3 = final2; }
+    else if (!k1 && k2 && k3) { final1 = s1_doubled; final2 = final1; final3 = final2; }
+
+    let baseTotal = 0, compItems = [];
+    if (s1.isCompleted) { baseTotal += final1; compItems.push(s1); }
+    if (s2.isCompleted) { baseTotal += final2; compItems.push(s2); }
+    if (s3.isCompleted) { baseTotal += final3; compItems.push(s3); }
+
+    let colorBonus = 0, typeBonus = 0;
+    if (compItems.length >= 2) {
+        if (compItems.length === 3) {
+            if (compItems[0].color === compItems[1].color && compItems[1].color === compItems[2].color && compItems[0].type === compItems[1].type && compItems[1].type === compItems[2].type) { colorBonus = n; typeBonus = n; }
+            else if ((compItems[0].color === compItems[1].color && compItems[0].type === compItems[1].type) || (compItems[1].color === compItems[2].color && compItems[1].type === compItems[2].type) || (compItems[0].color === compItems[2].color && compItems[0].type === compItems[2].type)) { colorBonus = n; typeBonus = n; }
+            else {
+                if (compItems[0].color === compItems[1].color || compItems[1].color === compItems[2].color || compItems[0].color === compItems[2].color) colorBonus = n;
+                if (compItems[0].type === compItems[1].type || compItems[1].type === compItems[2].type || compItems[0].type === compItems[2].type) typeBonus = n;
+            }
+        } else {
+            if (compItems[0].color === compItems[1].color && compItems[0].type === compItems[1].type) { colorBonus = n; typeBonus = n; }
+            else {
+                if (compItems[0].color === compItems[1].color) colorBonus = n;
+                if (compItems[0].type === compItems[1].type) typeBonus = n;
+            }
+        }
+    }
+    return { total: baseTotal + colorBonus + typeBonus, final1, final2, final3, baseTotal, colorBonus, typeBonus };
+}
+
+// 既存の標準逆算
+function searchPatterns() {
     const currentScore = parseInt(document.getElementById('currentScore').value) || 0;
     const targetScore = parseInt(document.getElementById('targetScore').value) || 0;
-    const goldKakashiCount = parseInt(document.getElementById('goldKakashiBonus').value) || 0;
+    const includeExcess = document.getElementById('includeExcess').checked;
+    const requiredPoints = targetScore - currentScore;
+    const gameLevel = document.getElementById('gameLevel').value;
 
-    const s1_c = document.getElementById('s1_color').value;
-    const s1_t = document.getElementById('s1_type').value;
-    const s2_c = document.getElementById('s2_color').value;
-    const s2_t = document.getElementById('s2_type').value;
-    const s3_c = document.getElementById('s3_color').value;
-    const s3_t = document.getElementById('s3_type').value;
+    let flatStock = [];
+    COLORS.forEach(c => TYPES.forEach(t => { for(let i=0; i<stockMatrix[c][t]; i++) flatStock.push({color:c, type:t}); }));
 
-    // 現在のスロットとそれぞれの引き継ぎ鉱石状態の取得
-    const currentSlots = [ {c:s1_c, t:s1_t}, {c:s2_c, t:s2_t}, {c:s3_c, t:s3_t} ];
-    const inheritedList = [
-        getInheritedOres('s1', s1_c, s1_t),
-        getInheritedOres('s2', s2_c, s2_t),
-        getInheritedOres('s3', s3_c, s3_t)
-    ];
+    const cur1 = { color: document.getElementById('color1').value, type: document.getElementById('type1').value };
+    const cur2 = { color: document.getElementById('color2').value, type: document.getElementById('type2').value };
+    const cur3 = { color: document.getElementById('color3').value, type: document.getElementById('type3').value };
 
-    let validRoutes = [];
+    let states1 = [{ color: cur1.color, type: cur1.type, useStockIdx: null }];
+    let states2 = [{ color: cur2.color, type: cur2.type, useStockIdx: null }];
+    let states3 = [{ color: cur3.color, type: cur3.type, useStockIdx: null }];
 
-    // ループ処理用：6つの練習データオブジェクト化
-    let parsedPractices = PRACTICE_NAMES.map((name, idx) => {
-        let ores = { R:0, B:0, Y:0, G:0, N:0 };
-        practiceData[idx].forEach(o => { if(o==='N') ores.N++; else ores[o]++; });
-        return { name: name, ores: ores };
+    flatStock.forEach((st, idx) => {
+        if (st.color === cur1.color || st.type === cur1.type) states1.push({ color: st.color, type: st.type, useStockIdx: idx });
+        if (st.color === cur2.color || st.type === cur2.type) states2.push({ color: st.color, type: st.type, useStockIdx: idx });
+        if (st.color === cur3.color || st.type === cur3.type) states3.push({ color: st.color, type: st.type, useStockIdx: idx });
     });
 
-    // 簡略総当り：現状のスロット構成のまま、「どれか1つをストックから変換する」「またはそのまま練習を踏む」
-    // 【補足2】をシミュレート：スロットのアイテムをストックに戻して変換 or 手持ちストックを変換
-    let conversionOptions = [{ label: "変換なし", ores: {R:0,B:0,Y:0,G:0,N:0}, used: "なし" }];
-    
-    // 手持ちストックからの変換パターン
-    COLORS.forEach(c => {
-        TYPES.forEach(t => {
-            if(stockMatrix[`${c}_${t}`] > 0) {
-                let add = { R:0, B:0, Y:0, G:0, N:0 };
-                if(c === 'gold') { add.R=1; add.B=1; add.Y=1; add.G=1; }
-                else { add[c.toUpperCase() === 'RED' ? 'R' : c.toUpperCase() === 'BLUE' ? 'B' : c.toUpperCase() === 'YELLOW' ? 'Y' : 'G'] = 1; }
-                conversionOptions.push({
-                    label: `${COLOR_LABELS[c]}${TYPE_LABELS[t]}を変換`,
-                    ores: add,
-                    used: `${COLOR_LABELS[c]}${TYPE_LABELS[t]}`
-                });
+    let matches = [];
+    for (let s1 of states1) {
+        for (let s2 of states2) {
+            for (let s3 of states3) {
+                let used = new Set();
+                if (s1.useStockIdx !== null) used.add(s1.useStockIdx);
+                if (s2.useStockIdx !== null) { if(used.has(s2.useStockIdx)) continue; used.add(s2.useStockIdx); }
+                if (s3.useStockIdx !== null) { if(used.has(s3.useStockIdx)) continue; used.add(s3.useStockIdx); }
+
+                let res = checkScore({color: s1.color, type: s1.type, isCompleted: true}, {color: s2.color, type: s2.type, isCompleted: true}, {color: s3.color, type: s3.type, isCompleted: true}, gameLevel);
+                
+                let ok = includeExcess ? (res.total >= Math.max(0, requiredPoints)) : (res.total === requiredPoints);
+                if (ok) matches.push({ s1, s2, s3, res });
             }
-        });
-    });
+        }
+    }
 
-    // スロット内アイテムを退避しての変換パターン
-    currentSlots.forEach((slot, sIdx) => {
-        let add = { R:0, B:0, Y:0, G:0, N:0 };
-        if(slot.c === 'gold') { add.R=1; add.B=1; add.Y=1; add.G=1; }
-        else { add[slot.c.toUpperCase() === 'RED' ? 'R' : slot.c.toUpperCase() === 'BLUE' ? 'B' : slot.c.toUpperCase() === 'YELLOW' ? 'Y' : 'G'] = 1; }
-        conversionOptions.push({
-            label: `スロット${sIdx+1}の${COLOR_LABELS[slot.c]}${TYPE_LABELS[slot.t]}を入れ替えて変換`,
-            ores: add,
-            used: `スロット${sIdx+1}から退避`
-        });
-    });
-
-    // 全パターンの探索開始
-    parsedPractices.forEach(practice => {
-        conversionOptions.forEach(convert => {
-            
-            // 【補足3】変換鉱石は全スロットに等しく一律付与される
-            let finalOresPerSlot = [];
-            for(let i=0; i<3; i++) {
-                finalOresPerSlot.push({
-                    R: inheritedList[i].R + convert.ores.R + practice.ores.R,
-                    B: inheritedList[i].B + convert.ores.B + practice.ores.B,
-                    Y: inheritedList[i].Y + convert.ores.Y + practice.ores.Y,
-                    G: inheritedList[i].G + convert.ores.G + practice.ores.G,
-                    N: inheritedList[i].N + convert.ores.N + practice.ores.N,
-                });
-            }
-
-            // 完成可能性の厳密判定
-            const s1Comp = canCompleteItem(s1_c, s1_t, finalOresPerSlot[0]);
-            const s2Comp = canCompleteItem(s2_c, s2_t, finalOresPerSlot[1]);
-            const s3Comp = canCompleteItem(s3_c, s3_t, finalOresPerSlot[2]);
-
-            const scoreRes = checkScore(
-                { color: s1_c, type: s1_t, isCompleted: s1Comp },
-                { color: s2_c, type: s2_t, isCompleted: s2Comp },
-                { color: s3_c, type: s3_t, isCompleted: s3Comp },
-                gameLevel, goldKakashiCount
-            );
-
-            if(s1Comp || s2Comp || s3Comp) {
-                validRoutes.push({
-                    practiceName: practice.name,
-                    convertLabel: convert.label,
-                    score: scoreRes.total,
-                    s1: s1Comp, s2: s2Comp, s3: s3Comp
-                });
-            }
-        });
-    });
-
-    // スコア降順ソート
-    validRoutes.sort((a,b) => b.score - a.score);
-
-    // 画面出力とフローチャート生成
-    const resultArea = document.getElementById('resultArea');
-    if(validRoutes.length === 0) {
-        resultArea.innerHTML = `<div style="text-align:center; padding:20px; color:#ff4d4d;">現在の練習分布と引継ぎ状況では、今ターン完成可能なルートがありません。</div>`;
+    const resDiv = document.getElementById('searchResults');
+    if (matches.length === 0) {
+        resDiv.innerHTML = `<span style="color: #e74c3c;">目標を達成できる手順は見つかりませんでした。</span>`;
         return;
     }
 
-    let html = `<div style="margin-bottom:10px; color:#2ecc71; font-weight:bold;">実現可能な精密分析ルート (${validRoutes.length}件) を検出しました。クリックで手順のフローチャートを展開します：</div>`;
-    validRoutes.forEach((route, idx) => {
-        const reqDiff = targetScore - (currentScore + route.score);
-        const achText = reqDiff <= 0 ? `<span style="color:#2ecc71;">[目標クリア]</span>` : `[目標まであと ${reqDiff}pt]`;
-        
-        html += `
-            <div class="result-item" onclick="toggleFlowchart(${idx})">
-                <strong>ルート ${idx+1}: 期待獲得点数 +${route.score} pts ${achText}</strong><br>
-                <span style="font-size:12px; color:#a4b0be;">選択練習: ${route.practiceName} | 操作: ${route.convertLabel}</span>
-                
-                <div id="flow-${idx}" class="flowchart hidden">
-                    <div style="font-weight:bold; color:#e67e22; margin-bottom:5px;">【最適手順フローチャート】</div>
-                    <div class="flow-step">① レシピ操作: <strong>${route.convertLabel}</strong> を実行し、全スロットに鉱石を付与</div>
-                    <div class="flow-arrow">▼</div>
-                    <div class="flow-step">② 練習選択: <strong>【${route.practiceName}練習】</strong> を選択して実行</div>
-                    <div class="flow-arrow">▼</div>
-                    <div class="flow-step">③ 結果確認: 
-                        [スロット1: ${route.s1 ? '🟢完成' : '❌未完成'}] 
-                        [スロット2: ${route.s2 ? '🟢完成' : '❌未完成'}] 
-                        [スロット3: ${route.s3 ? '🟢完成' : '❌未完成'}]
-                    </div>
-                    ${!route.s1 ? '<div class="flow-arrow" style="color:#ff4d4d;">▼</div><div class="flow-step" style="color:#ff4d4d;">⚠️注意: スロット1が未完成のため、終了時にスロット1の鉱石は破棄されます。</div>' : ''}
-                </div>
-            </div>`;
+    matches.sort((a,b) => b.res.total - a.res.total);
+    
+    let html = `<div style="font-size:13px; color:#a0a0b0; text-align:center; background:#191924; padding:8px; border-radius:4px; border:1px solid var(--border-color); margin-bottom:10px;">`;
+    if (requiredPoints > 0) html += `目標ラインまで あと <strong style="color:#ff9f43; font-size:15px;">${requiredPoints} pts</strong> 必要です。`;
+    else html += `<span style="color:#2ecc71; font-weight:bold;">目標点達成中！最高得点ルート表示。</span>`;
+    html += `</div>`;
+
+    matches.forEach((m, idx) => {
+        html += `<div class="result-item" onclick="alert('詳細分析シミュレーターを使うとより精密な手順がフローチャートで表示されます！')">`;
+        html += `<strong>パターン ${idx + 1}: (今回獲得: +${m.res.total} pts ➔ 合計: ${currentScore + m.res.total} pts)</strong><br>`;
+        html += `・スロット1: <span class="text-${m.s1.color}">${colorJa[m.s1.color]}${typeJa[m.s1.type]}</span> (➔ ${m.res.final1}pts)<br>`;
+        html += `・スロット2: <span class="text-${m.s2.color}">${colorJa[m.s2.color]}${typeJa[m.s2.type]}</span> (➔ ${m.res.final2}pts)<br>`;
+        html += `・スロット3: <span class="text-${m.s3.color}">${colorJa[m.s3.color]}${typeJa[m.s3.type]}</span> (➔ ${m.res.final3}pts)<br>`;
+        html += `</div>`;
     });
-    resultArea.innerHTML = html;
+    resDiv.innerHTML = html;
 }
 
-function toggleFlowchart(idx) {
-    const el = document.getElementById(`flow-${idx}`);
-    el.classList.toggle('hidden');
+
+// 高度な分析の実行コア
+let advancedSolutions = [];
+function runAdvancedAnalysis() {
+    const currentScore = parseInt(document.getElementById('currentScore').value) || 0;
+    const targetScore = parseInt(document.getElementById('targetScore').value) || 0;
+    const includeExcess = document.getElementById('includeExcess').checked;
+    const requiredPoints = targetScore - currentScore;
+    const gameLevel = document.getElementById('gameLevel').value;
+
+    const baseSlots = [
+        { color: document.getElementById('color1').value, type: document.getElementById('type1').value },
+        { color: document.getElementById('color2').value, type: document.getElementById('type2').value },
+        { color: document.getElementById('color3').value, type: document.getElementById('type3').value }
+    ];
+
+    // ストック平坦化
+    let initialStocks = [];
+    COLORS.forEach(c => TYPES.forEach(t => {
+        for(let i=0; i<stockMatrix[c][t]; i++) initialStocks.push({ color: c, type: t });
+    }));
+
+    advancedSolutions = [];
+
+    // 1. 入れ替えの全探索
+    // 各スロットに対して、「そのまま(null)」か「ストックの特定のインデックスと入れ替え」
+    let swapChoices = [[null], [null], [null]];
+    initialStocks.forEach((st, idx) => {
+        if(st.color === baseSlots[0].color || st.type === baseSlots[0].type) swapChoices[0].push(idx);
+        if(st.color === baseSlots[1].color || st.type === baseSlots[1].type) swapChoices[1].push(idx);
+        if(st.color === baseSlots[2].color || st.type === baseSlots[2].type) swapChoices[2].push(idx);
+    });
+
+    for (let c0 of swapChoices[0]) {
+        for (let c1 of swapChoices[1]) {
+            for (let c2 of swapChoices[2]) {
+                // 重複して同じストックは使えない
+                let usedStock = new Set();
+                if(c0 !== null) usedStock.add(c0);
+                if(c1 !== null) { if(usedStock.has(c1)) continue; usedStock.add(c1); }
+                if(c2 !== null) { if(usedStock.has(c2)) continue; usedStock.add(c2); }
+
+                // 現時点のスロットアイテム確定
+                let currentSlots = [
+                    c0 === null ? baseSlots[0] : initialStocks[c0],
+                    c1 === null ? baseSlots[1] : initialStocks[c1],
+                    c2 === null ? baseSlots[2] : initialStocks[c2]
+                ];
+
+                // 残りストック（変換用候補）
+                let remainingStocks = [];
+                initialStocks.forEach((st, idx) => {
+                    if(!usedStock.has(idx)) remainingStocks.push(st);
+                });
+
+                // 2. 変換パターンの生成 (残りストックのビット全探索)
+                let convertCombos = [[]];
+                const len = remainingStocks.length;
+                for(let i=1; i < (1 << len); i++) {
+                    let combo = [];
+                    for(let j=0; j<len; j++) {
+                        if((i >> j) & 1) combo.push(remainingStocks[j]);
+                    }
+                    convertCombos.push(combo);
+                }
+
+                for (let convertList of convertCombos) {
+                    // 変換による全スロット鉱石ボーナス
+                    let convertBonus = { R:0, B:0, Y:0, G:0 };
+                    convertList.forEach(item => {
+                        if (item.color === 'gold') {
+                            convertBonus.R++; convertBonus.B++; convertBonus.Y++; convertBonus.G++;
+                        } else if (item.color === 'red') convertBonus.R++;
+                        else if (item.color === 'blue') convertBonus.B++;
+                        else if (item.color === 'yellow') convertBonus.Y++;
+                        else if (item.color === 'green') convertBonus.G++;
+                    });
+
+                    // 3. 6つの練習の全探索
+                    for (let tIdx = 0; tIdx < 6; tIdx++) {
+                        let trainOres = trainingData[tIdx];
+                        let trainCounts = { R:0, B:0, Y:0, G:0, N:0 };
+                        trainOres.forEach(o => trainCounts[o]++);
+
+                        // 各スロットが完成するか判定
+                        let isCompleted = [false, false, false];
+                        let slotOresLog = [];
+
+                        for (let s = 0; s < 3; s++) {
+                            const slotItem = currentSlots[s];
+                            const recipe = RECIPES[slotItem.color][slotItem.type];
+                            
+                            // 鉱石の集計
+                            let have = { R: convertBonus.R + trainCounts.R, B: convertBonus.B + trainCounts.B, Y: convertBonus.Y + trainCounts.Y, G: convertBonus.G + trainCounts.G, N: trainCounts.N };
+                            
+                            // 入れ替えなし(null)の場合のみ引き継ぎ鉱石をオン
+                            if ((s === 0 && c0 === null) || (s === 1 && c1 === null) || (s === 2 && c2 === null)) {
+                                const stateList = retainedOresState[s+1] || [];
+                                // 引き継ぎ元レシピの構成を再現
+                                const origRecipe = RECIPES[baseSlots[s].color][baseSlots[s].type];
+                                let origList = [];
+                                ['R', 'B', 'Y', 'G'].forEach(k => { for(let i=0; i<origRecipe[k]; i++) origList.push(k); });
+                                for(let i=0; i<origRecipe.ALL; i++) origList.push('ALL');
+                                
+                                stateList.forEach((active, oIdx) => {
+                                    if(active && oIdx < origList.length) {
+                                        let type = origList[oIdx];
+                                        if (type === 'ALL') have.N++; // 自由枠としてカウント
+                                        else have[type]++;
+                                    }
+                                });
+                            }
+
+                            // レシピ満たすか判定
+                            let diffR = have.R - recipe.R;
+                            let diffB = have.B - recipe.B;
+                            let diffY = have.Y - recipe.Y;
+                            let diffG = have.G - recipe.G;
+
+                            if (diffR >= 0 && diffB >= 0 && diffY >= 0 && diffG >= 0) {
+                                let surplus = diffR + diffB + diffY + diffG + have.N;
+                                if (surplus >= recipe.ALL) {
+                                    isCompleted[s] = true;
+                                }
+                            }
+                        }
+
+                        // スコア計算
+                        let res = checkScore(
+                            { color: currentSlots[0].color, type: currentSlots[0].type, isCompleted: isCompleted[0] },
+                            { color: currentSlots[1].color, type: currentSlots[1].type, isCompleted: isCompleted[1] },
+                            { color: currentSlots[2].color, type: currentSlots[2].type, isCompleted: isCompleted[2] },
+                            gameLevel
+                        );
+
+                        let ok = includeExcess ? (res.total >= Math.max(0, requiredPoints)) : (res.total === requiredPoints);
+                        if (ok && res.total > 0) {
+                            advancedSolutions.push({
+                                swaps: [c0, c1, c2],
+                                currentSlots,
+                                converts: convertList,
+                                trainIdx: tIdx,
+                                trainName: TRAIN_NAMES[tIdx],
+                                res,
+                                isCompleted
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // 表示処理
+    const resDiv = document.getElementById('advResults');
+    if (advancedSolutions.length === 0) {
+        resDiv.innerHTML = `<span style="color:#e74c3c;">現在の鉱石・練習条件では、目標条件を達成できる精密手順は見つかりませんでした。</span>`;
+        return;
+    }
+
+    advancedSolutions.sort((a,b) => b.res.total - a.res.total);
+    // 重複を少し間引く（同じアクション結果はまとめる）
+    let html = `<div style="font-weight:bold; color:#2ecc71; margin-bottom:8px;">${advancedSolutions.length} 件のルートを検出（タップでフローチャート表示）：</div>`;
+    
+    advancedSolutions.slice(0, 30).forEach((sol, idx) => {
+        html += `<div class="result-item" onclick="showFlowchart(${idx})">`;
+        html += `<strong>ルート ${idx + 1}: [獲得: +${sol.res.total} pts] ➔ 練習: ${sol.trainName}</strong><br>`;
+        html += `<span style="font-size:11px; color:#a0a0b0;">完成: ` +
+                `スロット1(${sol.isCompleted[0]?'○':'×'}) | ` +
+                `スロット2(${sol.isCompleted[1]?'○':'×'}) | ` +
+                `スロット3(${sol.isCompleted[2]?'○':'×'})</span></div>`;
+    });
+    resDiv.innerHTML = html;
 }
 
-// 既存の簡易シミュレーション代替表示
-function runBasicSimulation() {
-    const resultArea = document.getElementById('resultArea');
-    resultArea.innerHTML = `
-        <div style="color: #a4b0be; text-align: center; padding: 20px;">
-            現在は簡易モードです。上のボタンから「詳細な分析」をONにすると、練習の分布に基づいた精密ルートとフローチャートがここに表示されます。
-        </div>`;
+// フローチャート生成表示
+function showFlowchart(idx) {
+    const sol = advancedSolutions[idx];
+    const area = document.getElementById('flowchartArea');
+    const baseSlots = [
+        { color: document.getElementById('color1').value, type: document.getElementById('type1').value },
+        { color: document.getElementById('color2').value, type: document.getElementById('type2').value },
+        { color: document.getElementById('color3').value, type: document.getElementById('type3').value }
+    ];
+
+    let html = `<div class="flowchart-box">
+        <h4 style="margin:0 0 8px 0; color:#e67e22; font-size:13px;">ルート ${idx + 1} の詳細フローチャート</h4>`;
+    
+    // Step1: 入れ替え
+    let swapNotes = [];
+    for(let s=0; s<3; s++) {
+        if(sol.swaps[s] !== null) {
+            swapNotes.push(`スロット${s+1}のアイテムをストックの<span class="text-${sol.currentSlots[s].color}">${colorJa[sol.currentSlots[s].color]}${typeJa[sol.currentSlots[s].type]}</span>と入れ替える（※このスロットの引き継ぎ鉱石はリセットされます）`);
+        }
+    }
+    if(swapNotes.length > 0) {
+        swapNotes.forEach(note => html += `<div class="flow-step">${note}</div>`);
+    } else {
+        html += `<div class="flow-step">スロットの入れ替えは行いません（引き継ぎ鉱石を維持）。</div>`;
+    }
+
+    // Step2: 変換
+    if(sol.converts.length > 0) {
+        let cvText = sol.converts.map(c => `<span class="text-${c.color}">${colorJa[c.color]}${typeJa[c.type]}</span>`).join(', ');
+        html += `<div class="flow-step">ストック内のレシピ [ ${cvText} ] を鉱石に変換する（対応する鉱石が全スロットに供給されます）。</div>`;
+    } else {
+        html += `<div class="flow-step">ストックのレシピ変換は行いません。</div>`;
+    }
+
+    // Step3: 訓練
+    html += `<div class="flow-step"><strong>「${sol.trainName}」</strong>の練習を実行し、配置されている鉱石を獲得する。</div>`;
+
+    // 結果
+    let compText = [];
+    if(sol.isCompleted[0]) compText.push("スロット1");
+    if(sol.isCompleted[1]) compText.push("スロット2");
+    if(sol.isCompleted[2]) compText.push("スロット3");
+
+    html += `<div class="flow-step" style="color:#2ecc71; font-weight:bold;">➔ 【ターン終了】 ${compText.join(', ')} が完成！合計 +${sol.res.total} pts を獲得します！</div>`;
+    html += `</div>`;
+    
+    area.innerHTML = html;
+    area.scrollIntoView({ behavior: 'smooth' });
 }
+
+// 初回キック
+buildStockTable();
+updateStockStatusDisplay();
+updateSelectColor(1); updateSelectColor(2); updateSelectColor(3);
 </script>
+
 </body>
 </html>
